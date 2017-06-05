@@ -1,0 +1,15 @@
+Link From Google Drive
+
+-slider prev icon (left arrow) 
+https://drive.google.com/uc?export=download&id=0B6dFFB5wzRwcSnhCeXRfZWp5alk
+
+
+-slider next icon (right arrow) 
+https://drive.google.com/uc?export=download&id=0B6dFFB5wzRwcSkVUYkhuOXEwclE
+
+-slide prev icon on hover 
+https://drive.google.com/uc?export=download&id=0B6dFFB5wzRwcVzM2d3hJUXJDSUk
+
+
+-slide next icon on hover 
+https://drive.google.com/uc?export=download&id=0B6dFFB5wzRwcekdMTXh2VEMwZms
