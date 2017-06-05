@@ -7,8 +7,8 @@
     </div>
     <ul class="sidebar-nav">
         <li>    
-            <a id="sidebar-nav-collapse" href="<?=site_url('applicant/dashboard/pending')?>" title="My Applications">
-                <i class="fa fa-tachometer"></i> 
+            <a id="sidebar-nav-collapse" href="<?=site_url('applicant/applications/pending')?>" title="My Applications">
+                <i class="fa fa-file"></i> 
             </a>
         </li>
         <li>

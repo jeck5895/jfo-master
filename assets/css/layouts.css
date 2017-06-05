@@ -1189,6 +1189,12 @@ img.upload-frame-overlay:hover{
 	padding-right: 0!important; 
 }
 
+.fixedRight{
+	position: fixed;
+	right: 8px;
+	top:5px;
+}
+
 .profile-box-body hr{
 	width: 87%
 }
@@ -1324,7 +1330,7 @@ ul.work-history-box{
 }
 
 .box-header.with-border {
-  border-bottom: 1px solid #f4f4f4;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);/*#f4f4f4*/;
 }
 
 .box-body {
@@ -1728,9 +1734,9 @@ ul.maintenance-menu > li > label{
 		background-color: rgba(128, 128, 128, 0.74);
 	}
  	
-	.content-wrapper-home{
+	/*.content-wrapper-home{
 		margin-left: 0;
-	}
+	}*/
 
 	.partners, .about-us{
 		font-size: 11px;
@@ -1768,10 +1774,6 @@ ul.maintenance-menu > li > label{
 
 	.job-info{
 		margin-bottom: 1rem;
-	}
-
-	.logo-box, .job-info{
-		width: 50%!important;
 	}
 
 	.box-slider, .featured-companies-box{

@@ -4,6 +4,7 @@ $(document).ready(function(){
  	var pathUrl = window.location.protocol + "//" + window.location.host + "/" + seg[1];
  	var current_url = window.location.href; 
     var userAction;
+   
  	var App = {
         
         pathUrl : window.location.protocol + "//" + window.location.host + "/" + seg[1],
@@ -53,6 +54,7 @@ $(document).ready(function(){
 
     $(window).resize(function() {
         setHeight();
+        
     });
 
     switch (document.readyState) {
@@ -91,6 +93,7 @@ $(document).ready(function(){
             window.location.hash = hash;
         }); 
     });
+
 
     $('.dataTables_info, .dataTables_paginate').addClass('fs-13');
 

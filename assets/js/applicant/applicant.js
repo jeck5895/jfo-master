@@ -403,14 +403,34 @@
     {
         getData(App.apiUrl +"/applicants/notifications",function(data){
             var html = "";
+            var new_notif = 0;
             $("#notif-list").html("");
 
             if(data.length != ""){
                 $.each(data, function (index, item){
-                    html += "<li>";
-                        html += "<a href='#' class='fs-11 dropdown-item'>"+item.notification+"</a>"; 
+                    new_notif = (item.status == 1)? new_notif = new_notif + 1 : new_notif;
+                    notif_class = (item.status == 1)? "new-notif" : "";
+                    html += "<li class='"+notif_class+"'>";
+                        html += "<div class='dropdown-item dropdown-notif-item'>";
+                            html += item.notification;
+                            html += "<p class='text-muted fs-11'>"+moment(item.date_created).format('MMMM D, YYYY')+' ('+moment(item.date_created).fromNow()+")</p>";
+                        html += "</div>";    
                     html += "</li>";
                 });
+
+                if(new_notif != 0){
+                    $("#notif-badge").css("display","block");
+                    $("#notif-badge").css("right","24px");
+                    $("#notif-badge").html(new_notif);
+                }
+
+                $("#notif-list").append(html);
+                console.log(new_notif)
+            }
+            else{
+                html += '<div class="dropdown-item">';
+                    html += '<p class="fs-13 text-muted-light text-center">No notifications right now</p>';
+                html += '</div>';
 
                 $("#notif-list").append(html);
             }
@@ -472,10 +492,15 @@
         var name = notification.name;
 
         $.notify({
-            title: "<strong>"+name+"</strong>",
+            title: " ",//<strong>"+name+"</strong>
             message: message
         },{
-            type: "success",
+            type: "default",
+            delay: 80000,
+            placement: {
+                from: "bottom",
+                align: "left"
+            },
             animate: {
                 enter: 'animated fadeIn',
                 exit: 'animated fadeOut'

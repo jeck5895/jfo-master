@@ -87,12 +87,17 @@ class Notification extends MY_Controller
 
                 	$message = "";
                     $action = $this->input->post('method');
+                    $temp = str_replace(array('\\', '/'), '', $query->job_position);
+                    $position_uri =  str_replace(' ', '-', $temp);
+                    $job_id = $this->my_encrypt->encode($query->job_id);
+
+
                     
                     if($action == "tag_as_reviewed"){
-                    	$message = strtoupper($query->recruiter).' has viewed your application and is reviewing your application for the position'.$query->job_position;
+                    	$message = '<a href="'.base_url().'jobs/details/'.$position_uri.'/'.$job_id.'" target="'.$job_id.'"><strong>'.$query->recruiter.'</strong> has viewed your application and is reviewing your application for the position <strong>'.$query->job_position.'</strong></a>';
                     }
                     elseif($action == "tag_for_interview"){
-                    	$message = strtoupper($query->recruiter).' has been tag as FOR INTERVIEW.';
+                    	$message = '<a href="'.base_url().'jobs/details/'.$position_uri.'/'.$job_id.'" target="'.$job_id.'"><strong>'.$query->recruiter.'</strong> has been tag you as FOR INTERVIEW.</a>';
                     }
                     else{
 

@@ -1106,7 +1106,8 @@ class Applicants extends REST_Controller {
                     $notifications[] = array(
                         "id" => $notif->id,
                         "notification" => $notif->notification,
-                        "date_created" => $notif->date_created 
+                        "date_created" => $notif->date_created,
+                        "status" => $notif->status 
                         );
                 }
 

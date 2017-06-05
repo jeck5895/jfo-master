@@ -92,19 +92,19 @@ $(function(){
                 html += '<div class="box box-widget jobs-container">';
                     html += '<div class="box-body">';
                         html += '<div class="row">';
-                            html += '<div class="col-xs-6  col-md-3 job-info">';
+                            html += '<div class="col-xs-12  col-md-4 job-info">';
                                 html += '<h6 class="job-title"><a href="'+App.pathUrl+'/jobs/details/'+job_title_uri+'/'+item.id+'" target="'+item.id+'">'+item.position+'</a></h6>';
                     
                                 html += '<p><a href="'+App.pathUrl + '/companies/'+uri+'-'+item.cid+'" target="'+item.company+'-'+item.cid+'"><small><strong>'+item.company+'</strong></small></a></p>';
                                 html += '<p><small>' + item.location + '</small></p>';
                                 html += '<p style="color:#cc6969;"><small>' + salary + '</small></p>';
 
-                                html += '<a href="'+App.pathUrl+'/jobs/details/'+job_title_uri+'/'+item.id+'" target="'+item.id+'" class="btn btn-info btn-sm" style="margin-top:0.3125rem;">See More Details</a>';
+                                html += '<a href="'+App.pathUrl+'/jobs/details/'+job_title_uri+'/'+item.id+'" target="'+item.id+'" class="btn btn-info btn-materialize btn-materialize-sm" style="margin-top:0.3125rem;">See More Details</a>';
                             html += '</div>';
                             html += '<div class="col-md-6">';
                                 html += '<small><p class="job-description"> '+item.job_description+'</p></small>';
                             html += '</div>';
-                            html += '<div class="col-xs-3 col-md-3 logo-box">';
+                            html += '<div class="col-xs-12 col-md-2 logo-box hidden-md-down">';
                                 html += '<div class="company-logo-container">';
                                     html += '<a href="'+App.pathUrl + '/companies/'+uri+'-'+item.cid+'" target="'+item.company+'-'+item.cid+'">';
                                         html += '<img src="'+item.company_logo+'" alt="'+item.company+' logo" class="img-fluid"/>';

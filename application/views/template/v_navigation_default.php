@@ -21,13 +21,21 @@
         
                 <li class="nav-item dropdown">
                     <a href="" class="nav-link" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">    <span class="nav-notification fa fa-flag-o"> 
-                             <span id="notif-badge" class="badge-sm badge badge-pill badge-danger badge-nav-notif">0</span>    
+                            <span id="notif-badge" class="badge-sm badge badge-pill badge-danger badge-nav-notif" style="display: none;">0</span>    
                         </span> 
                     </a>
 
-                    <ul id="notif-list" class="dropdown-menu dropdown-notif top-navigation dropdown-default" aria-labelledby="responsiveNavbarDropdown">
+                   <!--  <ul id="notif-list" class="dropdown-menu dropdown-notif top-navigation dropdown-default" aria-labelledby="responsiveNavbarDropdown">
                         <li class="dropdown-item text-center"><label class="fs-11 text-bold">No notifications for now</label></li>
-                    </ul>
+                    </ul> -->
+                    <div class="dropdown-menu dropdown-notif">
+                        <div class="box-header with-border py-1">
+                            <p class="text-bold">Notifications</p>
+                        </div>
+                        <div class="box-body py-0 px-0" id="notif-list">
+                            
+                        </div>
+                    </div>
                 </li>
 
                 <li class="nav-item dropdown">
