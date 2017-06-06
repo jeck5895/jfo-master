@@ -54,6 +54,8 @@ $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
 $route['login'] = 'authenticate/auth';
+$route['login/facebook'] = 'authenticate/login_facebook';
+$route['login/google'] = 'authenticate/login_google';
 $route['accounts/recovery'] = "authenticate/account_recovery";
 $route['accounts/resetpassword'] = "authenticate/reset_password";
 $route['accounts/employers/activate'] = 'authenticate/employer_account_activate';
@@ -67,11 +69,13 @@ $route['admin/applicants/private'] = 'admin/applicants_private';
 $route['admin/applicants/inactive'] = 'admin/applicants_inactive';
 $route['admin/advertisements/sliders'] = 'admin/get_advertisements_sliders';
 $route['admin/advertisements/get/featured_jobs'] = 'admin/get_featured_jobs';
+$route['admin/advertisements/get/featured_jobs_by_location'] = 'admin/get_featured_jobs_by_location';
 $route['admin/advertisements/get/featured_companies'] = 'admin/get_featured_companies';
 $route['admin/categories'] = 'admin/get_categories';
 $route['admin/maintenance/keywords'] = 'admin/keywords';
 $route['admin/maintenance/advertisements/sliders'] = 'admin/maintenance_advertisements_sliders';
 $route['admin/maintenance/advertisements/featured/jobs'] = 'admin/maintenance_featured_jobs';
+$route['admin/maintenance/advertisements/featured/jobs-by-location'] = 'admin/maintenance_featured_jobs_by_location';
 $route['admin/maintenance/advertisements/featured/companies'] = 'admin/maintenance_featured_companies';
 
 
@@ -118,6 +122,9 @@ $route['api/companies/applicants/tag_as_reject'] = 'api/companies/tag_as_reject'
 
 $route['api/admin/featured_jobs/activate'] = 'api/admin/featured_jobs_activate';
 $route['api/admin/featured_jobs/deactivate'] = 'api/admin/featured_jobs_deactivate';
+
+$route['api/admin/featured_jobs_by_location/activate'] = 'api/admin/featured_jobs_by_location_activate';
+$route['api/admin/featured_jobs_by_location/deactivate'] = 'api/admin/featured_jobs_by_location_deactivate';
 
 $route['api/admin/featured_companies/activate'] = 'api/admin/featured_companies_activate';
 $route['api/admin/featured_companies/deactivate'] = 'api/admin/featured_companies_deactivate';

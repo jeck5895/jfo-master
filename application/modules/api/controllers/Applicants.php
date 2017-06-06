@@ -88,6 +88,15 @@ class Applicants extends REST_Controller {
            
             if($this->app_model->create($applicant_info, $applicant_acct))
             {
+                $log['user_id'] = $uid;
+                $log['audit_action'] = 1;
+                $log['table_name'] = "tb_users";
+                $log['record_id'] = $uid;
+                $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                $log['date'] = date('Y-m-d H:i:s');
+                $log['is_active'] = 1;
+                $this->log_model->save($log);
+
                 $expDate = date("Y-m-d H:i:s", strtotime('+1 day'));
                 $data['user_id'] = $uid;
                 $data['token'] = md5($this->functions->guid().$applicant_acct['email'].$applicant_acct['password']);
@@ -160,6 +169,15 @@ class Applicants extends REST_Controller {
 
                         if($this->app_model->update($id, $data))
                         {
+                            $log['user_id'] = $id;
+                            $log['audit_action'] = 13;
+                            $log['table_name'] = "tb_employee";
+                            $log['record_id'] = $id;
+                            $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                            $log['date'] = date('Y-m-d H:i:s');
+                            $log['is_active'] = 1;
+                            $this->log_model->save($log);
+
                             $response = array(
                                 "status"=>TRUE,
                                 "message" => "Profile changes saved",
@@ -175,6 +193,15 @@ class Applicants extends REST_Controller {
 
                         if($this->app_model->update($id, $data))
                         {
+                            $log['user_id'] = $id;
+                            $log['audit_action'] = 13;
+                            $log['table_name'] = "tb_employee";
+                            $log['record_id'] = $id;
+                            $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                            $log['date'] = date('Y-m-d H:i:s');
+                            $log['is_active'] = 1;
+                            $this->log_model->save($log);
+
                             $response = array(
                                 "status"=>TRUE,
                                 "message" => "Profile changes saved",
@@ -192,6 +219,15 @@ class Applicants extends REST_Controller {
 
                         if($this->app_model->update($id, $data))
                         {
+                            $log['user_id'] = $id;
+                            $log['audit_action'] = 13;
+                            $log['table_name'] = "tb_employee";
+                            $log['record_id'] = $id;
+                            $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                            $log['date'] = date('Y-m-d H:i:s');
+                            $log['is_active'] = 1;
+                            $this->log_model->save($log);
+
                             $response = array(
                                 "status"=>TRUE,
                                 "message" => "Profile changes saved",
@@ -213,6 +249,15 @@ class Applicants extends REST_Controller {
                             {
                                 if($this->app_model->updateEmail($user->user_id, $newEmail) === TRUE)
                                 {
+                                    $log['user_id'] = $id;
+                                    $log['audit_action'] = 16;
+                                    $log['table_name'] = "tb_users";
+                                    $log['record_id'] = $id;
+                                    $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                                    $log['date'] = date('Y-m-d H:i:s');
+                                    $log['is_active'] = 1;
+                                    $this->log_model->save($log);
+
                                     $response = array(
                                         "status" => true,
                                         "message" => "New email saved"
@@ -253,6 +298,15 @@ class Applicants extends REST_Controller {
                             {
                                 if($this->app_model->updateMobile($user->user_id, $new_mobile) === TRUE)
                                 {
+                                    $log['user_id'] = $id;
+                                    $log['audit_action'] = 13;
+                                    $log['table_name'] = "tb_users";
+                                    $log['record_id'] = $id;
+                                    $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                                    $log['date'] = date('Y-m-d H:i:s');
+                                    $log['is_active'] = 1;
+                                    $this->log_model->save($log);
+
                                     $response = array(
                                         "status" => true,
                                         "message" => "New mobile no. saved"
@@ -287,6 +341,15 @@ class Applicants extends REST_Controller {
                         {
                             if($this->app_model->updatePassword($user->user_id, $new_password) === TRUE)
                             {
+                                $log['user_id'] = $id;
+                                $log['audit_action'] = 17;
+                                $log['table_name'] = "tb_users";
+                                $log['record_id'] = $id;
+                                $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                                $log['date'] = date('Y-m-d H:i:s');
+                                $log['is_active'] = 1;
+                                $this->log_model->save($log);
+
                                 $response = array(
                                     "status" => true,
                                     "message" => "New password saved",
@@ -309,6 +372,16 @@ class Applicants extends REST_Controller {
                             $data['allow_info_status'] = $info_status;
                          
                             if($this->app_model->update($id, $data)){
+
+                                $log['user_id'] = $id;
+                                $log['audit_action'] = 13;
+                                $log['table_name'] = "tb_employee";
+                                $log['record_id'] = $id;
+                                $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                                $log['date'] = date('Y-m-d H:i:s');
+                                $log['is_active'] = 1;
+                                $this->log_model->save($log);
+
                                 $response = array(
                                     "status" => true,
                                     "message" => ($info_status == 1)?  "Profile status has been set as Public": "Profile status has been set as Private",
@@ -596,33 +669,6 @@ class Applicants extends REST_Controller {
             $this->set_response($jobs, REST_Controller::HTTP_OK); 
         }
     }
-    //seen status
-    public function application_seen_post()
-    {
-        if(!isset($_COOKIE['_ut'])){
-            $this->response([
-                'status' => FALSE,
-                'message' => 'REQUEST UNAUTHORIZED' 
-                ],REST_Controller::HTTP_UNAUTHORIZED);
-        }
-        else
-        {
-            $user = $this->auth_model->getUserByToken($_COOKIE['_ut']);
-
-            if(!empty($user) && $user->account_type == 2)
-            {
-                $ids = $this->post('ids');
-                foreach ($ids AS  $id) {
-                    $id = $this->my_encrypt->decode($id);
-                    $this->app_model->setAsSeen($id);
-                }
-                $this->response([],REST_Controller::HTTP_OK);
-            }
-            else{
-                $this->response(['status'=>FALSE, "response"=> "REQUEST UNAUTHORIZED"], REST_Controller::HTTP_UNAUTHORIZED);
-            }
-        }
-    }
 
     public function application_delete_post()
     {
@@ -636,6 +682,16 @@ class Applicants extends REST_Controller {
                 $id = $this->my_encrypt->decode($this->post('vid'));
 
                 if($this->app_model->deleteApplication($id) === TRUE){
+
+                    $log['user_id'] = $user_id;
+                    $log['audit_action'] = 53;
+                    $log['table_name'] = "tb_verification";
+                    $log['record_id'] = $user->user_id;
+                    $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                    $log['date'] = date('Y-m-d H:i:s');
+                    $log['is_active'] = 1;
+                    $this->log_model->save($log);
+
                     $response = array(
                             "message" => "You application has been deleted",
                             "status" => true
@@ -683,6 +739,15 @@ class Applicants extends REST_Controller {
                         $this->response('', REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
                     }
                 }
+
+                $log['user_id'] = $user->user_id;
+                $log['audit_action'] = 40;
+                $log['table_name'] = "tb_employee";
+                $log['record_id'] = $user->user_id;
+                $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                $log['date'] = date('Y-m-d H:i:s');
+                $log['is_active'] = 1;
+                $this->log_model->save($log);
             }
             else{
                 $this->response(['status'=>FALSE, "response"=> "REQUEST UNAUTHORIZED"], REST_Controller::HTTP_UNAUTHORIZED);
@@ -720,6 +785,15 @@ class Applicants extends REST_Controller {
                         $this->response('', REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
                     }  
                 }
+
+                $log['user_id'] = $user->user_id;
+                $log['audit_action'] = 39;
+                $log['table_name'] = "tb_employee";
+                $log['record_id'] = $user->user_id;
+                $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                $log['date'] = date('Y-m-d H:i:s');
+                $log['is_active'] = 1;
+                $this->log_model->save($log);
              }
             else{
                 $this->response(['status'=>FALSE, "response"=> "REQUEST UNAUTHORIZED"], REST_Controller::HTTP_UNAUTHORIZED);
@@ -755,6 +829,16 @@ class Applicants extends REST_Controller {
 
                 if($this->app_model->create_work_history($data))
                 {
+                    $log['user_id'] = $user->user_id;
+                    $log['audit_action'] = 13;
+                    $log['table_name'] = "tb_work_history";
+                    $log['record_id'] = $user->user_id;
+                    $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                    $log['date'] = date('Y-m-d H:i:s');
+                    $log['is_active'] = 1;
+
+                    $this->log_model->save($log);
+
                    $response = array(
                     "status"=>TRUE,
                     "message" => "New Work History created",
@@ -804,6 +888,15 @@ class Applicants extends REST_Controller {
                         );
                        $this->response($response, REST_Controller::HTTP_CREATED);
                     }
+
+                    $log['user_id'] = $user->user_id;
+                    $log['audit_action'] = 13;
+                    $log['table_name'] = "tb_work_history";
+                    $log['record_id'] = $user->user_id;
+                    $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                    $log['date'] = date('Y-m-d H:i:s');
+                    $log['is_active'] = 1;
+                    $this->log_model->save($log);
                 }
             }
             else{
@@ -1070,6 +1163,15 @@ class Applicants extends REST_Controller {
                             "status"=>TRUE,
                             );
                         $this->response($response, REST_Controller::HTTP_OK);
+
+                        $log['user_id'] = $user->user_id;
+                        $log['audit_action'] = 41;
+                        $log['table_name'] = "tb_employee , tb_users";
+                        $log['record_id'] = $user->user_id;
+                        $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                        $log['date'] = date('Y-m-d H:i:s');
+                        $log['is_active'] = 1;
+                        $this->log_model->save($log);
                     }
                     else{
                         $this->response('', REST_Controller::HTTP_INTERNAL_SERVER_ERROR);

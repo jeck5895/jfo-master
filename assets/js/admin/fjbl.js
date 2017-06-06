@@ -1,5 +1,6 @@
 $(document).ready(function(){
 
+	
 	function getJSONDoc(url) {
         var response = $.ajax({
             type: "GET",
@@ -46,14 +47,24 @@ $(document).ready(function(){
         }
     });
 
-    var featured_job_table = $('#featured-job-list-table').DataTable({ 
+
+	// for global filtering 
+	function filterLocation () {
+		$('#featured-job_by_location-list').DataTable().search(
+			$('select[name=filter-location]').val()
+			).draw();
+	}
+
+
+
+    var featured_job_table = $('#featured-job_by_location-list').DataTable({ 
             "processing": true, 
             "serverSide": true, 
             "responsive": true,
             "autoWidth":false,
             
             "ajax": {
-                "url": App.pathUrl + "/admin/advertisements/get/featured_jobs",
+                "url": App.pathUrl + "/admin/advertisements/get/featured_jobs_by_location",
                 "type": "POST",
                 "dataFilter": function(data){
                     var json = jQuery.parseJSON( data );
@@ -82,8 +93,18 @@ $(document).ready(function(){
                   "targets": ['class','no-sort'], 
                   "orderable": false, 
                 },
+                {
+                	"targets": [ 8 ],
+                	"visible": false,
+                }
             ],
         });
+
+    $("select[name=filter-location]").on("change", function(){
+		filterLocation();
+	});
+
+ 
 
 
     $(document).on("change", "select[name=company]", function(){
@@ -107,16 +128,15 @@ $(document).ready(function(){
     });
 
 
-    $("#featured-job-form").submit(function(e){
+    $("#job-by-location-form").submit(function(e){
 		e.preventDefault();
 
 		var comp_name = $.trim($("select[name=company]").val());
 		var job_position = $.trim($("select[name=job_position]").val());
 		var duration = $("select[name=duration]").val();
 		var content = CKEDITOR.instances.featuredContent.getData();
-		var ckb = $("#featured-job-form input[name=use_alt_position]");
-		var alt_position = $("#featured-job-form input[name=alt_job_title]").val();
-
+		var ckb = $("#job-by-location-form input[name=use_alt_position]");
+		var alt_position = $("input[name=alt_job_title]").val();
 		
 		if(ckb.is(":checked") && alt_position == ""){
 			$.notify({
@@ -131,13 +151,12 @@ $(document).ready(function(){
 			});
 		}
 		else{
-
 			$("#btn-save-job").prop("disabled", true);
 			$("#btn-save-job").html('<i class="fa fa-refresh fa-spin fa-fw"></i><span class="sr-only">Saving...</span>');
 
 			$.ajax({
 				type: "POST",
-				url: App.apiUrl + "/admin/featured_jobs",
+				url: App.apiUrl + "/admin/featured_jobs_by_location",
 				dataType: "JSON",
 				data:{
 					company: comp_name,
@@ -154,16 +173,16 @@ $(document).ready(function(){
 
 					},{
 						type: "success",
-						delay: 2000,
+						delay: 5000,
 						animate: {
 							enter: 'animated fadeIn',
 							exit: 'animated fadeOut'
 						}
 					});
-					$('#featured-job-form')[0].reset();
+					$('#job-by-location-form')[0].reset();
 					$("#btn-save-job").prop("disabled", false);
 					$("#btn-save-job").html('SAVE FEATURED JOB');
-					$("input[name=alt_job_title]").prop("disabled", true);
+					$("input[name=alt_job_title]").prop("disabled",true);
 					CKEDITOR.instances.featuredContent.setData('');
 					featured_job_table.ajax.reload(null, false);
 				},
@@ -182,7 +201,6 @@ $(document).ready(function(){
 				}
 			});
 		}
-
 	});
 
 
@@ -208,7 +226,7 @@ $(document).ready(function(){
 
  								$.ajax({
  									type: 'DELETE',
- 									url: App.apiUrl+'/admin/featured_jobs',
+ 									url: App.apiUrl+'/admin/featured_jobs_by_location',
  									dataType: 'JSON',
  									data:{
  										fid : fid,
@@ -248,7 +266,7 @@ $(document).ready(function(){
 
  								$.ajax({
  									type: 'POST',
- 									url: App.apiUrl+'/admin/featured_jobs/activate',
+ 									url: App.apiUrl+'/admin/featured_jobs_by_location/activate',
  									dataType: 'JSON',
  									data:{
  										id : fid,
@@ -262,7 +280,7 @@ $(document).ready(function(){
 
  										},{
  											type: "success",
- 											delay: 1200,
+ 											delay: 5000,
  											animate: {
  												enter: 'animated fadeIn',
  												exit: 'animated fadeOut'
@@ -299,7 +317,7 @@ $(document).ready(function(){
 
  								$.ajax({
  									type: 'POST',
- 									url: App.apiUrl+'/admin/featured_jobs/deactivate',
+ 									url: App.apiUrl+'/admin/featured_jobs_by_location/deactivate',
  									dataType: 'JSON',
  									data:{
  										id : fid,
@@ -313,7 +331,7 @@ $(document).ready(function(){
 
  										},{
  											type: "success",
- 											delay: 1200,
+ 											delay: 5000,
  											animate: {
  												enter: 'animated fadeIn',
  												exit: 'animated fadeOut'
@@ -344,7 +362,7 @@ $(document).ready(function(){
         $(this).find('#ref').removeClass('modal-sm');
         $(this).find('.modal-body').html("");     
 
-        var data = getJSONDoc(App.apiUrl + "/admin/featured_jobs/id/"+fid);
+        var data = getJSONDoc(App.apiUrl + "/admin/featured_jobs_by_location/id/"+fid);
 
        	html += '<div id="edit-featured-job">';	
 	       	html += '<div class="form-group">';
@@ -402,15 +420,8 @@ $(document).ready(function(){
         			maxCharCount: 6000,
         		}
         	});
-       		
-       		CKEDITOR.instances.editorModal.setData(data.job_description);
-       		$("select[name=duration] option").filter(function(e){
-       			var temp = $.trim($(this).val());
 
-       			return temp == data.duration;
-
-       		}).prop('selected', true);
-       		if(data.use_alternative == 1){
+        	if(data.use_alternative == 1){
         		$("#edit-featured-job input[name='use_alt_position']").prop("checked", true);
         		$("#edit-featured-job input[name='alt_job_title']").prop("disabled", false);
         	}
@@ -421,12 +432,21 @@ $(document).ready(function(){
         			$("#edit-featured-job select[name = company]").append("<option value="+item.id+" "+selected+">"+item.company+"</option>");
         		});
         	});
+       		
+       		CKEDITOR.instances.editorModal.setData(data.job_description);
 
-        	getData(App.apiUrl + "/jobs?cid="+data.company_id, function(positions){
+       		$("#edit-featured-job select[name=duration] option").filter(function(e){
+       			var temp = $.trim($(this).val());
+
+       			return temp == data.duration;
+
+       		}).prop('selected', true);
+   
+       		getData(App.apiUrl + "/jobs?cid="+data.company_id, function(positions){
        			$("#edit-featured-job select[name = job_position]").empty();
        			
        			$.each(positions, function(index, item){
-       				console.log(data.position + "||" +item.id);
+       				
        				var selected = (data.position == item.id)? "selected" : "";
        			
        				$("#edit-featured-job select[name = job_position]").append("<option value="+item.id+" "+selected+">"+item.position+"</option>");
@@ -441,7 +461,7 @@ $(document).ready(function(){
 		var editContent = CKEDITOR.instances.editorModal.getData();
 		var eckb = $("#edit-featured-job input[name=use_alt_position]");
 		var alt_position = $("#edit-featured-job input[name=alt_job_title]").val(); 
-    	
+
 		if(eckb.is(":checked") && alt_position == ""){
 			$.notify({
 				title: " ",
@@ -456,7 +476,7 @@ $(document).ready(function(){
 		}
 		else{
 			$.ajax({
-				url: App.apiUrl+'/admin/featured_jobs',
+				url: App.apiUrl+'/admin/featured_jobs_by_location',
 				type: 'PATCH',
 				data:{
 					id: fid,

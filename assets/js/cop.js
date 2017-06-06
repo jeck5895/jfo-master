@@ -44,6 +44,7 @@ $(function () {
         $("#company-website").attr('href',company.site);
         $("#company-website").text(company.site);
         $("#company-details").text(company.details);
+        document.title = company.company_name;
     });
     
     function loadJobs(jobs, selector)
@@ -91,7 +92,7 @@ $(function () {
        }
     }
 
-    getData(App.apiUrl+'/jobs?cid='+cid, function(jobs){
+    getData(App.apiUrl+'/jobs?cid='+cid+"&limit=3", function(jobs){
         loadJobs(jobs, jobsCanvas);
     });
 

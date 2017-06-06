@@ -103,7 +103,7 @@
                             </a>
                         </li>
                         <li style="font-size: 12px; margin-bottom: 5px;">
-                            <a href="<?=site_url('')?>" style="color: #909090;">
+                            <a href="<?=site_url('admin/maintenance/advertisements/featured/jobs-by-location')?>" style="color: #909090;">
                                 Featured Job Post by City
                             </a>
                         </li>

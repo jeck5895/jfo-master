@@ -1,18 +1,4 @@
 	</div>
-	
-		<?php if((isset($_COOKIE['_typ']) && $_COOKIE['_typ'] == "ap") || !isset($_COOKIE['_typ'])):?>
-			<footer class="footer-main">
-				<div class="container">
-					<img src="<?=base_url('assets/images/logo/jfo_logo_footer.png')?>">
-				</div>
-			</footer>
-		<?php elseif(isset($_COOKIE['_typ']) && $_COOKIE['_typ'] == "ep"):?>
-			<footer class="footer-purple">
-				<div class="container">
-					<img src="<?=base_url('assets/images/logo/jfo_logo_footer.png')?>">
-				</div>
-			</footer>
-		<?php endif;?>    
 		
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 	<script src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>

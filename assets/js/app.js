@@ -1,4 +1,9 @@
 $(document).ready(function(){
+
+    if(document.getElementById("sidebar-mini")){
+        $(".content-wrapper-home").css("margin-left","5rem");
+    }
+
 	var path = window.location.pathname;
  	var seg = path.split('/');
  	var pathUrl = window.location.protocol + "//" + window.location.host + "/" + seg[1];
@@ -54,7 +59,6 @@ $(document).ready(function(){
 
     $(window).resize(function() {
         setHeight();
-        
     });
 
     switch (document.readyState) {
@@ -77,8 +81,6 @@ $(document).ready(function(){
             console.log("complete")
             break;
     }
-    console.log(document.readyState)
-    var db = new localStorageDB("jfo", localStorage); 
 
     $(document).on('click', "ul.home.navbar-nav a",function(e) {
         var hash = this.hash;
@@ -142,6 +144,11 @@ $(document).ready(function(){
         allowClear: true,
         maximumSelectionSize: 10,
 	});
+
+    $(".select2-company").select2({
+        placeholder: "",
+        allowClear: true,
+    });
 
     $(".province").select2({
        placeholder:"Search Job via Location",

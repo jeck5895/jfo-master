@@ -171,3 +171,8 @@
 		</div>
 	</div>
 </div>
+<footer class="footer-main">
+	<div class="container">
+		<img src="<?=base_url('assets/images/logo/jfo_logo_footer.png')?>">
+	</div>
+</footer>

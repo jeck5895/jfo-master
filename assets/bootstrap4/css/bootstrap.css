@@ -2670,7 +2670,7 @@ select.form-control-lg:not([size]):not([multiple]), .input-group-lg > select.for
 }
 
 .btn:focus, .btn.focus {
-  outline: 0;
+  outline: none;
   -webkit-box-shadow: 0 0 0 2px rgba(2, 117, 216, 0.25);
   box-shadow: 0 0 0 2px rgba(2, 117, 216, 0.25);
 }
@@ -2764,9 +2764,12 @@ fieldset[disabled] a.btn {
   border: 1px solid #31b0d5;
 }
 
-.btn-info:focus, .btn-info.focus {
-  -webkit-box-shadow: 0 0 0 2px rgba(91, 192, 222, 0.5);
-  box-shadow: 0 0 0 2px rgba(91, 192, 222, 0.5);
+.btn-info:focus, .btn-info.focus, .btn-info:active {
+    color: #fff;
+  background-color: #349bea/*#5bc0de*/;
+  border-color: #349bea/*#5bc0de*/;
+  /*-webkit-box-shadow: 0 0 0 2px rgba(91, 192, 222, 0.5);
+  box-shadow: 0 0 0 2px rgba(91, 192, 222, 0.5);*/
 }
 
 .btn-info.disabled, .btn-info:disabled {
@@ -3190,6 +3193,10 @@ tbody.collapse.show {
   font-weight: normal!important;
   font-size: 13px!important;
   width: 450px!important;
+}
+
+.dropdown-notif{
+     min-width: 15rem!important;
 }
 
 .dropdown-menu:before {
@@ -7992,6 +7999,16 @@ a.bg-inverse:focus, a.bg-inverse:hover {
 .py-5 {
   padding-top: 3rem !important;
   padding-bottom: 3rem !important;
+}
+
+.py-6 {
+  padding-top: 4rem !important;
+  padding-bottom: 4rem !important;
+}
+
+.py-7 {
+  padding-top: 5rem !important;
+  padding-bottom: 5rem !important;
 }
 
 .m-auto {

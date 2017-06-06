@@ -303,6 +303,29 @@ class Admin extends MY_Controller {
         }
     }
 
+    public function maintenance_featured_jobs_by_location()
+    {
+        if(isset($_COOKIE['_ut']) && $_COOKIE['_typ'])
+        {
+            $user = $this->auth_model->getUserByToken($_COOKIE['_ut']);
+            if(!empty($user) && $user->account_type == 1){
+                
+                $page_title['title'] = 'Advertisements | Featured Jobs';
+                $page = 'v_admin_featured_post_by_location';
+                $data['admin'] = $admindata['user'] = $this->auth_model->getUserDetails($user->user_id, $user->account_type);
+                $admindata['admin_logo'] = base_url().str_replace("./", "", $data['admin']->profile_pic);
+
+                $this->loadMainPage($page_title, $admindata, $page ,$data);
+            }
+            else{
+                redirect('');    
+            }
+        }
+        else{
+            redirect('');
+        }
+    }
+
     public function maintenance_featured_companies()
     {
         if(isset($_COOKIE['_ut']) && $_COOKIE['_typ'])
@@ -689,7 +712,7 @@ class Admin extends MY_Controller {
                     
                     $row[] = $advertisement->id;
                     $row[] = $advertisement->company_name;
-                    $row[] = $advertisement->job_position;
+                    $row[] = ($advertisement->use_alternative == 1)? $advertisement->alternative_title:$advertisement->job_position;
                     $row[] = $advertisement->duration ." days";
                     $row[] = ($advertisement->start_date != NULL)? date('F j, Y', strtotime($advertisement->start_date)) :"TBD";
                     $row[] = ($advertisement->end_date != NULL)? date('F j, Y', strtotime($advertisement->end_date)): "TBD" ;
@@ -702,7 +725,7 @@ class Admin extends MY_Controller {
                         $html = '<a href="" onclick="return false;" id="btn-activate" data-id="'.$advertisement_id.'" data-title="'.$advertisement->job_position.'" class="ml-2"><i class="fa fa-check fc-grey fa-1x"></i></a>';
                     }
 
-                    $html .= '<a href="'.$advertisement->url.'" target="'.$advertisement->url.'" class="ml-2"><img id="view" src="'.base_url('assets/images/app/PreviewDataTableIcon.png').'" ></a> ';
+                    // $html .= '<a href="'.$advertisement->url.'" target="'.$advertisement->url.'" class="ml-2"><img id="view" src="'.base_url('assets/images/app/PreviewDataTableIcon.png').'" ></a> ';
                     
                     $html .= '<a href="" onclick="return false;" id="btn-edit" data-toggle="modal" data-target="#dynamicModal" data-id="'.$advertisement_id.'" data-title="'.$advertisement->job_position.'" class="" style="margin-right:0.25rem;"><img id="edit" src="'.base_url('assets/images/app/EditDataTableIcon.png').'"></a> ';
 
@@ -718,6 +741,71 @@ class Admin extends MY_Controller {
                                 "draw" => $_POST['draw'],
                                 "recordsTotal" => $this->featured_job_model->count_all(),
                                 "recordsFiltered" => $this->featured_job_model->count_filtered(),
+                                "data" => $data,
+                        );
+                //output to json format
+                echo json_encode($output); 
+            }
+            else{
+                redirect("404");
+            }
+        }    
+    }
+
+    public function get_featured_jobs_by_location()
+    {
+        $this->load->model('featured_jobByLocation_model');
+        if(isset($_COOKIE['_ut']) && $_COOKIE['_typ'])
+        {
+            $user = $this->auth_model->getUserByToken($_COOKIE['_ut']);
+            if(!empty($user) && $user->account_type == 1)
+            {    
+                $list = $this->featured_jobByLocation_model->get_datatables();
+
+                $data = array();
+
+                $no = $_POST['start'];
+                foreach ($list as $advertisement) {
+                    $date_now = new DateTime(date('Y-m-d H:i:s'));
+                    $end_date = new DateTime($advertisement->end_date);
+                    $interval = $date_now->diff($end_date)->format('%R%a days');
+                    $advertisement_id = $this->my_encrypt->encode($advertisement->id);
+                    $no++;
+                    $row = array();
+                    
+                    $row[] = $advertisement->id;
+                    $row[] = $advertisement->company_name;
+                    $row[] = ($advertisement->use_alternative == 1)? $advertisement->alternative_title:$advertisement->job_position;
+                    $row[] = $advertisement->duration ." days";
+                    $row[] = ($advertisement->start_date != NULL)? date('F j, Y', strtotime($advertisement->start_date)) :"TBD";
+                    $row[] = ($advertisement->end_date != NULL)? date('F j, Y', strtotime($advertisement->end_date)): "TBD" ;
+                    $row[] = ($advertisement->is_active == 1)? "Active":"Inactive";
+
+                    if($advertisement->is_active == 1){
+                         $html = '<a href="" onclick="return false;" id="btn-deactivate" data-id="'.$advertisement_id.'" data-title="'.$advertisement->job_position.'" class="ml-2"><i class="fa fa-power-off fc-grey fa-1x"></i></a>';
+                    }
+                    else{
+                        $html = '<a href="" onclick="return false;" id="btn-activate" data-id="'.$advertisement_id.'" data-title="'.$advertisement->job_position.'" class="ml-2"><i class="fa fa-check fc-grey fa-1x"></i></a>'; 
+                    }
+
+                    // $html .= '<a href="'.$advertisement->url.'" target="'.$advertisement->url.'" class="ml-2"><img id="view" src="'.base_url('assets/images/app/PreviewDataTableIcon.png').'" ></a> ';
+                    
+                    $html .= '<a href="" onclick="return false;" id="btn-edit" data-toggle="modal" data-target="#dynamicModal" data-id="'.$advertisement_id.'" data-title="'.$advertisement->job_position.'" class="" style="margin-right:0.25rem;"><img id="edit" src="'.base_url('assets/images/app/EditDataTableIcon.png').'"></a> ';
+
+                    $html .= '<a href="" onclick="return false;" id="btn-delete" data-id="'.$advertisement_id.'" data-title="'.$advertisement->job_position.'"><img id="delete" src="'.base_url('assets/images/app/DeleteDataTableIcon.png').'"></a>';
+                            
+                    $row[] = $html;
+
+                    $row[] = $advertisement->location_id;
+                     
+
+                    $data[] = $row;
+                }
+
+                $output = array(
+                                "draw" => $_POST['draw'],
+                                "recordsTotal" => $this->featured_jobByLocation_model->count_all(),
+                                "recordsFiltered" => $this->featured_jobByLocation_model->count_filtered(),
                                 "data" => $data,
                         );
                 //output to json format

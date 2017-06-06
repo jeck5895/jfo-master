@@ -16,9 +16,9 @@
 		public function __construct(){
 
 			$this->fb = new Facebook\Facebook([
-				  'app_id' => '938590269606353',
-				  'app_secret' => '711263b0d142774794d0b10e443914ce',
-				  'default_graph_version' => 'v2.5',
+				  'app_id' => '139260186634697',
+				  'app_secret' => '55fe94a4d2c0236417d99508b9ea6e37',
+				  'default_graph_version' => 'v2.9',
 				]);
 			$this->helper = $this->fb->getRedirectLoginHelper();
 			

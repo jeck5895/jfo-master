@@ -74,6 +74,15 @@ class Jobs extends REST_Controller {
 
                 if($this->job_post_model->create($job))
                 {
+                    $log['user_id'] = $user->user_id;
+                    $log['audit_action'] = 11;
+                    $log['table_name'] = "tb_jobpost";
+                    $log['record_id'] = $user->user_id;
+                    $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                    $log['date'] = date('Y-m-d H:i:s');
+                    $log['is_active'] = 1;
+                    $this->log_model->save($log);
+
                     $response = array(
                             "status"=>TRUE,
                             "message" => "Your post has been submitted for review"
@@ -100,7 +109,7 @@ class Jobs extends REST_Controller {
         $encrypted_job_id = $this->get('job_id');
         $keyword = ($this->get('keyword')=== NULL)? FALSE: $this->get('keyword');
         $offset = ($this->get('offset')=== NULL)? 0 : $this->get('offset');
-        $region = ($this->get('region') === NULL)? FALSE : $this->get('region'); //for region filter
+        $region = ($this->get('reg') === NULL)? FALSE : $this->get('reg'); //for region filter
         $category = ($this->get('category') === NULL)? FALSE : $this->get('category');
         $job_status = ($this->get('status') === NULL)? "published" : $this->get('status'); 
         $company_id = ($this->get('cid') === NULL)? FALSE : $this->get('cid'); //get jobs related from a company
@@ -110,13 +119,13 @@ class Jobs extends REST_Controller {
             $category = $this->my_encrypt->decode($this->get('ec'));
         }
 
-        $limit = 10;
+        $limit = ($this->get('limit') === NULL)? FALSE : $this->get('limit');
         
         $totalRows = $this->job_post_model->getTotalRows($job_status);
 
-        if($this->get('ex') != NULL || $this->get('cid')){
-            $limit = 3;
-        }
+        // if($this->get('ex') != NULL && $this->get('cid')){
+        //     $limit = 3;
+        // }
 
         $user = (isset($_COOKIE['_ut']) && $_COOKIE['_typ'] == "ap")? $this->auth_model->getUserByToken($_COOKIE['_ut']): NULL;
 
@@ -285,57 +294,6 @@ class Jobs extends REST_Controller {
 
     }
 
-    public function search_get()
-    {
-        $keyword = $this->get('keyword');
-
-        if($keyword === "")
-        {   
-           $query = $this->job_post_model->get();
-           $jobs = array();
-
-            if(!empty($query))
-            {
-                foreach($query as $job)
-                {
-                    $salary1 = floatval($job['salary_range1']);
-                    $salary2 = floatval($job['salary_range2']);
-                    $salary = ($job['salary_status'] == 1)? number_format($salary1,2,'.',',').'-'.number_format($salary2,2,'.',','):0; 
-                    $jobs[] = array(
-                        "id" => $this->my_encrypt->encode($job['job_id']),
-                        "position" => $job['job_position'],
-                        "cid" => $job['company_id'],
-                        "company" => $job['company_name'],
-                        "location" => $job['city_1'].', '.$job['province_1'],
-                        "salary" =>  $salary,
-                        "open_date" =>  date('F d, Y',strtotime($job['job_opendate'])),
-                        "due_date" => date('F d, Y',strtotime($job['job_closedate'])),
-                        "category" => $job['category_name'],
-                        "job_description" => substr($job['job_description'], 0,200).'....',
-                        "education_requirement" => $job['educational_attainment'],
-                        "company_details" => $job['company_description'],
-                        "company_logo" => base_url().str_replace("./", "",$job['profile_pic']),
-                        "vacancies" => $job['num_vacancies'],
-                        "course" => $job['code'],
-                        "date_posted" => $job['job_opendate'],
-                        );
-                }
-
-                $this->response($jobs, REST_Controller::HTTP_OK);
-            }    
-            else
-            {
-                $this->response([
-                    "status" => FALSE,
-                    "message" => "No results found"
-                    ], REST_Controller::HTTP_NOT_FOUND);
-            }
-        }
-        else{
-            $this->response($keyword, REST_Controller::HTTP_OK);
-        }
-    }
-
     public function apply_post()
     {
         if(isset($_COOKIE['_ut']))
@@ -358,6 +316,16 @@ class Jobs extends REST_Controller {
                     );
 
                 if($this->job_post_model->apply($data) === TRUE){
+                    $log['user_id'] = $user->user_id;
+                    $log['audit_action'] = 12;
+                    $log['table_name'] = "tb_verification";
+                    $log['record_id'] = $user->user_id;
+                    $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                    $log['date'] = date('Y-m-d H:i:s');
+                    $log['is_active'] = 1;
+                    $this->log_model->save($log);
+
+
                     $response = array(
                         "message" => "You have successfully applied to this Job",
                         "status" => true
@@ -405,6 +373,17 @@ class Jobs extends REST_Controller {
                             );
 
                 if($this->job_post_model->withdraw($data) === TRUE){
+
+                    $log['user_id'] = $user->user_id;
+                    $log['audit_action'] = 62;
+                    $log['table_name'] = "tb_verification";
+                    $log['record_id'] = $user->user_id;
+                    $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                    $log['date'] = date('Y-m-d H:i:s');
+                    $log['is_active'] = 1;
+                    $this->log_model->save($log);
+
+
                     $response = array(
                             "message" => "You have successfully withdraw your application",
                             "status" => true
@@ -442,6 +421,16 @@ class Jobs extends REST_Controller {
                             );
 
                 if($this->job_post_model->reapply($data) === TRUE){
+                    
+                    $log['user_id'] = $user->user_id;
+                    $log['audit_action'] = 63;
+                    $log['table_name'] = "tb_verification";
+                    $log['record_id'] = $user->user_id;
+                    $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                    $log['date'] = date('Y-m-d H:i:s');
+                    $log['is_active'] = 1;
+                    $this->log_model->save($log);
+
                     $response = array(
                             "message" => "You have successfully Re-submit your application",
                             "status" => true,
@@ -501,6 +490,15 @@ class Jobs extends REST_Controller {
                         "message" => "Job Post changes saved"
                         );
                     $this->response($response, REST_Controller::HTTP_OK);
+
+                    $log['user_id'] = $user->user_id;
+                    $log['audit_action'] = 26;
+                    $log['table_name'] = "tb_jobpost";
+                    $log['record_id'] = $user->user_id;
+                    $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                    $log['date'] = date('Y-m-d H:i:s');
+                    $log['is_active'] = 1;
+                    $this->log_model->save($log);
                 }
             }
             else{
@@ -534,6 +532,15 @@ class Jobs extends REST_Controller {
 
                         if($this->job_post_model->approve($id) === TRUE)
                         {
+                            $log['user_id'] = $user->user_id;
+                            $log['audit_action'] = 35;
+                            $log['table_name'] = "tb_verification";
+                            $log['record_id'] = $user->user_id;
+                            $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                            $log['date'] = date('Y-m-d H:i:s');
+                            $log['is_active'] = 1;
+                            $this->log_model->save($log);
+
                             $response = array(
                                 "status"=>TRUE,
                                 "message" => "Job post has been approved",
@@ -587,6 +594,15 @@ class Jobs extends REST_Controller {
                                 "message" => "Job post has been declined"
                                 );
                             $this->response($response, REST_Controller::HTTP_OK);
+
+                            $log['user_id'] = $user->user_id;
+                            $log['audit_action'] = 33;
+                            $log['table_name'] = "tb_verification";
+                            $log['record_id'] = $user->user_id;
+                            $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                            $log['date'] = date('Y-m-d H:i:s');
+                            $log['is_active'] = 1;
+                            $this->log_model->save($log);
                         }
                     }
                 }
@@ -635,6 +651,15 @@ class Jobs extends REST_Controller {
                             $this->response($response, REST_Controller::HTTP_OK);
                         }
                     }
+
+                    $log['user_id'] = $user->user_id;
+                    $log['audit_action'] = 53;
+                    $log['table_name'] = "tb_verification";
+                    $log['record_id'] = $user->user_id;
+                    $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                    $log['date'] = date('Y-m-d H:i:s');
+                    $log['is_active'] = 1;
+                    $this->log_model->save($log);
                 }
                 else{
                     $this->response(NULL, REST_Controller::HTTP_BAD_REQUEST);
@@ -685,6 +710,16 @@ class Jobs extends REST_Controller {
                 else{
                     $this->response(NULL, REST_Controller::HTTP_BAD_REQUEST);
                 }
+
+                $log['user_id'] = $user->user_id;
+                $log['audit_action'] = 28;
+                $log['table_name'] = "tb_jobpost";
+                $log['record_id'] = $user->user_id;
+                $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                $log['date'] = date('Y-m-d H:i:s');
+                $log['is_active'] = 1;
+                $this->log_model->save($log);
+
             }
             else{
                 $this->response([
@@ -842,6 +877,15 @@ class Jobs extends REST_Controller {
                                 "data" => $data['category_name']
                                 );
                         $this->response($response, REST_Controller::HTTP_CREATED);
+
+                        $log['user_id'] = $user->user_id;
+                        $log['audit_action'] = 18;
+                        $log['table_name'] = "tb_category";
+                        $log['record_id'] = $user->user_id;
+                        $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                        $log['date'] = date('Y-m-d H:i:s');
+                        $log['is_active'] = 1;
+                        $this->log_model->save($log);
                     }
                 }
                 else{
@@ -889,6 +933,15 @@ class Jobs extends REST_Controller {
                                 "id" => $id
                                 );
                             $this->response($response, REST_Controller::HTTP_OK);
+
+                            $log['user_id'] = $user->user_id;
+                            $log['audit_action'] = 20;
+                            $log['table_name'] = "tb_category";
+                            $log['record_id'] = $user->user_id;
+                            $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                            $log['date'] = date('Y-m-d H:i:s');
+                            $log['is_active'] = 1;
+                            $this->log_model->save($log);
                         }
                         else{
                             $this->response(NULL, REST_Controller::HTTP_NO_CONTENT);   
@@ -914,6 +967,16 @@ class Jobs extends REST_Controller {
                                 "status" => true
                                 );
                             $this->response($response, REST_Controller::HTTP_CREATED);
+
+                            $log['user_id'] = $user->user_id;
+                            $log['audit_action'] = 19;
+                            $log['table_name'] = "tb_category";
+                            $log['record_id'] = $user->user_id;
+                            $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                            $log['date'] = date('Y-m-d H:i:s');
+                            $log['is_active'] = 1;
+                            $this->log_model->save($log);
+
                         }
                         else{
                             $this->response(NULL, REST_Controller::HTTP_NO_CONTENT);

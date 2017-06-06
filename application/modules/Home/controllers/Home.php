@@ -84,19 +84,21 @@
 			$userdata['user'] = NULL; 
 
 			$featuredJobs = array();
+			
 
 			$query = $this->admin_model->getFeaturedJobs();
 
 			foreach($query AS $job){
 				$featuredJobs [] = array(
 					"company" => $job->company_name,
-					"position" => $job->job_position,
+					"position" => ($job->use_alternative == 1)? $job->alternative_title:$job->job_position,
 					"job" => $job->job_description,
-					"url" => $job->url,
-					"company_url" => $job->company_url,
+					"url" => site_url('jobs/details/'.str_replace("+","-",urlencode(ucfirst($job->job_position))).'-/'.$this->my_encrypt->encode($job->job_id)),
+					"company_url" => site_url('companies/'.str_replace("+","-",urlencode(ucfirst($job->company_name))).'-'.$job->company_id),
 					"description" => $job->job_description,//substr($job->job_description, 0,50).'....',
 					);
 			}
+
 			$data['featuredJobs'] = $featuredJobs;
 
 			if(isset($_COOKIE['_ut']) && isset($_COOKIE['_typ']))

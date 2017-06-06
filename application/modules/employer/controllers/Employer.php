@@ -25,11 +25,11 @@ class Employer extends MY_Controller{
                 redirect('login');
             }
             else{
-                $page_title['title'] = 'Employer | Dashboard';
+                
                 $page = 'v_employer_applicants';
                 $user = $this->auth_model->getUserByToken($_COOKIE['_ut']);
                 $data['employer'] = $employerdata['user'] = $this->auth_model->getUserDetails($user->user_id, $user->account_type);
-                
+                $page_title['title'] =  $data['employer']->company_name.' | Applicants';
                 $data['company_logo'] = ($data['employer']->profile_pic != "")? base_url().str_replace("./", "", $data['employer']->profile_pic) : base_url('assets/images/Default_Company_Logo1.png');
                 
                 $this->loadMainPage($page_title, $employerdata, $page ,$data);   

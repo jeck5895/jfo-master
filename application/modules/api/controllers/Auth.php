@@ -74,6 +74,15 @@ class Auth extends REST_Controller {
                             $data['date_created'] = date('Y-m-d H:i:s');
                             $data['status'] = 1;
 
+                            $log['user_id'] = $user->user_id;
+                            $log['audit_action'] = 3;
+                            $log['table_name'] = "tb_users";
+                            $log['record_id'] = $user->user_id;
+                            $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                            $log['date'] = date('Y-m-d H:i:s');
+                            $log['is_active'] = 1;
+                            $this->log_model->save($log);
+
                             setcookie("_ut", $data['token'], time()+86400,'/',$_SERVER['HTTP_HOST'],false,true);
                             setcookie("_u", $data['user_id'], time()+86400,'/',$_SERVER['HTTP_HOST'],false,false);
                             setcookie("_typ", "ep", time()+86400,'/',$_SERVER['HTTP_HOST'],false,false);
@@ -98,6 +107,15 @@ class Auth extends REST_Controller {
                         $data['exp_date'] = $expDate;
                         $data['date_created'] = date('Y-m-d H:i:s');
                         $data['status'] = 1;
+
+                        $log['user_id'] = $user->user_id;
+                        $log['audit_action'] = 3;
+                        $log['table_name'] = "tb_users";
+                        $log['record_id'] = $user->user_id;
+                        $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                        $log['date'] = date('Y-m-d H:i:s');
+                        $log['is_active'] = 1;
+                        $this->log_model->save($log);
 
                         setcookie("_ut", $data['token'], time()+86400,'/',$_SERVER['HTTP_HOST'],false,true);
                         setcookie("_u", $data['user_id'], time()+86400,'/',$_SERVER['HTTP_HOST'],false,false);
@@ -166,11 +184,20 @@ class Auth extends REST_Controller {
         {
 
             $token = $_COOKIE['_ut'];
+            $user = $this->auth_model->getUserByToken($token);
             $data['status'] = 0;
             $data['date_destroyed'] = date('Y-m-d H:i:s');
             if($this->auth_model->destroyToken($token ,$data) === TRUE)
             {
-                
+                $log['user_id'] = $user->user_id;
+                $log['audit_action'] = 4;
+                $log['table_name'] = "tb_users";
+                $log['record_id'] = $user->user_id;
+                $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                $log['date'] = date('Y-m-d H:i:s');
+                $log['is_active'] = 1;
+                $this->log_model->save($log);
+
                 $this->session->sess_destroy();
 
                 $this->response(array("status" => true), REST_Controller::HTTP_OK);
@@ -345,6 +372,14 @@ class Auth extends REST_Controller {
                 $this->auth_model->resetUserPassword($user->user_id, $data);
                 $this->auth_model->disableResetCode($code);
 
+                $log['user_id'] = $user->user_id;
+                $log['audit_action'] = 4;
+                $log['table_name'] = "tb_users";
+                $log['record_id'] = $user->user_id;
+                $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                $log['date'] = date('Y-m-d H:i:s');
+                $log['is_active'] = 1;
+                $this->log_model->save($log);
 
                 $response = array(
                     "status" => TRUE,

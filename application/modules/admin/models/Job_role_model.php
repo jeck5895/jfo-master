@@ -1,5 +1,4 @@
-<?php
-	defined("BASEPATH") OR exit("No Direct script access allowed");
+<?php defined("BASEPATH") OR exit("No Direct script access allowed");
 	
 	
 	class Job_role_model extends CI_Model{

@@ -1,5 +1,5 @@
 
-<div class="sidebar">
+<div class="sidebar" id="sidebar-mini">
     <div class="info-container">
         <div class="user-image">
             <img src="<?php echo ($user->profile_pic != '')? $user_image :base_url('assets/images/Default_User1.png');?>" class="img-fluid" alt="User Image">

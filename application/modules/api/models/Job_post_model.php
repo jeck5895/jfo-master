@@ -135,7 +135,10 @@ class Job_post_model extends CI_Model{
 				$this->db->where('tb_jobpost.user_id', $emp_id);
 			}
 
-			$this->db->limit($limit, $offset);  
+			if($limit != FALSE){
+				$this->db->limit($limit, $offset);  
+			}
+			
 			$this->db->order_by('tb_jobpost.job_opendate','DESC');
 			$query = $this->db->get();
 
@@ -460,5 +463,17 @@ class Job_post_model extends CI_Model{
 		$query = $this->db->where('id !=',4)->get('tb_status');
 
 		return $query->result_array();
+	}
+
+	public function getTotalJobsByLocation($location_id)
+	{
+		$query = $this->db->where('location_id',$location_id)
+				->where('status', 1)
+				->where('status_1', 1)
+				->where('is_active', 1)
+				->where('job_closedate >=', date('Y-m-d h:i:s'))
+				->get('tb_jobpost');
+
+		return $query->num_rows();
 	}
 }	

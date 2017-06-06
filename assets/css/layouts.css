@@ -822,7 +822,7 @@ ul.dashboard-menu > li > a.active{
 
 .content-wrapper-home{
 	z-index: 800;
-	margin-left: 5rem;
+	/*margin-left: 5rem;*/
 }
 
 .d-filter-container #btn-i-search{
@@ -832,7 +832,6 @@ ul.dashboard-menu > li > a.active{
 }
 
 .d-filter-container{
-	margin-bottom: 1rem;
 	position: relative;
 	display: flex;
 	margin-right: auto;
@@ -1166,6 +1165,14 @@ img.upload-frame-overlay:hover{
 	border:1px solid rgba(0, 0, 0, 0.125)!important;
 }
 
+.bordered-b-1{
+	border-bottom: 1px solid rgba(0, 0, 0, 0.125)!important;
+}
+
+.bordered-t-1{
+	border-top: 1px solid rgba(0, 0, 0, 0.125)!important;
+}
+
 .mw-200{
 	width: 200px!important;
 }
@@ -1193,6 +1200,7 @@ img.upload-frame-overlay:hover{
 	position: fixed;
 	right: 8px;
 	top:5px;
+	mar
 }
 
 .profile-box-body hr{
@@ -1416,6 +1424,11 @@ ul.work-history-box{
 
 .job-container, .ads-container, .profile-box, .form-box, .resume-box, .app-container, .form-box-max, .dashboard-job-container{
 	margin-left: 7px;
+}
+
+.jbl-box{
+	max-height: 300px;
+	overflow-y: auto;
 }
 
 .job-title-container{
@@ -1738,12 +1751,6 @@ ul.maintenance-menu > li > label{
 		margin-left: 0;
 	}*/
 
-	.partners, .about-us{
-		font-size: 11px;
-		padding-right: 1rem!important;
-		padding-left: 1rem!important;
-	}
-
 	.home-header-p{
 		font-size: 1.25rem;
 	}
@@ -1785,6 +1792,11 @@ ul.maintenance-menu > li > label{
 
 
 @media(max-width: 575px){
+	.partners, .about-us{
+		font-size: 11px;
+		padding-right: 1rem!important;
+		padding-left: 1rem!important;
+	}
 
 	.c-search-form-container{
 		padding: 0;

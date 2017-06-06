@@ -1,33 +1,35 @@
-<?php defined("BASEPATH") OR exit("No Direct script access allowed");
+<?php
+	defined("BASEPATH") OR exit("No Direct script access allowed");
 	
 	
-	class Featured_job_model extends CI_Model{
+	class Featured_jobByLocation_model extends CI_Model{
 		
-		var $table = 'tb_featured_post';
-		var $column = array('tb_featured_post.id',
+		var $table = 'tb_featured_jobpost_location';
+		var $column = array('tb_featured_jobpost_location.id',
 							'company_name',
-							'tb_featured_post.job_position', 
-							'tb_featured_post.start_date', 
-							'tb_featured_post.end_date', 
-							'tb_featured_post.date_created', 
-							'tb_featured_post.is_active',
+							'tb_featured_jobpost_location.job_position', 
+							'tb_featured_jobpost_location.start_date', 
+							'tb_featured_jobpost_location.end_date', 
+							'tb_featured_jobpost_location.date_created', 
+							'tb_featured_jobpost_location.is_active',
 							'tb_jobpost.location_id'); 
-		var $order = array('tb_position.id' => 'ASC');
+		var $order = array('tb_featured_jobpost_location.id' => 'ASC');
 
 		public function __construct(){
 	
 			parent:: __construct();
+			$this->load->library('my_encrypt');
 		}
 
 		private function _get_datatables_query()
 	    {
-	    	$sql = '(tb_featured_post.id LIKE "%'.$_POST['search']['value'].'%" OR tb_employer.company_name LIKE "%'. $_POST['search']['value'].'%" OR tb_jobpost.job_position LIKE "%'.$_POST['search']['value'].'%" OR tb_featured_post.start_date LIKE "%'.$_POST['search']['value'].'%" OR tb_featured_post.end_date LIKE "%'.$_POST['search']['value'].'%")';
+	    	$sql = '(tb_jobpost.location_id LIKE "%'.$_POST['search']['value'].'%" OR tb_employer.company_name LIKE "%'. $_POST['search']['value'].'%" OR tb_jobpost.job_position LIKE "%'.$_POST['search']['value'].'%" OR tb_featured_jobpost_location.start_date LIKE "%'.$_POST['search']['value'].'%" OR tb_featured_jobpost_location.end_date LIKE "%'.$_POST['search']['value'].'%")';
 	         
-	        $this->db->select('*, tb_featured_post.id AS id, ,tb_featured_post.is_active AS is_active');
+	        $this->db->select('*, tb_featured_jobpost_location.id AS id ,tb_featured_jobpost_location.is_active AS is_active');
 			$this->db->from($this->table);
-			$this->db->join('tb_employer','tb_employer.id = tb_featured_post.company_id');
-			$this->db->join('tb_jobpost', 'tb_jobpost.id = tb_featured_post.job_position');
-
+			$this->db->join('tb_employer','tb_employer.id = tb_featured_jobpost_location.company_id');
+			$this->db->join('tb_jobpost', 'tb_jobpost.id = tb_featured_jobpost_location.job_position');
+			
 			$i = 0;
 
 			foreach ($this->column as $item) 

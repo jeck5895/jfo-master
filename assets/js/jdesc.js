@@ -156,7 +156,7 @@ $(function () {
     loadJobDetails(job);
 
     //filtering jobs based on category
-    getData(App.apiUrl+'/jobs?category='+job.cat_id+'&ex='+job.id, function(jobs){
+    getData(App.apiUrl+'/jobs?category='+job.cat_id+'&ex='+job.id+"&limit=3", function(jobs){
         loadJobs(jobs, jobsCanvas);
     });
 

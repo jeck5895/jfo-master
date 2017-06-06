@@ -1,9 +1,14 @@
 <?php
     $this->load->model('api/admin_model');
+    $this->load->model('api/job_post_model');
+    $this->load->model('api/location_model');
+    $this->load->library('my_encrypt');
+
     $sliderImages = array();
     $featuredCompanies = array();
     $query = $this->admin_model->getAdvertisementSlider();
     $companies = $this->admin_model->getFeaturedCompanies();
+    $locations = $this->location_model->get();
     
     foreach($query as $image)
     {
@@ -78,7 +83,8 @@
                         <img src="<?=$company['logo']?>" alt="<?=$company['company']?> logo" class="img-fluid">
                     </div>
                     <div class="featured-companies-description">
-                        <a href="http://localhost/jobfair-online.com/companies/<?=$company['company']."-".$company['cid']?>" target="<?=$company['company']."-".$company['cid']?>">
+                        <?php $comp_url  = site_url('companies/'.str_replace("+","-",urlencode(ucfirst($company['company']))).'-'.$company['cid']);?>
+                        <a href="<?=$comp_url?>" target="<?=$comp_url?>">
                             <small>
                                 <strong><?=$company['company']?></strong>
                             </small>
@@ -89,6 +95,31 @@
                 </div>
 
             <?php endforeach;?>
+
+        </div>
+        <div class="box-footer">
+            <center><a href="#" class="btn btn-sm btn-primary form-control">See More</a></center>
+        </div>
+    </div>
+
+
+
+    <div class="box box-widget mt-3">
+        <div class="box-header with-border">
+            <h6 class="registration-title">JOBS BY LOCATION  </h6>
+        </div>
+        <div class="box-body jbl-box">
+
+            <ul class="list-unstyled">
+                <?php foreach($locations AS $location):?>
+                <?php $locId = $location['id']; ?>
+                <?php $totalJobs = $this->job_post_model->getTotalJobsByLocation($locId)?>
+
+                <li class="fs-13"><a href="<?=site_url('jobs?location='.$location['region_name'].'&reg='.$location['id'].'&vt=jobs-by-location')?>" target="<?=site_url('jobs?location='.$location['region_name'].'&reg='.$location['id'].'&vt=jobs-by-location')?>"><?=$location['region_name']?></a> - <span class="">(<?=$totalJobs?>) jobs</span></li>
+
+               
+                <?php endforeach;?>
+            </ul>
 
         </div>
         <div class="box-footer">

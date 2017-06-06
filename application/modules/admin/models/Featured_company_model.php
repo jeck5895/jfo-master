@@ -1,5 +1,4 @@
-<?php
-	defined("BASEPATH") OR exit("No Direct script access allowed");
+<?php defined("BASEPATH") OR exit("No Direct script access allowed");
 	
 	
 	class Featured_company_model extends CI_Model{

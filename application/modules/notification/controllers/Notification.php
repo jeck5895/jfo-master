@@ -94,7 +94,7 @@ class Notification extends MY_Controller
 
                     
                     if($action == "tag_as_reviewed"){
-                    	$message = '<a href="'.base_url().'jobs/details/'.$position_uri.'/'.$job_id.'" target="'.$job_id.'"><strong>'.$query->recruiter.'</strong> has viewed your application and is reviewing your application for the position <strong>'.$query->job_position.'</strong></a>';
+                    	$message = '<a href="'.base_url().'jobs/details/'.$position_uri.'/'.$job_id.'" target="'.$job_id.'"><strong>'.$query->recruiter.'</strong> has viewed and is reviewing your application for the position <strong>'.$query->job_position.'</strong></a>';
                     }
                     elseif($action == "tag_for_interview"){
                     	$message = '<a href="'.base_url().'jobs/details/'.$position_uri.'/'.$job_id.'" target="'.$job_id.'"><strong>'.$query->recruiter.'</strong> has been tag you as FOR INTERVIEW.</a>';

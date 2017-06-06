@@ -42,6 +42,13 @@ class Admin_model extends CI_Model{
 		return $this->db->insert_id();
 	}
 
+	public function saveFeaturedJobByLocation($data = array())
+	{
+		$this->db->insert('tb_featured_jobpost_location', $data);
+
+		return $this->db->insert_id();
+	}
+
 	public function getAdvertisementSlider($id = FALSE)
 	{
 		if($id == FALSE)
@@ -59,11 +66,49 @@ class Admin_model extends CI_Model{
 	{
 		if($id == FALSE)
 		{
-			$query = $this->db->where('is_active',1)->limit(8)->get('tb_featured_post');
+			$query = $this->db->select("*, tb_featured_post.id AS id, tb_jobpost.job_position AS job_position, tb_featured_post.job_position AS job_id")
+			->where('tb_featured_post.is_active',1)
+			->limit(8)
+			->join('tb_employer','tb_employer.id = tb_featured_post.company_id')
+			->join('tb_jobpost', 'tb_jobpost.id = tb_featured_post.job_position')
+			->get('tb_featured_post');
 			return $query->result();
 		}
 		else{
-			$query = $this->db->where('id', $id)->get('tb_featured_post');
+			$query = $this->db->select("*, tb_featured_post.id AS id, tb_featured_post.job_description AS job_description, tb_featured_post.job_position AS job_position")
+			->where('tb_featured_post.id', $id)
+			->join('tb_employer','tb_employer.id = tb_featured_post.company_id')
+			->join('tb_jobpost', 'tb_jobpost.id = tb_featured_post.job_position')
+			->get('tb_featured_post');
+			return $query->row();
+		}
+	}
+
+	public function getFeaturedJobsByLocation($id = FALSE, $reg = FALSE)
+	{
+		if($id == FALSE)
+		{
+			$this->db->select("*, tb_featured_jobpost_location.id AS id, tb_featured_jobpost_location.job_position AS job_position, tb_featured_jobpost_location.job_position AS job_id");
+			$this->db->from('tb_featured_jobpost_location');
+			
+			if($reg != FALSE){
+				$this->db->where('tb_jobpost.location_id', $reg);
+			}
+
+			$this->db->where('.tb_featured_jobpost_location.is_active',1);
+			$this->db->join('tb_employer','tb_employer.id = tb_featured_jobpost_location.company_id');
+			$this->db->join('tb_jobpost', 'tb_jobpost.id = tb_featured_jobpost_location.job_position');
+			$this->db->limit(3);
+			$query = $this->db->get();
+			return $query->result();
+		}
+		else{
+			$query = $this->db->select("*, tb_featured_jobpost_location.id AS id, tb_featured_jobpost_location.job_description AS job_description, tb_featured_jobpost_location.job_position AS job_position")
+			->where('tb_featured_jobpost_location.id', $id)
+			->join('tb_employer','tb_employer.id = tb_featured_jobpost_location.company_id')
+			->join('tb_jobpost', 'tb_jobpost.id = tb_featured_jobpost_location.job_position')
+			->get('tb_featured_jobpost_location');
+
 			return $query->row();
 		}
 	}
@@ -123,6 +168,13 @@ class Admin_model extends CI_Model{
 		return TRUE;
 	}
 
+	public function updateFeaturedJobByLocation($id, $data = array())
+	{
+		$this->db->where('id', $id)->update('tb_featured_jobpost_location', $data);
+
+		return TRUE;
+	}
+
 	public function updateFeaturedCompany($id, $data = array())
 	{
 		$this->db->where('id', $id)->update('tb_featured_companies', $data);
@@ -140,6 +192,13 @@ class Admin_model extends CI_Model{
 	public function deleteFeaturedJob($id)
 	{
 		$this->db->delete('tb_featured_post', array('id' => $id));
+
+		return TRUE;
+	}
+
+	public function deleteFeaturedJobByLocation($id)
+	{
+		$this->db->delete('tb_featured_jobpost_location', array('id' => $id));
 
 		return TRUE;
 	}

@@ -72,6 +72,15 @@ class Admin extends REST_Controller {
 
         if($this->admin_model->create($admin_info, $admin_acct))
         {
+            $log['user_id'] = $uid;
+            $log['audit_action'] = 15;
+            $log['table_name'] = "tb_users";
+            $log['record_id'] = $uid;
+            $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+            $log['date'] = date('Y-m-d H:i:s');
+            $log['is_active'] = 1;
+            $this->log_model->save($log);
+
             $response = array(
                 "status"=>TRUE,
                 "message" => "New Account has been created",
@@ -110,9 +119,17 @@ class Admin extends REST_Controller {
                         $data['province'] = $this->patch('province');
                         $data['city'] = $this->patch('city');
 
-
                         if($this->admin_model->update($id, $data))
                         {
+                            $log['user_id'] = $user->user_id;
+                            $log['audit_action'] = 56;
+                            $log['table_name'] = "tb_sri_account";
+                            $log['record_id'] = $user->user_id;
+                            $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                            $log['date'] = date('Y-m-d H:i:s');
+                            $log['is_active'] = 1;
+                            $this->log_model->save($log);
+
                             $response = array(
                                 "status"=>TRUE,
                                 "message" => "Profile changes saved",
@@ -136,6 +153,15 @@ class Admin extends REST_Controller {
 
                                 if($this->admin_model->updateAccount($user->user_id, $data) === TRUE)
                                 {
+                                    $log['user_id'] = $user->user_id;
+                                    $log['audit_action'] = 56;
+                                    $log['table_name'] = "tb_users";
+                                    $log['record_id'] = $user->user_id;
+                                    $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                                    $log['date'] = date('Y-m-d H:i:s');
+                                    $log['is_active'] = 1;
+                                    $this->log_model->save($log);
+
                                     $response = array(
                                         "status" => true,
                                         "message" => "New email saved"
@@ -177,6 +203,15 @@ class Admin extends REST_Controller {
 
                                 if($this->admin_model->updateAccount($user->user_id, $data) === TRUE)
                                 {
+                                    $log['user_id'] = $user->user_id;
+                                    $log['audit_action'] = 56;
+                                    $log['table_name'] = "tb_users";
+                                    $log['record_id'] = $user->user_id;
+                                    $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                                    $log['date'] = date('Y-m-d H:i:s');
+                                    $log['is_active'] = 1;
+                                    $this->log_model->save($log);
+
                                     $response = array(
                                         "status" => true,
                                         "message" => "New mobile number saved",
@@ -213,6 +248,15 @@ class Admin extends REST_Controller {
 
                             if($this->admin_model->updateAccount($user->user_id, $data) === TRUE)
                             {
+                                $log['user_id'] = $user->user_id;
+                                $log['audit_action'] = 56;
+                                $log['table_name'] = "tb_users";
+                                $log['record_id'] = $user->user_id;
+                                $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                                $log['date'] = date('Y-m-d H:i:s');
+                                $log['is_active'] = 1;
+                                $this->log_model->save($log);
+
                                 $response = array(
                                     "status" => true,
                                     "message" => "New password saved",
@@ -297,7 +341,15 @@ class Admin extends REST_Controller {
                 $ads['date_created'] = date('Y-m-d h:i:s');
                 $ads['is_active'] = 0;
                 
-                
+                $log['user_id'] = $user->user_id;
+                $log['audit_action'] = 57;
+                $log['table_name'] = "tb_advertisement";
+                $log['record_id'] = $user->user_id;
+                $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                $log['date'] = date('Y-m-d H:i:s');
+                $log['is_active'] = 1;
+                $this->log_model->save($log);
+
                 if($adsId = $this->admin_model->saveAdvertisementSlider($ads))
                 {
                     $rand_id = time();
@@ -363,6 +415,15 @@ class Admin extends REST_Controller {
                 $ads['start_date'] = date('Y-m-d H:i:s');
                 $ads['end_date'] = date("Y-m-d H:i:s", strtotime('+'.$query->duration." day"));
                 $ads['is_active'] = 1;
+
+                $log['user_id'] = $user->user_id;
+                $log['audit_action'] = 60;
+                $log['table_name'] = "tb_advertisement";
+                $log['record_id'] = $user->user_id;
+                $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                $log['date'] = date('Y-m-d H:i:s');
+                $log['is_active'] = 1;
+                $this->log_model->save($log);
                 
                 
                 if($fID = $this->admin_model->updateAdvertisementSlider($id, $ads))
@@ -403,6 +464,15 @@ class Admin extends REST_Controller {
                 $ads['start_date'] = NULL;
                 $ads['end_date'] = NULL;
                 $ads['is_active'] = 0;
+
+                $log['user_id'] = $user->user_id;
+                $log['audit_action'] = 61;
+                $log['table_name'] = "tb_advertisement";
+                $log['record_id'] = $user->user_id;
+                $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                $log['date'] = date('Y-m-d H:i:s');
+                $log['is_active'] = 1;
+                $this->log_model->save($log);
                 
                 
                 if($fID = $this->admin_model->updateAdvertisementSlider($id, $ads))
@@ -446,6 +516,15 @@ class Admin extends REST_Controller {
         
                 if($this->admin_model->updateAdvertisementSlider($ads_id, $ads))
                 {
+                    $log['user_id'] = $user->user_id;
+                    $log['audit_action'] = 58;
+                    $log['table_name'] = "tb_advertisement";
+                    $log['record_id'] = $user->user_id;
+                    $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                    $log['date'] = date('Y-m-d H:i:s');
+                    $log['is_active'] = 1;
+                    $this->log_model->save($log);
+
                     $response = array(
                         "status"=>TRUE,
                         "message" => "Advertisement changes saved",
@@ -483,6 +562,15 @@ class Admin extends REST_Controller {
                 unlink($query->upload_path."/".$query->filename);
                 rmdir($query->upload_path);
                 $this->admin_model->deleteErrorUpload($ads_id);
+
+                $log['user_id'] = $user->user_id;
+                $log['audit_action'] = 59;
+                $log['table_name'] = "tb_advertisement";
+                $log['record_id'] = $user->user_id;
+                $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                $log['date'] = date('Y-m-d H:i:s');
+                $log['is_active'] = 1;
+                $this->log_model->save($log);
                 
                 $response = array(
                     "status"=>TRUE,
@@ -591,14 +679,15 @@ class Admin extends REST_Controller {
                         foreach($query as $job)
                         {
                             $jobs[] = array(
-                                "job_url" => $job->url,
-                                "company_url" => $job->company_url,
-                                "position" => $job->job_position,
-                                "company" => $job->company_name,
-                                "duration" => $job->duration,
-                                "start_date" => $job->start_date,
-                                "end_date" => $job->end_date,
-                                "job_description" => $job->job_description,
+                                "position" => $this->my_encrypt->encode($job->job_position),
+                             "company" => $job->company_name,
+                             "company_id" => $job->company_id,
+                             "duration" => $job->duration,
+                             "start_date" =>  date('Y-m-d', strtotime($job->start_date)),
+                             "end_date" =>  date('Y-m-d', strtotime($job->end_date)),
+                             "job_description" => $job->job_description,
+                             "use_alternative" => $job->use_alternative,
+                             "alternative_title" => $job->alternative_title
                                 );
                         }
 
@@ -613,14 +702,16 @@ class Admin extends REST_Controller {
                     if(!empty($query))
                     {
                         $job = array(
-                            "job_url" => $query->url,
-                            "company_url" => $query->company_url,
-                            "position" => $query->job_position,
+                        
+                            "position" => $this->my_encrypt->encode($query->job_position),
                             "company" => $query->company_name,
+                            "company_id" => $query->company_id,
                             "duration" => $query->duration,
                             "start_date" =>  date('Y-m-d', strtotime($query->start_date)),
                             "end_date" =>  date('Y-m-d', strtotime($query->end_date)),
                             "job_description" => $query->job_description,
+                            "use_alternative" => $query->use_alternative,
+                            "alternative_title" => $query->alternative_title
                             );
                         $this->response($job, REST_Controller::HTTP_OK);
                     }
@@ -651,24 +742,34 @@ class Admin extends REST_Controller {
 
             if(!empty($user) && $user->account_type == 1)
             {
-                $ads['company_name'] = $this->post('company_name');
-                $ads['job_position'] = $this->post('job_position');
-                $ads['url'] = $this->post('job_link');
+                $ads['company_id'] = $this->post('company');
+                $ads['job_position'] = $this->my_encrypt->decode($this->post('job_position'));
                 $ads['duration'] = $this->post('duration');
                 $ads['job_description'] = $this->post('job_content');
                 $ads['date_created'] = date('Y-m-d h:i:s');
                 $ads['is_active'] = 0;
+                $ads['use_alternative']  = $this->post('alt_status');
+                $ads['alternative_title'] = $this->post('alt_position');
                 
                 
                 if($fID = $this->admin_model->saveFeaturedJob($ads))
                 {
 
+                    $log['user_id'] = $user->user_id;
+                    $log['audit_action'] = 57;
+                    $log['table_name'] = "tb_featured_post";
+                    $log['record_id'] = $user->user_id;
+                    $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                    $log['date'] = date('Y-m-d H:i:s');
+                    $log['is_active'] = 1;
+                    $this->log_model->save($log);
+
                     $response = array(    
                         "status"=>TRUE,
-                        "message" => "Featured job has been saved",                         
+                        "message" => "Featured job has been saved",     
+                        "data" => $ads                    
                     );
                     $this->response($response, REST_Controller::HTTP_CREATED);
-
                 }
             }
             else{
@@ -694,15 +795,25 @@ class Admin extends REST_Controller {
             if(!empty($user) && $user->account_type == 1)
             {
                 $fid = $this->my_encrypt->decode($this->patch('id'));
-                $ads['company_name'] = $this->patch('company_name');
-                $ads['job_position'] = $this->patch('job_position');
-                $ads['url'] = $this->patch('job_link');
-                $ads['company_url'] = $this->patch('company_url');
+                $ads['company_id'] = $this->patch('company');
+                $ads['job_position'] = $this->my_encrypt->decode($this->patch('job_position'));
                 $ads['duration'] = $this->patch('duration');
                 $ads['job_description'] = $this->patch('job_content');
+                $ads['date_modified'] = date('Y-m-d h:i:s');
+                $ads['use_alternative']  = $this->patch('alt_status');
+                $ads['alternative_title'] = ($this->patch('alt_status') == 1)? $this->patch('alt_position') :"";
 
                 if($this->admin_model->updateFeaturedJob($fid, $ads))
                 {
+                    $log['user_id'] = $user->user_id;
+                    $log['audit_action'] = 58;
+                    $log['table_name'] = "tb_featured_post";
+                    $log['record_id'] = $user->user_id;
+                    $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                    $log['date'] = date('Y-m-d H:i:s');
+                    $log['is_active'] = 1;
+                    $this->log_model->save($log);
+
                     $response = array(
                         "status"=>TRUE,
                         "message" => "Featured job changes saved",
@@ -741,6 +852,14 @@ class Admin extends REST_Controller {
                 
                 if($fID = $this->admin_model->updateFeaturedJob($id, $ads))
                 {
+                    $log['user_id'] = $user->user_id;
+                    $log['audit_action'] = 60;
+                    $log['table_name'] = "tb_featured_post";
+                    $log['record_id'] = $user->user_id;
+                    $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                    $log['date'] = date('Y-m-d H:i:s');
+                    $log['is_active'] = 1;
+                    $this->log_model->save($log);
 
                     $response = array(    
                         "status"=>TRUE,
@@ -783,6 +902,14 @@ class Admin extends REST_Controller {
                 
                 if($fID = $this->admin_model->updateFeaturedJob($id, $ads))
                 {
+                    $log['user_id'] = $user->user_id;
+                    $log['audit_action'] = 61;
+                    $log['table_name'] = "tb_featured_post";
+                    $log['record_id'] = $user->user_id;
+                    $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                    $log['date'] = date('Y-m-d H:i:s');
+                    $log['is_active'] = 1;
+                    $this->log_model->save($log);
 
                     $response = array(    
                         "status"=>TRUE,
@@ -819,6 +946,332 @@ class Admin extends REST_Controller {
                 $id = $this->my_encrypt->decode($this->delete('fid'));
 
                 $this->admin_model->deleteFeaturedJob($id);
+
+                $log['user_id'] = $user->user_id;
+                $log['audit_action'] = 59;
+                $log['table_name'] = "tb_featured_post";
+                $log['record_id'] = $user->user_id;
+                $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                $log['date'] = date('Y-m-d H:i:s');
+                $log['is_active'] = 1;
+                $this->log_model->save($log);
+
+                $response = array(
+                    "status"=>TRUE,
+                    "message" => "Featured job deleted",
+                    );
+                $this->response($response, REST_Controller::HTTP_NO_CONTENT);
+            }
+            else{
+                $this->response(['status' => FALSE, 'message' => 'REQUEST UNAUTHORIZED' ],REST_Controller::HTTP_UNAUTHORIZED);
+            }
+        }
+    }
+
+    public function featured_jobs_by_location_get()
+    {
+        if(!isset($_COOKIE['_ut']))
+        {
+            $this->response([
+                'status' => FALSE,
+                'message' => 'REQUEST FORBIDDEN' 
+                ],REST_Controller::HTTP_FORBIDDEN);
+        }
+        else
+        {
+            $token = $_COOKIE['_ut'];
+            $user = $this->auth_model->getUserByToken($token);
+
+            if(!empty($user) && $user->account_type == 1)
+            {
+                $id = $this->my_encrypt->decode($this->get('id'));
+
+                if($id == NULL)
+                {
+                    $jobs = array();
+                    $query = $this->admin_model->getFeaturedJobsByLocation();
+
+                    if(!empty($query))
+                    {
+                        foreach($query as $job)
+                        {
+                            $jobs[] = array(
+                               
+                                "position" => $this->my_encrypt->encode($job->job_position),
+                                "company" => $job->company_name,
+                                "company_id" => $job->company_id,
+                                "duration" => $job->duration,
+                                "start_date" => $job->start_date,
+                                "end_date" => $job->end_date,
+                                "job_description" => $job->job_description,
+                                "use_alternative" => $job->use_alternative,
+                                "alternative_title" =>  $job->alternative_title
+                                );
+                        }
+
+                        $this->response($jobs, REST_Controller::HTTP_OK);
+                    }else{
+                        $this->response(['status'=>FALSE,'message'=>'Jobs not found'], REST_Controller::HTTP_NOT_FOUND);
+                    }
+                }
+                else{
+                    $query = $this->admin_model->getFeaturedJobsByLocation($id);
+                    
+                    if(!empty($query))
+                    {
+                        $job = array(
+                            "position" => $this->my_encrypt->encode($query->job_position),
+                            "company" => $query->company_name,
+                            "company_id" => $query->company_id,
+                            "duration" => $query->duration,
+                            "start_date" =>  date('Y-m-d', strtotime($query->start_date)),
+                            "end_date" =>  date('Y-m-d', strtotime($query->end_date)),
+                            "job_description" => $query->job_description,
+                            "use_alternative" => $query->use_alternative,
+                            "alternative_title" => $query->alternative_title
+                            );
+                        $this->response($job, REST_Controller::HTTP_OK);
+                    }
+                    else{
+                        $this->response(['status'=>FALSE,'message'=>"Job not found"], REST_Controller::HTTP_NOT_FOUND);
+                    }
+                }
+            }
+            else{
+                $this->response(['status' => FALSE, 'message' => 'REQUEST UNAUTHORIZED' ],REST_Controller::HTTP_UNAUTHORIZED);
+            }
+        }
+    }
+
+    public function featured_jobs_by_location_patch()
+    {
+        if(!isset($_COOKIE['_ut']))
+        {
+            $this->response([
+                'status' => FALSE,
+                'message' => 'REQUEST FORBIDDEN' 
+                ],REST_Controller::HTTP_FORBIDDEN);
+        }
+        else
+        {
+            $token = $_COOKIE['_ut'];
+            $user = $this->auth_model->getUserByToken($token);
+
+            if(!empty($user) && $user->account_type == 1)
+            {
+                $fid = $this->my_encrypt->decode($this->patch('id'));
+            
+                $ads['company_id'] = $this->patch('company');
+                $ads['job_position'] = $this->my_encrypt->decode($this->patch('job_position'));
+                $ads['duration'] = $this->patch('duration');
+                $ads['job_description'] = $this->patch('job_content');
+                $ads['date_modified'] = date('Y-m-d h:i:s');
+                $ads['use_alternative']  = $this->patch('alt_status');
+                $ads['alternative_title'] = ($this->patch('alt_status') == 1)? $this->patch('alt_position') :"";
+
+                if($this->admin_model->updateFeaturedJobByLocation($fid, $ads))
+                {
+                    $log['user_id'] = $user->user_id;
+                    $log['audit_action'] = 58;
+                    $log['table_name'] = "tb_featured_jobpost_location";
+                    $log['record_id'] = $user->user_id;
+                    $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                    $log['date'] = date('Y-m-d H:i:s');
+                    $log['is_active'] = 1;
+                    $this->log_model->save($log);
+
+                    $response = array(
+                        "status"=>TRUE,
+                        "message" => "Featured job changes saved",
+                        );
+                    $this->response($response, REST_Controller::HTTP_CREATED);
+                }
+            }
+            else{
+                $this->response(['status' => FALSE, 'message' => 'REQUEST UNAUTHORIZED' ],REST_Controller::HTTP_UNAUTHORIZED);
+            }
+        }
+    }
+
+    public function featured_jobs_by_location_post()
+    {
+        if(!isset($_COOKIE['_ut']))
+        {
+            $this->response([
+                'status' => FALSE,
+                'message' => 'REQUEST FORBIDDEN' 
+                ],REST_Controller::HTTP_FORBIDDEN);
+        }
+        else
+        {
+            $token = $_COOKIE['_ut'];
+            $user = $this->auth_model->getUserByToken($token);
+
+            if(!empty($user) && $user->account_type == 1)
+            {
+                
+                $ads['company_id'] = $this->post('company');
+                $ads['job_position'] = $this->my_encrypt->decode($this->post('job_position'));
+                $ads['duration'] = $this->post('duration');
+                $ads['job_description'] = $this->post('job_content');
+                $ads['date_created'] = date('Y-m-d h:i:s');
+                $ads['is_active'] = 0;
+                $ads['use_alternative']  = $this->post('alt_status');
+                $ads['alternative_title'] = $this->post('alt_position');
+                
+                
+                if($fID = $this->admin_model->saveFeaturedJobByLocation($ads))
+                {
+                    $log['user_id'] = $user->user_id;
+                    $log['audit_action'] = 57;
+                    $log['table_name'] = "tb_featured_jobpost_location";
+                    $log['record_id'] = $user->user_id;
+                    $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                    $log['date'] = date('Y-m-d H:i:s');
+                    $log['is_active'] = 1;
+                    $this->log_model->save($log);
+
+                    $response = array(    
+                        "status"=>TRUE,
+                        "message" => "Job has been saved",                       
+                    );
+                    $this->response($response, REST_Controller::HTTP_CREATED);
+
+                }
+            }
+            else{
+                $this->response(['status' => FALSE, 'message' => 'REQUEST UNAUTHORIZED' ],REST_Controller::HTTP_UNAUTHORIZED);
+            }
+        }
+    }
+
+
+    public function featured_jobs_by_location_activate_post()
+    {
+        if(!isset($_COOKIE['_ut']))
+        {
+            $this->response([
+                'status' => FALSE,
+                'message' => 'REQUEST FORBIDDEN' 
+                ],REST_Controller::HTTP_FORBIDDEN);
+        }
+        else
+        {
+            $token = $_COOKIE['_ut'];
+            $user = $this->auth_model->getUserByToken($token);
+
+            if(!empty($user) && $user->account_type == 1)
+            {
+                $id = $this->my_encrypt->decode($this->post('id'));
+                $query = $this->admin_model->getFeaturedJobsByLocation($id);
+                $ads['start_date'] = date('Y-m-d H:i:s');
+                $ads['end_date'] = date("Y-m-d H:i:s", strtotime('+'.$query->duration." day"));
+                $ads['is_active'] = 1;
+                
+                
+                if($fID = $this->admin_model->updateFeaturedJobByLocation($id, $ads))
+                {
+                    $log['user_id'] = $user->user_id;
+                    $log['audit_action'] = 60;
+                    $log['table_name'] = "tb_featured_jobpost_location";
+                    $log['record_id'] = $user->user_id;
+                    $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                    $log['date'] = date('Y-m-d H:i:s');
+                    $log['is_active'] = 1;
+                    $this->log_model->save($log);
+
+                    $response = array(    
+                        "status"=>TRUE,
+                        "message" => "Featured job has been activated",                       
+                    );
+                    $this->response($response, REST_Controller::HTTP_CREATED);
+
+                }
+            }
+            else{
+                $this->response(['status' => FALSE, 'message' => 'REQUEST UNAUTHORIZED' ],REST_Controller::HTTP_UNAUTHORIZED);
+            }
+        }
+    }
+
+    public function featured_jobs_by_location_deactivate_post()
+    {
+        if(!isset($_COOKIE['_ut']))
+        {
+            $this->response([
+                'status' => FALSE,
+                'message' => 'REQUEST FORBIDDEN' 
+                ],REST_Controller::HTTP_FORBIDDEN);
+        }
+        else
+        {
+            $token = $_COOKIE['_ut'];
+            $user = $this->auth_model->getUserByToken($token);
+
+            if(!empty($user) && $user->account_type == 1)
+            {
+                $id = $this->my_encrypt->decode($this->post('id'));
+                $query = $this->admin_model->getFeaturedJobsByLocation($id);
+                $ads['start_date'] = NULL;
+                $ads['end_date'] = NULL;
+                $ads['is_active'] = 0;
+                
+                
+                if($fID = $this->admin_model->updateFeaturedJobByLocation($id, $ads))
+                {
+                    $log['user_id'] = $user->user_id;
+                    $log['audit_action'] = 61;
+                    $log['table_name'] = "tb_featured_jobpost_location";
+                    $log['record_id'] = $user->user_id;
+                    $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                    $log['date'] = date('Y-m-d H:i:s');
+                    $log['is_active'] = 1;
+                    $this->log_model->save($log);
+
+                    $response = array(    
+                        "status"=>TRUE,
+                        "message" => "Featured job has been deactivated", 
+                                               
+                    );
+                    $this->response($response, REST_Controller::HTTP_CREATED);
+
+                }
+            }
+            else{
+                $this->response(['status' => FALSE, 'message' => 'REQUEST UNAUTHORIZED' ],REST_Controller::HTTP_UNAUTHORIZED);
+            }
+        }
+    }
+
+    public function featured_jobs_by_location_delete()
+    {
+        if(!isset($_COOKIE['_ut']))
+        {
+            $this->response([
+                'status' => FALSE,
+                'message' => 'REQUEST FORBIDDEN' 
+                ],REST_Controller::HTTP_FORBIDDEN);
+        }
+        else
+        {
+            $token = $_COOKIE['_ut'];
+            $user = $this->auth_model->getUserByToken($token);
+
+            if(!empty($user) && $user->account_type == 1)
+            {
+                $id = $this->my_encrypt->decode($this->delete('fid'));
+
+                $this->admin_model->deleteFeaturedJobByLocation($id);
+
+                $log['user_id'] = $user->user_id;
+                $log['audit_action'] = 59;
+                $log['table_name'] = "tb_featured_jobpost_location";
+                $log['record_id'] = $user->user_id;
+                $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                $log['date'] = date('Y-m-d H:i:s');
+                $log['is_active'] = 1;
+                $this->log_model->save($log);
+
                 $response = array(
                     "status"=>TRUE,
                     "message" => "Featured job deleted",
@@ -861,6 +1314,15 @@ class Admin extends REST_Controller {
                         $ads['is_active'] = 0;
 
                         $this->admin_model->saveFeaturedCompany($ads);
+
+                        $log['user_id'] = $user->user_id;
+                        $log['audit_action'] = 57;
+                        $log['table_name'] = "tb_featured_companies";
+                        $log['record_id'] = $user->user_id;
+                        $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                        $log['date'] = date('Y-m-d H:i:s');
+                        $log['is_active'] = 1;
+                        $this->log_model->save($log);
 
                         $response = array(    
                             "status"=>TRUE,
@@ -974,6 +1436,15 @@ class Admin extends REST_Controller {
 
                 if($this->admin_model->updateFeaturedCompany($id, $ads))
                 {
+                    $log['user_id'] = $user->user_id;
+                    $log['audit_action'] = 58;
+                    $log['table_name'] = "tb_featured_companies";
+                    $log['record_id'] = $user->user_id;
+                    $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                    $log['date'] = date('Y-m-d H:i:s');
+                    $log['is_active'] = 1;
+                    $this->log_model->save($log);
+
                     $response = array(
                         "status"=>TRUE,
                         "message" => "Changes saved",
@@ -1007,6 +1478,16 @@ class Admin extends REST_Controller {
                 $id = $this->my_encrypt->decode($this->delete('id'));
 
                 $this->admin_model->deleteFeaturedCompany($id);
+
+                $log['user_id'] = $user->user_id;
+                $log['audit_action'] = 59;
+                $log['table_name'] = "tb_featured_companies";
+                $log['record_id'] = $user->user_id;
+                $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                $log['date'] = date('Y-m-d H:i:s');
+                $log['is_active'] = 1;
+                $this->log_model->save($log);
+
                 $response = array(
                     "status"=>TRUE,
                     "message" => "Featured company deleted",
@@ -1044,6 +1525,14 @@ class Admin extends REST_Controller {
                 
                 if($fID = $this->admin_model->updateFeaturedCompany($id, $ads))
                 {
+                    $log['user_id'] = $user->user_id;
+                    $log['audit_action'] = 60;
+                    $log['table_name'] = "tb_featured_companies";
+                    $log['record_id'] = $user->user_id;
+                    $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                    $log['date'] = date('Y-m-d H:i:s');
+                    $log['is_active'] = 1;
+                    $this->log_model->save($log);
 
                     $response = array(    
                         "status"=>TRUE,
@@ -1084,6 +1573,14 @@ class Admin extends REST_Controller {
                 
                 if($fID = $this->admin_model->updateFeaturedCompany($id, $ads))
                 {
+                    $log['user_id'] = $user->user_id;
+                    $log['audit_action'] = 61;
+                    $log['table_name'] = "tb_featured_companies";
+                    $log['record_id'] = $user->user_id;
+                    $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                    $log['date'] = date('Y-m-d H:i:s');
+                    $log['is_active'] = 1;
+                    $this->log_model->save($log);
 
                     $response = array(    
                         "status"=>TRUE,
@@ -1131,6 +1628,16 @@ class Admin extends REST_Controller {
                     $data['profile_pic'] = $upload_response['profile_path'];
 
                     if($this->app_model->update($user->user_id, $data)){
+
+                        $log['user_id'] = $user->user_id;
+                        $log['audit_action'] = 56;
+                        $log['table_name'] = "tb_sri_account";
+                        $log['record_id'] = $user->user_id;
+                        $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                        $log['date'] = date('Y-m-d H:i:s');
+                        $log['is_active'] = 1;
+                        $this->log_model->save($log);
+
                         $response = array(
                             "status"=>TRUE,
                             );

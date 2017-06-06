@@ -1,6 +1,4 @@
-<?php
-
-defined('BASEPATH') OR exit('No direct script access allowed');
+<?php defined('BASEPATH') OR exit('No direct script access allowed');
 
 // This can be removed if you use __autoload() in config.php OR use Modular Extensions
 /** @noinspection PhpIncludeInspection */
@@ -226,7 +224,14 @@ class Companies extends REST_Controller {
                     $employer_info['profile_pic'] = $upload_response['profile_path'];
                     if($this->company_model->create($employer_info, $employer_acct))
                     {   
-
+                        $log['user_id'] = $uid;
+                        $log['audit_action'] = 2;
+                        $log['table_name'] = "tb_users";
+                        $log['record_id'] = $uid;
+                        $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                        $log['date'] = date('Y-m-d H:i:s');
+                        $log['is_active'] = 1;
+                        $this->log_model->save($log);
                         
                         $comp_activation_code = $this->reg_model->newUserActivationCode($activationCode, $uid, $employer_acct['date_created']);
                         $email_response = $this->functions->sendEmail($email, $subject, $content);
@@ -293,6 +298,15 @@ class Companies extends REST_Controller {
 
                         if($this->company_model->update($id, $data))
                         {
+                            $log['user_id'] = $user->user_id;
+                            $log['audit_action'] = 14;
+                            $log['table_name'] = "tb_employer";
+                            $log['record_id'] = $user->user_id;
+                            $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                            $log['date'] = date('Y-m-d H:i:s');
+                            $log['is_active'] = 1;
+                            $this->log_model->save($log);
+
                             $response = array(
                                 "status"=>TRUE,
                                 "message" => "Company profile changes saved",
@@ -312,6 +326,15 @@ class Companies extends REST_Controller {
 
                         if($this->company_model->update($id, $data))
                         {
+                            $log['user_id'] = $user->user_id;
+                            $log['audit_action'] = 14;
+                            $log['table_name'] = "tb_employer";
+                            $log['record_id'] = $user->user_id;
+                            $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                            $log['date'] = date('Y-m-d H:i:s');
+                            $log['is_active'] = 1;
+                            $this->log_model->save($log);
+
                             $response = array(
                                 "status"=>TRUE,
                                 "message" => "Profile changes saved",
@@ -334,6 +357,15 @@ class Companies extends REST_Controller {
 
                                 if($this->company_model->updateAccount($user->user_id, $data) === TRUE)
                                 {
+                                    $log['user_id'] = $user->user_id;
+                                    $log['audit_action'] = 16;
+                                    $log['table_name'] = "tb_users";
+                                    $log['record_id'] = $user->user_id;
+                                    $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                                    $log['date'] = date('Y-m-d H:i:s');
+                                    $log['is_active'] = 1;
+                                    $this->log_model->save($log);
+
                                     $response = array(
                                         "status" => true,
                                         "message" => "New email saved"
@@ -375,6 +407,15 @@ class Companies extends REST_Controller {
 
                                 if($this->company_model->updateAccount($user->user_id, $data) === TRUE)
                                 {
+                                    $log['user_id'] = $user->user_id;
+                                    $log['audit_action'] = 14;
+                                    $log['table_name'] = "tb_users";
+                                    $log['record_id'] = $user->user_id;
+                                    $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                                    $log['date'] = date('Y-m-d H:i:s');
+                                    $log['is_active'] = 1;
+                                    $this->log_model->save($log);
+
                                     $response = array(
                                         "status" => true,
                                         "message" => "New mobile number saved",
@@ -411,6 +452,15 @@ class Companies extends REST_Controller {
 
                             if($this->company_model->updateAccount($user->user_id, $data) === TRUE)
                             {
+                                $log['user_id'] = $user->user_id;
+                                $log['audit_action'] = 17;
+                                $log['table_name'] = "tb_users";
+                                $log['record_id'] = $user->user_id;
+                                $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                                $log['date'] = date('Y-m-d H:i:s');
+                                $log['is_active'] = 1;
+                                $this->log_model->save($log);
+
                                 $response = array(
                                     "status" => true,
                                     "message" => "New password saved",
@@ -439,37 +489,87 @@ class Companies extends REST_Controller {
 
     public function active_post()
     {
+        if(!isset($_COOKIE['_ut'])){
+            $this->response([
+                'status' => FALSE,
+                'message' => 'REQUEST UNAUTHORIZED' 
+                ],REST_Controller::HTTP_UNAUTHORIZED);
+        }
+        else
+        {
+            $user = $this->auth_model->getUserByToken($_COOKIE['_ut']);
 
-        $ids = $this->post('id');
+            if(!empty($user) && $user->account_type == 1)
+            { 
+                $ids = $this->post('id');
 
-        foreach ($ids as $id) {
+                foreach ($ids as $id) {
 
-           if($this->company_model->setAsActive($id) === TRUE)
-            {
-                $response = array(
-                    "status"=>TRUE,
-                    "message" => "Employer(s) has been set as Active",
-                    "id" => $id
-                    );
-                $this->response($response, REST_Controller::HTTP_OK);
+                   if($this->company_model->setAsActive($id) === TRUE)
+                    {
+                        $response = array(
+                            "status"=>TRUE,
+                            "message" => "Employer(s) has been set as Active",
+                            "id" => $id
+                            );
+                        $this->response($response, REST_Controller::HTTP_OK);
+                    }
+                }
+
+                $log['user_id'] = $user->user_id;
+                $log['audit_action'] = 54;
+                $log['table_name'] = "tb_users";
+                $log['record_id'] = $user->user_id;
+                $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                $log['date'] = date('Y-m-d H:i:s');
+                $log['is_active'] = 1;
+                $this->log_model->save($log);
+            }
+            else{
+                $this->response(['status' => FALSE, 'message' => 'REQUEST UNAUTHORIZED' ],REST_Controller::HTTP_UNAUTHORIZED);
             }
         }
     }
 
     public function inactive_post()
-    {
+    {   
+        if(!isset($_COOKIE['_ut'])){
+            $this->response([
+                'status' => FALSE,
+                'message' => 'REQUEST UNAUTHORIZED' 
+                ],REST_Controller::HTTP_UNAUTHORIZED);
+        }
+        else
+        {
+            $user = $this->auth_model->getUserByToken($_COOKIE['_ut']);
 
-        $ids = $this->post('id');
-
-        foreach ($ids as $id) {
-
-           if($this->company_model->setAsInactive($id) === TRUE)
+            if(!empty($user) && $user->account_type == 1)
             {
-                $response = array(
-                    "status"=>TRUE,
-                    "message" => "Employer(s) has been set as Inactive"
-                    );
-                $this->response($response, REST_Controller::HTTP_OK);
+                $ids = $this->post('id');
+
+                foreach ($ids as $id) {
+
+                   if($this->company_model->setAsInactive($id) === TRUE)
+                    {
+                        $response = array(
+                            "status"=>TRUE,
+                            "message" => "Employer(s) has been set as Inactive"
+                            );
+                        $this->response($response, REST_Controller::HTTP_OK);
+                    }
+                }
+
+                $log['user_id'] = $user->user_id;
+                $log['audit_action'] = 55;
+                $log['table_name'] = "tb_users";
+                $log['record_id'] = $user->user_id;
+                $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                $log['date'] = date('Y-m-d H:i:s');
+                $log['is_active'] = 1;
+                $this->log_model->save($log);
+            }
+            else{
+                $this->response(['status' => FALSE, 'message' => 'REQUEST UNAUTHORIZED' ],REST_Controller::HTTP_UNAUTHORIZED);
             }
         }
     }
@@ -513,68 +613,129 @@ class Companies extends REST_Controller {
 
     public function industries_post()
     {
-        $data['industry_name'] = $this->post('industry');
-        $data['is_active'] = 1;
-
-        if($data['industry_name'] != NULL)
-        {
-            if($this->company_model->createIndustry($data) === TRUE)
-            {
-                $response = array(
-                        "message" => "New Industry created",
-                        "status" => true
-                        );
-                $this->response($response, REST_Controller::HTTP_CREATED);
-            }
+        if(!isset($_COOKIE['_ut'])){
+            $this->response([
+                'status' => FALSE,
+                'message' => 'REQUEST UNAUTHORIZED' 
+                ],REST_Controller::HTTP_UNAUTHORIZED);
         }
-        else{
-            $this->response(NULL, REST_Controller::HTTP_BAD_REQUEST);
+        else
+        {
+            $user = $this->auth_model->getUserByToken($_COOKIE['_ut']);
+
+            if(!empty($user) && $user->account_type == 1)
+            {
+                $data['industry_name'] = $this->post('industry');
+                $data['is_active'] = 1;
+
+                if($data['industry_name'] != NULL)
+                {
+                    if($this->company_model->createIndustry($data) === TRUE)
+                    {
+                        $log['user_id'] = $user->user_id;
+                        $log['audit_action'] = 44;
+                        $log['table_name'] = "tb_industry";
+                        $log['record_id'] = $user->user_id;
+                        $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                        $log['date'] = date('Y-m-d H:i:s');
+                        $log['is_active'] = 1;
+                        $this->log_model->save($log);
+
+                        $response = array(
+                                "message" => "New Industry created",
+                                "status" => true
+                                );
+                        $this->response($response, REST_Controller::HTTP_CREATED);
+                    }
+                }
+                else{
+                    $this->response(NULL, REST_Controller::HTTP_BAD_REQUEST);
+                }
+            }
+            else{
+                $this->response(['status' => FALSE, 'message' => 'REQUEST UNAUTHORIZED' ],REST_Controller::HTTP_UNAUTHORIZED);
+            }
         }
     }
 
     public function industries_patch()
     {
-        $id = $this->patch('id');
-        $data['industry_name'] = $this->patch('industry');
-        $action = $this->patch('action');
-
-        if($action != NULL && $action == "disable")
-        {
-            if($id != NULL)
-            {
-                if($this->company_model->disableIndustry($id) === TRUE)
-                {
-                    $response = array(
-                        "message" => "Industry has been deleted",
-                        "status" => true
-                        );
-                    $this->response($response, REST_Controller::HTTP_OK);
-                }
-                else{
-                    $this->response(NULL, REST_Controller::HTTP_NO_CONTENT);   
-                }
-            }
-            else{
-                $this->response("missing data parameters", REST_Controller::HTTP_BAD_REQUEST);
-            }    
+        if(!isset($_COOKIE['_ut'])){
+            $this->response([
+                'status' => FALSE,
+                'message' => 'REQUEST UNAUTHORIZED' 
+                ],REST_Controller::HTTP_UNAUTHORIZED);
         }
-        else{
-            if($data['industry_name'] != NULL && $id != NULL)
+        else
+        {
+            $user = $this->auth_model->getUserByToken($_COOKIE['_ut']);
+
+            if(!empty($user) && $user->account_type == 1)
             {
-                if($this->company_model->updateIndustry($id, $data) === TRUE)
+                $id = $this->patch('id');
+                $data['industry_name'] = $this->patch('industry');
+                $action = $this->patch('action');
+
+                if($action != NULL && $action == "disable")
                 {
-                    $response = array(
-                        "message" => "Industry updated",
-                        "status" => true
-                        );
-                    $this->response($response, REST_Controller::HTTP_CREATED);
+                    if($id != NULL)
+                    {
+                        if($this->company_model->disableIndustry($id) === TRUE)
+                        {
+                            $log['user_id'] = $user->user_id;
+                            $log['audit_action'] = 46;
+                            $log['table_name'] = "tb_industry";
+                            $log['record_id'] = $user->user_id;
+                            $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                            $log['date'] = date('Y-m-d H:i:s');
+                            $log['is_active'] = 1;
+                            $this->log_model->save($log);
+
+                            $response = array(
+                                "message" => "Industry has been deleted",
+                                "status" => true
+                                );
+                            $this->response($response, REST_Controller::HTTP_OK);
+                        }
+                        else{
+                            $this->response(NULL, REST_Controller::HTTP_NO_CONTENT);   
+                        }
+                    }
+                    else{
+                        $this->response("missing data parameters", REST_Controller::HTTP_BAD_REQUEST);
+                    }    
                 }
                 else{
-                    $this->response(NULL, REST_Controller::HTTP_NO_CONTENT);
+                    if($data['industry_name'] != NULL && $id != NULL)
+                    {
+                        if($this->company_model->updateIndustry($id, $data) === TRUE)
+                        {
+                            $log['user_id'] = $user->user_id;
+                            $log['audit_action'] = 45;
+                            $log['table_name'] = "tb_industry";
+                            $log['record_id'] = $user->user_id;
+                            $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                            $log['date'] = date('Y-m-d H:i:s');
+                            $log['is_active'] = 1;
+                            $this->log_model->save($log);
+
+                            $response = array(
+                                "message" => "Industry updated",
+                                "status" => true
+                                );
+                            $this->response($response, REST_Controller::HTTP_CREATED);
+                        }
+                        else{
+                            $this->response(NULL, REST_Controller::HTTP_NO_CONTENT);
+                        }
+                    }
+                    else{
+                        $this->response("missing data parameters", REST_Controller::HTTP_BAD_REQUEST);
+                    }
                 }
             }
             else{
-                $this->response("missing data parameters", REST_Controller::HTTP_BAD_REQUEST);
+                $this->response(['status' => FALSE, 'message' => 'REQUEST UNAUTHORIZED' ],REST_Controller::HTTP_UNAUTHORIZED);
             }
         }
     }
@@ -796,6 +957,15 @@ class Companies extends REST_Controller {
                     }
 
                 }   
+
+                $log['user_id'] = $user->user_id;
+                $log['audit_action'] = 32;
+                $log['table_name'] = "tb_verification";
+                $log['record_id'] = $user->user_id;
+                $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                $log['date'] = date('Y-m-d H:i:s');
+                $log['is_active'] = 1;
+                $this->log_model->save($log);
             }
             else{
                 $this->response([
@@ -835,7 +1005,16 @@ class Companies extends REST_Controller {
                             );
                         $this->response($response, REST_Controller::HTTP_OK);
                     }
-                }  
+                } 
+
+                $log['user_id'] = $user->user_id;
+                $log['audit_action'] = 34;
+                $log['table_name'] = "tb_verification";
+                $log['record_id'] = $user->user_id;
+                $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                $log['date'] = date('Y-m-d H:i:s');
+                $log['is_active'] = 1; 
+                $this->log_model->save($log);
             }
             else{
                 $this->response([
@@ -876,6 +1055,15 @@ class Companies extends REST_Controller {
                         $this->response($response, REST_Controller::HTTP_OK);
                     }
                 }
+
+                $log['user_id'] = $user->user_id;
+                $log['audit_action'] = 33;
+                $log['table_name'] = "tb_verification";
+                $log['record_id'] = $user->user_id;
+                $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                $log['date'] = date('Y-m-d H:i:s');
+                $log['is_active'] = 1;
+                $this->log_model->save($log);
             }
             else{
                 $this->response([

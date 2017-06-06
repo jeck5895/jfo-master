@@ -35,7 +35,7 @@ class Authenticate extends MY_Controller {
 		
 		$page_title['title'] = "Job-Fair Online | Login";
 		$data['token'] = $this->formToken();
-		$callback = base_url('Authenticate/facebook');
+		$callback = base_url('login/facebook');
 		$data['google_login_url'] = $this->googleplus->loginURL();
 		$data['fb_login_url'] = $this->facebook->getLoginUrl($callback);
 		//$this->load->view('v_auth',$data);
@@ -114,7 +114,8 @@ class Authenticate extends MY_Controller {
 	}
 
 	public function facebook()
-	{
+	{ 
+		//sign in with facebook
 		if(isset($_GET['code']))
 		{
 			$token = $this->facebook->getAccessToken();
@@ -125,9 +126,7 @@ class Authenticate extends MY_Controller {
 			$userData['last_name'] = $userProfile['last_name'];
 			$userData['email'] = $userProfile['email'];
 			$userData['gender'] = $userProfile['gender'];
-			// $userData['religion'] = $userProfile['religion']; not permissioned to view by facebook 
 			$userData['locale'] = $userProfile['locale'];
-			// $userData['birthday'] = $userProfile['birthday']; not permissioned to view by facebook 
 			$userData['profile_url'] = 'https://www.facebook.com/'.$userProfile['id'];
 			$userData['picture_url'] = $userProfile['picture']['url'];
 
@@ -136,16 +135,118 @@ class Authenticate extends MY_Controller {
 			echo 	"<script> 
 							window.close();
 							window.opener.location.href = '".base_url('sign-up-with-facebook')."';
-
 					</script>";
-			//redirect('Registration/view_applicant_registration');
 		}
 		else
 		{
-			$data['title'] = "Job-Fair Online | Login";
-			$callback = base_url('login');
-			$data['fb_login_url'] = $this->facebook->getLoginUrl($callback);
-			$this->load->view('v_login',$data);
+			redirect('login');
+		}		
+	}
+
+	public function login_facebook()
+	{
+		if(isset($_GET['code']))
+		{
+			$token = $this->facebook->getAccessToken();
+			$userProfile = $this->facebook->getUserData($token);
+			$email = $userProfile['email'];
+	
+			$user = $this->auth_model->getUserByEmail($email);
+			
+
+			if(!empty($user))
+			{
+				$userInfo = $this->auth_model->getUserDetails($user->user_id, $user->account_type);
+				$expDate = date("Y-m-d H:i:s", strtotime('+1 day'));
+				$data['user_id'] = $user->user_id;
+				$data['token'] = md5($this->functions->guid());
+				$data['exp_date'] = $expDate;
+				$data['date_created'] = date('Y-m-d H:i:s');
+				$data['status'] = 1;
+
+				$log['user_id'] = $user->user_id;
+				$log['audit_action'] = 3;
+				$log['table_name'] = "tb_users";
+				$log['record_id'] = $user->user_id;
+				$log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+				$log['date'] = date('Y-m-d H:i:s');
+				$log['is_active'] = 1;
+				$log['action_description'] = "Sign-in with Facebook";
+
+				if($user->account_type == 3)
+				{
+					$boolean = $this->auth_model->isEmailActivated($user->user_id);
+
+					if($boolean === FALSE){
+						header('HTTP/1.0 403 Forbidden');
+
+						echo "It seems your email is not verified. Please verify your email first.";
+					}
+					else{
+						
+						
+
+						setcookie("_ut", $data['token'], time()+86400,'/',$_SERVER['HTTP_HOST'],false,true);
+						setcookie("_u", $data['user_id'], time()+86400,'/',$_SERVER['HTTP_HOST'],false,false);
+						setcookie("_typ", "ep", time()+86400,'/',$_SERVER['HTTP_HOST'],false,false);
+
+						if($this->auth_model->newUserToken($data) === TRUE)
+						{
+							$this->log_model->save($log);
+
+							echo 	"<script> 
+										window.close();
+										window.opener.location.href = '".site_url("/company/applicants/dashboard")."';
+									</script>";
+						}
+					}
+				}	
+					
+
+				if($user->account_type == 2){
+					setcookie("_ut", $data['token'], time()+86400,'/',$_SERVER['HTTP_HOST'],false,true);
+					setcookie("_u", $data['user_id'], time()+86400,'/',$_SERVER['HTTP_HOST'],false,false);
+					setcookie("_uc", $this->my_encrypt->encode($userInfo->job_category), time()+86400,'/',$_SERVER['HTTP_HOST'],false,false);
+					setcookie("_typ", "ap", time()+86400,'/',$_SERVER['HTTP_HOST'],false,false);
+
+					if($this->auth_model->newUserToken($data) === TRUE)
+					{
+						$this->log_model->save($log);
+
+						echo 	"<script> 
+							window.close();
+							window.opener.location.href = '".site_url("/applicant/applications/pending")."';
+						</script>";
+					}
+				}
+
+				if($user->account_type == 1){
+					setcookie("_ut", $data['token'], time()+86400,'/',$_SERVER['HTTP_HOST'],false,true);
+					setcookie("_u", $data['user_id'], time()+86400,'/',$_SERVER['HTTP_HOST'],false,false);
+					setcookie("_typ", "ad", time()+86400,'/',$_SERVER['HTTP_HOST'],false,false);
+
+					if($this->auth_model->newUserToken($data) === TRUE)
+					{
+						$this->log_model->save($log);
+
+						echo 	"<script> 
+							window.close();
+							window.opener.location.href = '".site_url("/admin/review/jobs")."';
+						</script>";
+					}
+				}
+
+				
+			}
+			else{
+				
+
+				echo "Sorry! Couldn't found any related account. You may <a href='' onclick='return window.close();'><strong>CLOSE</strong></a> this window now";
+			}
+		}
+		else
+		{
+			redirect('login');
 		}		
 	}
 
@@ -175,6 +276,105 @@ class Authenticate extends MY_Controller {
 			$data['title'] = "Job-Fair Online | Login";
 			$data['google_login_url'] = $this->googleplus->loginURL();
 			$this->load->view('v_login',$data);
+		} 	
+	}
+
+	public function login_google()
+	{
+		$this->googleplus->getAuthenticate();
+		if($this->googleplus->getAccessToken())
+		{
+
+			$userInfo = $this->googleplus->getUserInfo();
+			$email = $userInfo['email'];
+
+			$user = $this->auth_model->getUserByEmail($email);
+
+			if(!empty($user))
+			{
+				$userInfo = $this->auth_model->getUserDetails($user->user_id, $user->account_type);
+				$expDate = date("Y-m-d H:i:s", strtotime('+1 day'));
+				$data['user_id'] = $user->user_id;
+				$data['token'] = md5($this->functions->guid());
+				$data['exp_date'] = $expDate;
+				$data['date_created'] = date('Y-m-d H:i:s');
+				$data['status'] = 1;
+
+				$log['user_id'] = $user->user_id;
+				$log['audit_action'] = 3;
+				$log['table_name'] = "tb_users";
+				$log['record_id'] = $user->user_id;
+				$log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+				$log['date'] = date('Y-m-d H:i:s');
+				$log['is_active'] = 1;
+				$log['action_description'] = "Sign-in with Google";
+
+				if($user->account_type == 3)
+				{
+					$boolean = $this->auth_model->isEmailActivated($user->user_id);
+
+					if($boolean === FALSE){
+						header('HTTP/1.0 403 Forbidden');
+
+						echo "It seems your email is not verified. Please verify your email first.";
+					}
+					else{
+						
+						
+
+						setcookie("_ut", $data['token'], time()+86400,'/',$_SERVER['HTTP_HOST'],false,true);
+						setcookie("_u", $data['user_id'], time()+86400,'/',$_SERVER['HTTP_HOST'],false,false);
+						setcookie("_typ", "ep", time()+86400,'/',$_SERVER['HTTP_HOST'],false,false);
+
+						if($this->auth_model->newUserToken($data) === TRUE)
+						{
+							$this->log_model->save($log);
+
+							redirect(site_url("/company/applicants/dashboard"));
+						}
+					}
+				}	
+					
+
+				if($user->account_type == 2){
+					setcookie("_ut", $data['token'], time()+86400,'/',$_SERVER['HTTP_HOST'],false,true);
+					setcookie("_u", $data['user_id'], time()+86400,'/',$_SERVER['HTTP_HOST'],false,false);
+					setcookie("_uc", $this->my_encrypt->encode($userInfo->job_category), time()+86400,'/',$_SERVER['HTTP_HOST'],false,false);
+					setcookie("_typ", "ap", time()+86400,'/',$_SERVER['HTTP_HOST'],false,false);
+
+					if($this->auth_model->newUserToken($data) === TRUE)
+					{
+						$this->log_model->save($log);
+
+						redirect(site_url("/applicant/applications/pending"));
+					}
+				}
+
+				if($user->account_type == 1){
+					setcookie("_ut", $data['token'], time()+86400,'/',$_SERVER['HTTP_HOST'],false,true);
+					setcookie("_u", $data['user_id'], time()+86400,'/',$_SERVER['HTTP_HOST'],false,false);
+					setcookie("_typ", "ad", time()+86400,'/',$_SERVER['HTTP_HOST'],false,false);
+
+					if($this->auth_model->newUserToken($data) === TRUE)
+					{
+						$this->log_model->save($log);
+
+						redirect(site_url("/admin/review/jobs"));
+					}
+				}
+
+				
+			}
+			else{
+				
+
+				echo "Sorry! Couldn't found any related account. Back to <a style='text-decoration:none; color:#000;' href='".site_url("login")."'><strong>LOGIN</strong></a> this window now";
+			}
+			
+		} 
+		else
+		{
+			redirect("login");
 		} 	
 	}
 
