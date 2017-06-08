@@ -39,7 +39,7 @@
             jobDescStatus = true;
             $("#char-label").css("color","#5cb85c");
             $("#char-count").css("color","#5cb85c");
-            $("#cke_jobDescription").tooltip("hide");
+            $("#cke_jobDescription").tooltip("dispose");
             $("#cke_jobDescription").css("border","1px solid #d1d1d1");
             $("#cke_jobDescription").css("box-shadow","0px 0px 0px 0px rgba(0,0,0,0)");
         }

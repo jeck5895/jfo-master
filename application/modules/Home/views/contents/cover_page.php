@@ -56,10 +56,10 @@
 </div>
 <div class="container">
 	<div class="f-comp-logo">
-		<?php foreach( $featuredCompanies AS $company):?>
+		<?php foreach( $featuredLogo AS $logo):?>
 			<div class="f-item">
-				<a href="http://localhost/jobfair-online.com/companies/<?=$company['company']."-".$company['cid']?>" target="<?=$company['company']."-".$company['cid']?>">
-					<img src="<?=$company['logo']?>" alt="<?=$company['company']?> logo" class="img-fluid">
+				<a href="<?=$logo['ads_url']?>" target="<?=$logo['ads_url']?>" title="<?=$logo['title']?>">
+					<img src="<?=$logo['logo']?>" alt="ads logo"  class="img-fluid">
 				</a>	
 			</div>
 		<?php endforeach;?>	
@@ -163,7 +163,7 @@
 						<span class="focus-border"></span>
 					</div>
 					<div class="form-group">
-					<button id="send-message" class="btn btn-materialize btn-info">Send message</button>
+					<button id="send-message" class="btn btn-materialize btn-info ripple">Send message</button>
 					</div>
 					
 				</div>

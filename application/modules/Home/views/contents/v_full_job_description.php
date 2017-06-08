@@ -1,7 +1,51 @@
+<?php
+    $this->load->model('notification/notification_model'); 
+    if(isset($_GET['notif_id']))
+    {
+
+        $notif_id = $_GET['notif_id'];
+        $data['status'] = 0;
+        $data['date_modified'] = date("Y-m-d H:i:s");
+
+        $this->notification_model->update($notif_id, $data);
+    }
+?>
+<?php if(isset($_COOKIE['_ut']) && isset($_COOKIE['_u']) && isset($_COOKIE['_typ']) && $_COOKIE['_typ'] == "ap"):?>
+    <?=$this->load->view('template/v_home_sidebar');//$this->load->view('applicant/v_applicant_sidebar');?>
+<?php endif;?>
+
 <div class="container">
     <div class="col-md-10 offset-md-1">
-        <div class="c-profile-box">
+        <div class="c-profile-box job-details">
+            <div class="box-header">
+            <div class="btn-box pull-right mt-2 mr-4">
+                <?php $this->load->model('auth/auth_model');?>
+                <?php if(!isset($_COOKIE['_ut'])):?>
+
+                    <div class="pull-right">
+                        <a href="<?=base_url('login?redirect='.$_SERVER['REDIRECT_URL'])?>" class="btn btn-primary btn-materialize">Login to Apply</a>
+                    </div>
+
+                <?php else:?>
+                    <?php $user = $this->auth_model->getUserByToken($_COOKIE['_ut']);?> 
+                    <?php if($user->account_type == 2 && $user->is_active):?>   
+
+                        <div id="app-option" class="">
+                            <button id="btn-apply" class="btn btn-info btn-materialize btn-materialize-sm ripple">Apply</button>
+                            <button id="btn-add-job" class="btn btn-secondary btn-materialize btn-materialize-sm ripple">Add to My Joblist</button> 
+                        </div>
+                    <?php else:?>
+                        <div id="" class="warning-box">
+                            <label class="error">Your account has been set to inactive status due to some inconsistency in your profile information. Please fix your information.</label>
+                        </div>    
+                    <?php endif;?>
+
+
+                <?php endif?>
+            </div>
+            </div>
             <div class="job-box-body">
+
                 <div class="c-info-box-header">
                     <div class="col-md-9 no-pad-lr">
                         <h4 class="header" id="job-title"></h4>
@@ -83,27 +127,6 @@
                
                 </div>
 
-                <div class="btn-box">
-                    <?php $this->load->model('auth/auth_model');?>
-                    <?php if(!isset($_COOKIE['_ut'])):?>
-                        
-                        <div class="pull-right">
-                            <a href="<?=base_url('login?redirect='.$_SERVER['REDIRECT_URL'])?>" class="btn btn-primary btn-materialize">Login to Apply</a>
-                        </div>
-                        
-                    <?php else:?>
-                            <?php $user = $this->auth_model->getUserByToken($_COOKIE['_ut']);?> 
-                            <?php if($user->account_type == 2):?>   
-                            
-                            <div id="app-option" class="pull-right">
-                                <button id="btn-apply" class="btn btn-info btn-materialize btn-materialize-sm">Apply</button>
-                                <button id="btn-add-job" class="btn btn-secondary btn-materialize btn-materialize-sm">Add to My Joblist</button> 
-                            </div>
-                            <?php endif;?>
-                  
-                            
-                    <?php endif?>
-                </div>
             </div> 
         </div>
 

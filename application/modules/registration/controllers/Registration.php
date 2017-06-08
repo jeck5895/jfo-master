@@ -20,21 +20,21 @@
 		public function view_applicant_registration()
 		{
 			if(isset($_COOKIE['_ut']) && $_COOKIE['_typ'])
-		{
-			$user = $this->auth_model->getUserByToken($_COOKIE['_ut']);
-			if($user->account_type == 1)
-			{	
-				redirect('admin/jobs/review');
-			}
-			if($user->account_type == 2)
 			{
-				redirect('applicant/applications/pending');
+				$user = $this->auth_model->getUserByToken($_COOKIE['_ut']);
+				if($user->account_type == 1)
+				{	
+					redirect('admin/jobs/review');
+				}
+				if($user->account_type == 2)
+				{
+					redirect('applicant/applications/pending');
+				}
+				if($user->account_type == 3)
+				{
+					redirect('company/applicants/all');
+				}
 			}
-			if($user->account_type == 3)
-			{
-				redirect('company/applicants/all');
-			}
-		}
 
 			$page_title['title'] = 'Sign-up | Job Seeker ';
 			$data['token'] = $this->formToken();
@@ -47,9 +47,21 @@
 
 		public function view_employer_registration()
 		{
-			if(!empty($_POST))
+			if(isset($_COOKIE['_ut']) && $_COOKIE['_typ'])
 			{
-				$this->register_employer();
+				$user = $this->auth_model->getUserByToken($_COOKIE['_ut']);
+				if($user->account_type == 1)
+				{	
+					redirect('admin/jobs/review');
+				}
+				if($user->account_type == 2)
+				{
+					redirect('applicant/applications/pending');
+				}
+				if($user->account_type == 3)
+				{
+					redirect('company/applicants/all');
+				}
 			}
 
 			$data['token'] = $this->formToken();

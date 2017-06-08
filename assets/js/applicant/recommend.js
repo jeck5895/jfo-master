@@ -102,7 +102,7 @@ $(function(){
             var html = '';
             html += '<div class="box box-widget">';
                 html += '<div class="box-body">';
-                    html += '<center><h1 class="lead"><i>No corresponding Job Application to display.</i></h1></center';
+                    html += '<center><h6 class="text-muted"><i>No corresponding Jobs.</i></h6></center';
                 html += '</div>';
             html += '</div>';     
             containerSelector.html(html);
@@ -126,7 +126,7 @@ $(function(){
         }).off().on("page", function(event, num){
                 offset = (num - 1) * limit;
                 
-                page_url = App.apiUrl + '/jobs?ec='+category+'&offset='+offset;
+                page_url = App.apiUrl + '/jobs?ec='+category+'&offset='+offset+"&limit=10";
                 paginatedJobs = getJSONDoc(page_url);
 
                 loadJobs(paginatedJobs, jobsContainer);
@@ -136,7 +136,7 @@ $(function(){
 
    
    	
-    getData(App.apiUrl + "/jobs?ec="+category, function(data){
+    getData(App.apiUrl + "/jobs?ec="+category+"&limit=10", function(data){
     	paginateData(data);
     });
 });

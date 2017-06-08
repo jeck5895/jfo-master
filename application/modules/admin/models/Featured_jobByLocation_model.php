@@ -23,13 +23,13 @@
 
 		private function _get_datatables_query()
 	    {
-	    	$sql = '(tb_jobpost.location_id LIKE "%'.$_POST['search']['value'].'%" OR tb_employer.company_name LIKE "%'. $_POST['search']['value'].'%" OR tb_jobpost.job_position LIKE "%'.$_POST['search']['value'].'%" OR tb_featured_jobpost_location.start_date LIKE "%'.$_POST['search']['value'].'%" OR tb_featured_jobpost_location.end_date LIKE "%'.$_POST['search']['value'].'%")';
+	    	$sql = '(tb_employer.company_name LIKE "%'. $_POST['search']['value'].'%" OR tb_jobpost.job_position LIKE "%'.$_POST['search']['value'].'%" OR tb_jobpost.location_id LIKE "%'.$_POST['search']['value'].'%")';
 	         
 	        $this->db->select('*, tb_featured_jobpost_location.id AS id ,tb_featured_jobpost_location.is_active AS is_active');
 			$this->db->from($this->table);
 			$this->db->join('tb_employer','tb_employer.id = tb_featured_jobpost_location.company_id');
 			$this->db->join('tb_jobpost', 'tb_jobpost.id = tb_featured_jobpost_location.job_position');
-			
+			$this->db->where('tb_featured_jobpost_location.is_active',1);
 			$i = 0;
 
 			foreach ($this->column as $item) 

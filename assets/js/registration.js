@@ -437,28 +437,28 @@
  				required: " Company description is required"
  			},
  			first_name:{
- 				required: " Contact Person's First name is required"
+ 				required: "First name field is required"
  			},
  			lastname:{
- 				required: " Contact Person's Last name is required"
+ 				required: "Last name is required"
  			},
  			position:{
- 				required: " Contact Person's position is required"
+ 				required: "Position field is required"
  			},
  			department:{
- 				required: " Contact Person's department is required"
+ 				required: "Department field is required"
  			},
  			email:{
- 				required: " Contact Person's email is required",
+ 				required: "Email field is required",
  				email : " Please enter a valid email",
  				remote: " This email is already in used"
  			},
  			phonenumber:{
- 				required: " Contact Person's phone number is required",
+ 				required: "Phone number field is required",
  				remote:" This number is already in used"
  			},
  			password:{
- 				required: " Password is required",
+ 				required: " Password field is required",
  				minlength: " Password is at least 8 characters."
  			},
  			confirm_password:{

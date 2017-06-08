@@ -49,7 +49,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | Examples:	my-controller/index	-> my_controller/index
 |		my-controller/my-method	-> my_controller/my_method
 */
-$route['default_controller'] = 'Home';
+$route['default_controller'] = 'home';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
@@ -60,6 +60,7 @@ $route['accounts/recovery'] = "authenticate/account_recovery";
 $route['accounts/resetpassword'] = "authenticate/reset_password";
 $route['accounts/employers/activate'] = 'authenticate/employer_account_activate';
 
+$route['admin/dashboard'] = 'admin/index';
 $route['admin/account/settings'] = 'admin/account_settings';
 $route['admin/jobs/(:any)'] = 'admin/get_job_post/$1';
 $route['admin/review/jobs'] = 'admin/review_job_post';
@@ -68,16 +69,18 @@ $route['admin/applicants/public'] = 'admin/applicants_public';
 $route['admin/applicants/private'] = 'admin/applicants_private';
 $route['admin/applicants/inactive'] = 'admin/applicants_inactive';
 $route['admin/advertisements/sliders'] = 'admin/get_advertisements_sliders';
+$route['admin/advertisements/logo'] = 'admin/get_advertisements_logo';
 $route['admin/advertisements/get/featured_jobs'] = 'admin/get_featured_jobs';
 $route['admin/advertisements/get/featured_jobs_by_location'] = 'admin/get_featured_jobs_by_location';
 $route['admin/advertisements/get/featured_companies'] = 'admin/get_featured_companies';
 $route['admin/categories'] = 'admin/get_categories';
 $route['admin/maintenance/keywords'] = 'admin/keywords';
 $route['admin/maintenance/advertisements/sliders'] = 'admin/maintenance_advertisements_sliders';
+$route['admin/maintenance/advertisements/logo'] = 'admin/maintenance_advertisements_logo';
 $route['admin/maintenance/advertisements/featured/jobs'] = 'admin/maintenance_featured_jobs';
 $route['admin/maintenance/advertisements/featured/jobs-by-location'] = 'admin/maintenance_featured_jobs_by_location';
 $route['admin/maintenance/advertisements/featured/companies'] = 'admin/maintenance_featured_companies';
-
+$route['admin/activity-logs'] = 'admin/activity_logs';
 
 
 $route['jobs'] = 'home/jobs';
@@ -131,6 +134,9 @@ $route['api/admin/featured_companies/deactivate'] = 'api/admin/featured_companie
 
 $route['api/admin/advertisement/activate'] = 'api/admin/advertisement_activate';
 $route['api/admin/advertisement/deactivate'] = 'api/admin/advertisement_deactivate';
+
+$route['api/admin/advertisement_logo/activate'] = 'api/admin/advertisement_logo_activate';
+$route['api/admin/advertisement_logo/deactivate'] = 'api/admin/advertisement_logo_deactivate';
 
 // REST API ROUTES
 // $route['api/example/users/(:num)'] = 'api/example/users/id/$1';

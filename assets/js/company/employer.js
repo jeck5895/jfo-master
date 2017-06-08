@@ -19,24 +19,6 @@
         return $.parseJSON(response);
     }
 
-    /*
-    *FOR PUSHING NOTIFICATION
-
-    */
-    $("#send-message").click(function(){
-        $.ajax({
-            type:"POST",
-            url: App.pathUrl +"/notification/trigger_event",
-            dataType:"JSON",
-            success:function(data){
-                console.log(data)
-            },
-            error:function(data){
-                console.log(data)
-            }
-
-        });
-
-    });
+   
 
  });	

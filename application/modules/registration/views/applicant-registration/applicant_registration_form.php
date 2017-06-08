@@ -266,7 +266,7 @@
                     </label>
                 </div>
                 <div class="form-group col-md-6 offset-md-3">
-                    <input type="submit" id="register-applicant" name="register-applicant" value="REGISTER" class="form-control btn btn-info btn-materialize" tabindex="28">
+                    <input type="submit" id="register-applicant" name="register-applicant" value="REGISTER" class="form-control btn btn-info btn-materialize ripple" tabindex="28">
                 </div>
             </div>      
         </div>

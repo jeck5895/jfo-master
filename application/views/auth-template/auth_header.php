@@ -18,6 +18,7 @@
     <link href="https://fonts.googleapis.com/css?family=Montserrat:300" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:200i" rel="stylesheet">
     <link rel="stylesheet" href="<?php echo base_url('assets/css/animate.css')?>">  
+    <link rel="stylesheet" href="<?php echo base_url('assets/css/ripple.min.css');?>">
 </head> 
 <body>
     <div id="load" style="background:url('<?php echo base_url('assets/images/app/ring.gif')?>') no-repeat center center #fff; z-index: 1500;"></div>

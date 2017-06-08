@@ -6,7 +6,7 @@
 		
 		var $table = 'tb_ads_slider';
 		var $column = array('id','company_name','ads_title', 'start_date', 'end_date', 'date_created', 'is_active'); 
-		var $order = array('tb_position.id' => 'ASC');
+		var $order = array('id' => 'ASC');
 
 		public function __construct(){
 	

@@ -54,7 +54,7 @@ $(document).ready(function(){
         windowHeight = $(window).innerHeight();
         $('.wrapper').css('min-height', windowHeight);
     };
-
+    
     setHeight();
 
     $(window).resize(function() {
@@ -66,16 +66,18 @@ $(document).ready(function(){
         case "loading":
             break;
         case "interactive":
-        
+                // $('#load').addClass('animated fadeOut');
             setTimeout(function(){
-                $('#load').css('visibility','hidden');
-                // document.getElementById('load').style.visibility="hidden";
+                $("body").addClass("loaded");
+                //document.getElementById('load').style.visibility="hidden";
             },1000);
          
             break;
         case "complete":
+            
+                // $('#load').addClass('animated fadeOut');
             setTimeout(function(){
-                $('#load').css('visibility','hidden');
+                $("body").addClass("loaded");
                 //document.getElementById('load').style.visibility="hidden";
             },100);
             console.log("complete")

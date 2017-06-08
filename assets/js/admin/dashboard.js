@@ -51,18 +51,9 @@ $(document).ready(function() {
                 "dataFilter": function(data){
                     var json = jQuery.parseJSON( data );
                     var totalReFiltered = json.recordsFiltered;
-
-                    if(totalReFiltered != 0)
-                    {
-                        $("#admin-review-badge, .jobs-badge").html(totalReFiltered);
-                        $("#admin-review-badge, .jobs-badge").css("background-color","rgb(154, 30, 30)");
-                    }
-                    else
-                    {
-                        $("#admin-review-badge, .jobs-badge").html("0");
-                        $("#admin-review-badge, .jobs-badge").css("background-color","#999999");
-                    }
                     
+                    $("#review-badge, .jobs-badge").html(totalReFiltered);
+
                     return JSON.stringify( json ); 
                 }
             },
@@ -92,16 +83,8 @@ $(document).ready(function() {
                     var json = jQuery.parseJSON( data );
                     var totalPuFiltered = json.recordsFiltered;
 
-                    if(totalPuFiltered != 0)
-                    {
-                        $(".published-badge").html(totalPuFiltered);
-                        $(".published-badge").css("background-color","rgb(154, 30, 30)");
-                    }
-                    else
-                    {
-                        $(".published-badge").html("0");
-                        $(".published-badge").css("background-color","#999999");
-                    }
+                    $("#published-badge").html(totalPuFiltered);
+                
                     
                     return JSON.stringify( json ); 
                 }
@@ -132,16 +115,7 @@ $(document).ready(function() {
                     var json = jQuery.parseJSON( data );
                     var totalDeFiltered = json.recordsFiltered;
 
-                    if(totalDeFiltered != 0)
-                    {
-                        $(".declined-badge").html(totalDeFiltered);
-                        $(".declined-badge").css("background-color","rgb(154, 30, 30)");
-                    }
-                    else
-                    {
-                        $(".declined-badge").html("0");
-                        $(".declined-badge").css("background-color","#999999");
-                    }
+                    $("#declined-badge").html(totalDeFiltered);
                     
                     return JSON.stringify( json ); 
                 }
@@ -172,16 +146,7 @@ $(document).ready(function() {
                     var json = jQuery.parseJSON( data );
                     var totalTrFiltered = json.recordsFiltered;
 
-                    if(totalTrFiltered != 0)
-                    {
-                        $(".trash-badge").html(totalTrFiltered);
-                        $(".trash-badge").css("background-color","rgb(154, 30, 30)");
-                    }
-                    else
-                    {
-                        $(".trash-badge").html("0");
-                        $(".trash-badge").css("background-color","#999999");
-                    }
+                    $(".trash-badge").html(totalTrFiltered);
                     
                     return JSON.stringify( json ); 
                 }
@@ -263,11 +228,13 @@ $(document).ready(function() {
         if(action == "approve" && scope == "review-tab")
         {
             job_ids = [];
+           
 
             $("input[name=select-admin-pending-job]").each(function (index) {
                 if($(this).is(":checked"))
                 {
                     var applicant_id = $(this).data("id");
+                    
                     job_ids.push(applicant_id);
                 }
             });
@@ -276,11 +243,12 @@ $(document).ready(function() {
         else if(action == "approve" && scope == "declined-tab")
         {
             job_ids = [];
-
+           
             $("input[name=select-admin-declined-job]").each(function (index) {
                 if($(this).is(":checked"))
                 {
                     var applicant_id = $(this).data("id");
+                    
                     job_ids.push(applicant_id);
                 }
             });
@@ -289,11 +257,13 @@ $(document).ready(function() {
         else if(action == "decline" && scope == "review-tab")
         {
             job_ids = [];
+            
 
             $("input[name=select-admin-pending-job]").each(function (index) {
                 if($(this).is(":checked"))
                 {
                     var applicant_id = $(this).data("id");
+                    
                     job_ids.push(applicant_id);
                 }
             });
@@ -302,11 +272,13 @@ $(document).ready(function() {
         else if(action == "decline" && scope == "published-tab")
         {
             job_ids = [];
+            
 
             $("input[name=select-admin-published-job]").each(function (index) {
                 if($(this).is(":checked"))
                 {
                     var applicant_id = $(this).data("id");
+                   
                     job_ids.push(applicant_id);
                 }
             });
@@ -364,19 +336,99 @@ $(document).ready(function() {
 
         if(job_ids.length != 0)
         {
-            if(job_ids.length == 1)
+            if(method == "approve" || method == "decline")
+            {
+                $.confirm({
+                    icon: ' ',
+                    alignMiddle: true,
+                    columnClass: 'col-md-4',   
+                    title: ' ',
+                    content: prompt+' job(s) ?',
+                    buttons: {
+                        confirm: {
+                            btnClass: 'btn-success btn-materialize btn-materialize-sm',
+                            action: function () {
+                                $.ajax({
+                                    type:"POST",
+                                    url: App.pathUrl +"/notification/new_notification",
+                                    dataType:"JSON",
+                                    data:{
+                                        id : job_ids,
+                                        method: method
+                                    },
+                                    success:function(){
+                                        $.ajax({
+                                            url: pathUrl + "/api/jobs/"+method,
+                                            type: 'POST',
+                                            dataType: 'JSON',
+                                            data:{
+                                                id : job_ids,
+                                            },
+                                            success: function(data){
+                                            
+                                                admin_table_approval.ajax.reload(null, false);
+                                                admin_published_table.ajax.reload(null, false);
+                                                admin_declined_table.ajax.reload(null, false);
+                                                admin_trash_table.ajax.reload(null, false);
+
+
+                                                $("input[name=select-all-admin-pending-job]").prop("checked",false);
+
+                                                $.notify({
+                                                    title: " ",
+                                                    message: "<h6><i class='fa fa-exclamation-triangle'></i>&nbsp<small>"+data.message+"</small></h6>",
+
+                                                },{
+                                                    type: "success",
+                                                    delay: 1200,
+                                                    animate: {
+                                                        enter: 'animated fadeIn',
+                                                        exit: 'animated fadeOut'
+                                                    }
+                                                });
+                                            },
+                                            error: function(xhr, exception){
+                                                $.notify({
+                                                    title: " ",
+                                                    message: "<i class='fa fa-exclamation-triangle'></i>&nbsp<small>"+xhr.responseJSON.message+"</small>"
+                                                },{
+                                                    type: "danger",
+                                                    animate: {
+                                                        enter: 'animated fadeIn',
+                                                        exit: 'animated fadeOut'
+                                                    },  
+                                                });
+
+                                            }
+                                        });
+                                    },
+                                    error: function(xhr, exception){
+                                        console.log(exception)
+                                    }
+                                });
+                            }
+                        },
+                        cancel:{
+                            btnClass: 'btn btn-secondary btn-materialize btn-materialize-sm',
+                            action: function () {
+
+                            }
+                        }
+                    }
+                });
+            }
+            else
             {
                 $.confirm({
                     icon: '',
                     alignMiddle: true,
                     columnClass: 'col-md-4',   
-                    title: '<small>JOBFAIR-ONLINE says</small>',
-                    content: prompt+' this job?',
+                    title: '',
+                    content: prompt+' job(s) ?',
                     buttons: {
                         confirm: {
-                            btnClass: 'btn-success btn-materialize btn-materialize-sm',
+                            btnClass: 'btn-success',
                             action: function () {
-                                //console.log(job_ids);
                                 $.ajax({
                                     url: pathUrl + "/api/jobs/"+method,
                                     type: 'POST',
@@ -386,14 +438,14 @@ $(document).ready(function() {
                                     },
                                     success: function(data){
                                         console.log(data);
-                                        //reload();
+
                                         admin_table_approval.ajax.reload(null, false);
                                         admin_published_table.ajax.reload(null, false);
                                         admin_declined_table.ajax.reload(null, false);
                                         admin_trash_table.ajax.reload(null, false);
-                                        
 
-                                        $("input[name=select-all-admin-pending-job]").prop("checked",false);// unchecked header checkbox
+
+                                        $("input[name=select-all-admin-pending-job]").prop("checked",false);
 
                                         $.notify({
                                             title: " ",
@@ -424,72 +476,16 @@ $(document).ready(function() {
                                 });
                             }
                         },
-                        cancel:{
+                        cancel: {
                             btnClass: 'btn btn-secondary btn-materialize btn-materialize-sm',
                             action: function () {
 
                             }
                         }
                     }
-                });
-            }
-            else{
-                $.confirm({
-                    icon: '',
-                    alignMiddle: true,
-                    columnClass: 'col-md-4',   
-                    title: '<small>JOBFAIR-ONLINE says</small>',
-                    content: prompt+' these jobs?',
-                    buttons: {
-                        confirm: {
-                            btnClass: 'btn-success btn-materialize btn-materialize-sm',
-                            action: function () {
-                                //console.log(job_ids)
-                                $.ajax({
-                                    type: 'POST',
-                                    url: pathUrl + "/api/jobs/"+method,
-                                    dataType: 'JSON',
-                                    data:{
-                                        id : job_ids,
-                                    },
-                                    success: function(data){
-                                        console.log(data);
-                                        admin_table_approval.ajax.reload(null, false);
-                                        admin_published_table.ajax.reload(null, false);
-                                        admin_declined_table.ajax.reload(null, false);
-                                        admin_trash_table.ajax.reload(null, false);
-                                       
-
-                                        $("input[name=select-all-admin-pending-job]").prop("checked",false);// unchecked header checkbox
-
-                                        $.notify({
-                                            title: " ",
-                                            message: "<i class='fa fa-exclamation-triangle'></i>&nbsp<small>"+data.message+"</small>",
-
-                                        },{
-                                            type: "success",
-                                            delay: 1200,
-                                            animate: {
-                                                enter: 'animated fadeIn',
-                                                exit: 'animated fadeOut'
-                                            }
-                                        });
-                                    },
-                                    error:function(XMLHttpRequest, textStatus, errorThrown){ 
-                                        console.log(textStatus);
-                                    }
-                                });
-                            }
-                        },
-                        cancel:{
-                            btnClass: 'btn btn-secondary btn-materialize btn-materialize-sm',
-                            action: function () {
-
-                            }
-                        }
-                    }
-                });
-            }   
+                }); 
+            }                       
+               
         }
         else{
             $.notify({

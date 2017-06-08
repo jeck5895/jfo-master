@@ -4,9 +4,10 @@ $(function () {
     var seg = path.split('/');
     var temp = window.location.href;
     var urlSegment = temp.split('/');
-    var urlParams = urlSegment[urlSegment.length -1];
+    var urlParams = (window.location.search == "")? urlSegment[urlSegment.length -1]: urlSegment[urlSegment.length -2];
     var jobsCanvas = $("#jobs-container");
     
+
     var App = {
         
         pathUrl : window.location.protocol + "//" + window.location.host + "/" + seg[1],

@@ -185,7 +185,7 @@
                     </div>
                 </div>
                 <div class="form-group col-md-6 offset-md-3">
-                    <input type="submit" id="register-employer" name="register-employer" value="REGISTER" class="form-control btn btn-info btn-materialize" tabindex="18">
+                    <input type="submit" id="register-employer" name="register-employer" value="REGISTER" class="form-control btn btn-info btn-materialize ripple" tabindex="18">
                 </div>
             </div>
         </div>    

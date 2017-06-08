@@ -46,6 +46,14 @@ class Auth extends REST_Controller {
             $password = $this->my_encrypt->encrypt($this->post('password'));
             $redirect = $this->post('redirect');
 
+            $response = array(
+                "status" => FALSE,
+                "username" => $username,
+                "password" => $this->post('password'),
+                "token" => $form_token 
+                );
+            $this->response($response, REST_Controller::HTTP_UNAUTHORIZED);
+
 
             if($this->auth_model->validateEmail($username) === TRUE)
             {   
@@ -165,7 +173,8 @@ class Auth extends REST_Controller {
             else{
                 $response = array(
                             "status" => false,
-                            "message" => "Invalid Email or Password"
+                            "message" => "Invalid Email or Password",
+                            "stage"=>1
                         );
                 $this->response($response, REST_Controller::HTTP_UNAUTHORIZED);
             }

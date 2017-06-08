@@ -20,7 +20,7 @@
 
 			</div>	
 			<div class="form-group-btn">
-				<input type="submit" name="login" value="Sign in" class="btn btn-login" >
+				<input type="submit" name="login" value="Sign in" class="btn btn-login ripple" >
 			</div>
 		</form>
 
@@ -28,19 +28,19 @@
 			<span class="google-label">
 				<i class="fa fa-google-plus"></i>
 			</span>
-			<a href="<?=$google_login_url ?>" class="btn btn-block btn-google">Sign in with Google</a>
+			<a href="<?=$google_login_url ?>" class="btn btn-block btn-google ripple">Sign in with Google</a>
 		</div>
 
 		<div class="form-group">
 			<span class="facebook-label">
-				<i class="fa fa-facebook-official"></i>
+				<i class="fa fa-facebook-official ripple"></i>
 			</span>
 			<a href="<?=$fb_login_url ?>" onclick="window.open(this.href,'targetWindow', 'toolbar=no, location=no, status=no, menubar=no, scrollbars=yes, resizable=yes,  width=500, height=500').moveTo(450,150);return false;" class="btn btn-block btn-facebook">Sign in with Facebook</a>
 		</div>
 		
 		<center>
 
-			<small id="emailHelp" class="form-text text-muted">Register as <a href="<?php echo base_url('registration/employer')?>">Employer</a> or <a href="<?php echo base_url('registration/job-seeker')?>">Job Seeker</a> now!
+			<small id="emailHelp" class="form-text text-muted">Register as <a href="<?php echo base_url('registration/employer')?>" class="text-bold text-underline">Employer</a> or <a href="<?php echo base_url('registration/job-seeker')?>" class="text-bold text-underline">Job Seeker</a> now!
 			</small>
 		</center>
 		

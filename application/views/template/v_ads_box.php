@@ -115,16 +115,12 @@
                 <?php $locId = $location['id']; ?>
                 <?php $totalJobs = $this->job_post_model->getTotalJobsByLocation($locId)?>
 
-                <li class="fs-13"><a href="<?=site_url('jobs?location='.$location['region_name'].'&reg='.$location['id'].'&vt=jobs-by-location')?>" target="<?=site_url('jobs?location='.$location['region_name'].'&reg='.$location['id'].'&vt=jobs-by-location')?>"><?=$location['region_name']?></a> - <span class="">(<?=$totalJobs?>) jobs</span></li>
-
-               
+                <li class="fs-13"><a href="<?=site_url('jobs?location='.$location['region_name'].'&reg='.$location['id'].'&vt=jobs-by-location')?>" target="<?=site_url('jobs?location='.$location['region_name'].'&reg='.$location['id'].'&vt=jobs-by-location')?>"><?=$location['region_name']?></a> - <span class=""><?=$totalJobs?> jobs</span></li>
                 <?php endforeach;?>
             </ul>
 
         </div>
-        <div class="box-footer">
-            <center><a href="#" class="btn btn-sm btn-primary form-control">See More</a></center>
-        </div>
+        
     </div>
 </div>
 

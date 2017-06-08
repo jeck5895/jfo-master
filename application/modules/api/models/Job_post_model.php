@@ -1,5 +1,4 @@
-<?php
-defined("BASEPATH") OR exit("No Direct script access allowed");
+<?php defined("BASEPATH") OR exit("No Direct script access allowed");
 
 class Job_post_model extends CI_Model{
 
@@ -196,7 +195,7 @@ class Job_post_model extends CI_Model{
 								->join('tb_cities', 'tb_cities.id = tb_jobpost.city_id')
 								->where('tb_jobpost.id', $id)
 								->get();
-			return $query->result_array();					
+			return $query->row_array();					
 		}
 		
 	}
@@ -313,14 +312,14 @@ class Job_post_model extends CI_Model{
 	public function approve($id)
 	{
 		$job = $this->get($id);
-		$duration = $job[0]['expiration'];
-		$date_created = $job[0]['date_create'];
+		$duration = $job['expiration'];
+		$date_created = $job['date_create'];
 
 		$data['status'] = 1;
 		$data['status_1'] = 1;
 		$data['is_active'] = 1;
-		$data['job_opendate'] = date('Y-m-d h:i:s');
-		$data['job_closedate'] = date('Y-m-d h:i:s', strtotime($data['job_opendate']. " + ". $duration ." months"));
+		$data['job_opendate'] = date('Y-m-d H:i:s');
+		$data['job_closedate'] = date('Y-m-d H:i:s', strtotime($data['job_opendate']. " + ". $duration ." months"));
 		
 		$this->db->where('id', $id)->update('tb_jobpost', $data);
 		

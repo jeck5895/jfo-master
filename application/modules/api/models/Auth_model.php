@@ -1,5 +1,4 @@
-<?php
-defined("BASEPATH") OR exit("No Direct script access allowed");
+<?php defined("BASEPATH") OR exit("No Direct script access allowed");
 
 class Auth_model extends CI_Model{
 
@@ -68,24 +67,24 @@ class Auth_model extends CI_Model{
 			$this->db->select('tb_sri_account.*, tb_sri_account.user_id AS user_id, tb_users.email, tb_users.mobile_num, tb_cities.id AS city_id, tb_cities.city_name AS city, tb_region.region_name AS province, tb_region.id AS region_id, tb_users.account_type');
 			$this->db->from('tb_sri_account');
 			$this->db->join('tb_users','tb_users.user_id = tb_sri_account.user_id');
-			$this->db->join('tb_region', 'tb_region.id = tb_sri_account.province');
 			$this->db->join('tb_cities', 'tb_cities.id = tb_sri_account.city');
+			$this->db->join('tb_region', 'tb_region.id = tb_cities.region_id');
 			$this->db->where('tb_sri_account.user_id', $user_id);
 		}
 		if($acct_type == 2){
 			$this->db->select('tb_employee.*, tb_employee.user_id AS user_id, tb_users.email, tb_users.mobile_num, tb_cities.city_name AS city, tb_region.region_name AS province, tb_users.account_type');
 			$this->db->from('tb_employee');
 			$this->db->join('tb_users','tb_users.user_id = tb_employee.user_id');
-			$this->db->join('tb_region', 'tb_region.id = tb_employee.province_1');
 			$this->db->join('tb_cities', 'tb_cities.id = tb_employee.city_1');
+			$this->db->join('tb_region', 'tb_region.id = tb_cities.region_id');
 			$this->db->where('tb_employee.user_id', $user_id);
 		}
 		if($acct_type == 3){
 			$this->db->select('tb_employer.*, tb_employer.user_id AS user_id, tb_employer.id AS comp_id, tb_industry.industry_name AS industry, tb_employer.industry AS industry_id,tb_users.email, tb_users.mobile_num, tb_cities.city_name AS city, tb_region.region_name AS province, tb_users.account_type');
 			$this->db->from('tb_employer');
 			$this->db->join('tb_users','tb_users.user_id = tb_employer.user_id');
-			$this->db->join('tb_region', 'tb_region.id = tb_employer.province_1');
 			$this->db->join('tb_cities', 'tb_cities.id = tb_employer.city_1');
+			$this->db->join('tb_region', 'tb_region.id = tb_cities.region_id');
 			$this->db->join('tb_industry', 'tb_industry.id = tb_employer.industry');
 			$this->db->where('tb_employer.user_id', $user_id);
 		}
@@ -175,7 +174,7 @@ class Auth_model extends CI_Model{
 	public function newUserActivationCode($code, $uid, $dateCreated)
 	{
 		$data['code'] = $code;
-		$data['userid'] = $uid;
+		$data['user_id'] = $uid;
 		$data['date_created'] = $dateCreated;
 		$data['status'] = 1;
 

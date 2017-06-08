@@ -135,9 +135,9 @@
                                         <div class="row">
                                             <?php foreach($locations AS $location):?>
                                                 <?php $locId = $location['id']; ?>
-                                                <?php $totalJobs = $this->job_post_model->getTotalJobsByLocation($locId)?>
+                                                <?php $totalJobs = $this->admin_model->getFeaturedJobsByLocation($locId, $reg = FALSE, $Status = TRUE)?>
                                                 <div class="col-sm-3">
-                                                    <li class="fs-13"><a href="" data-id="<?=$location['id']?>" onclick="return false;"><?=$location['region_name']?></a> - <span class="">(<?=$totalJobs?>) jobs</span></li>
+                                                    <li class="fs-13"><a href="" data-id="<?=$location['id']?>" onclick="return false;"><?=$location['region_name']?></a> - <span class="">(<?=count($totalJobs)?>) jobs</span></li>
                                                 </div>    
 
                                             <?php endforeach;?>

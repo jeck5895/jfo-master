@@ -18,7 +18,7 @@
 	         
 	        $this->db->select('*, tb_featured_companies.id AS id, tb_featured_companies.is_active AS is_active');
 			$this->db->from($this->table);
-			$this->db->join('tb_employer','tb_employer.id = tb_featured_companies.company_id');
+			$this->db->join('tb_employer','tb_employer.user_id = tb_featured_companies.company_id');
 			$this->db->join('tb_industry','tb_industry.id = tb_employer.industry');
 			$this->db->join('tb_region', 'tb_region.id = tb_employer.province_1');
 			$this->db->join('tb_cities', 'tb_cities.id = tb_employer.city_1');

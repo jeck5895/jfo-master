@@ -3177,7 +3177,8 @@ tbody.collapse.show {
 }
 
 .new-notif{
-  background-color: #DDE7FC!important;
+  /*background-color: #DDE7FC!important;*/
+  background-color:#f7f7f9;
 }
 
 #notif-list{
@@ -3262,6 +3263,11 @@ tbody.collapse.show {
   white-space: normal;
   background: none;
   border: 0;
+}
+.dropdown-notif .dropdown-item:focus, .dropdown-notif .dropdown-item:hover {
+  color: /*#fff*/#1d1e1f;
+  text-decoration: none;
+  background-color:/* #349bea*/#f7f7f9;
 }
 
 .dropdown-default .dropdown-item:focus, .dropdown-default .dropdown-item:hover {
@@ -9277,6 +9283,10 @@ a.bg-inverse:focus, a.bg-inverse:hover {
 
 .text-bold{
   font-weight: bold;
+}
+
+.text-underline{
+    text-decoration: underline;
 }
 
 .text-upper{

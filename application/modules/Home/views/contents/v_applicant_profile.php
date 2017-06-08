@@ -92,3 +92,14 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url('assets/js/plugins/dropzone.js');?>"></script>
 <script type="text/javascript" src="<?=base_url('assets/js/appProf.js')?>"></script>
+<?php 
+	$this->load->model('api/auth_model');
+	if(isset($_COOKIE['_ut'])):
+		$user = $this->auth_model->getUserByToken($_COOKIE['_ut']);
+		if(!empty($user) && $user->account_type == 3):
+?>
+	<script type="text/javascript" src="<?php echo base_url('assets/js/company/pjp.js');?>"></script>
+<?php 
+		endif;
+	endif;
+?>

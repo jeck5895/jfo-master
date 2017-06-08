@@ -75,7 +75,7 @@ $(function () {
                                 html += '</div>';
                                 html += '<div class="user-info" style="margin-left: 8px!important;">';
 
-                                    html += '<label class="user-name"><a href="#profileModal" id="view_app_profile" data-toggle="modal" data-target="#profileModal" data-aid="'+item.id+'">'+item.first_name+" "+item.last_name+'</a></label>  ';
+                                    html += '<label class="user-name"><a href="'+App.pathUrl+'/applicants/'+item.id+'" target="'+item.id+'">'+item.first_name+" "+item.last_name+'</a></label>  ';
                                     html += '<ul class="list-unstyled mb-1">';
                                         html += '<li>'+item.gender+' '+item.age+' y/o</li>';
                                         html += '<li ><i class="fa fa-map-marker"></i> '+item.address+'</li>';

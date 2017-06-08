@@ -1,6 +1,7 @@
 <?php if(isset($_COOKIE['_typ']) && $_COOKIE['_typ'] == "ap"):?>
 	<?php $this->load->view('template/v_home_sidebar')?>
 <?php endif?>
+
 <?php
 	if(isset($_GET['vt']) && $_GET['vt'] == "jobs-by-location"){
 		$this->load->model('api/admin_model');
@@ -44,7 +45,7 @@
 					<input type="search" id="search-jobs" class="form-control" name="search" placeholder="Search Job">	
 				</div>
 				<div class="col d-filter-group">
-					<button type="button" id="btn-i-search" class="btn btn-info btn-materialize form-control">SEARCH</button>
+					<button type="button" id="btn-i-search" class="btn btn-info btn-materialize form-control ripple">SEARCH</button>
 				</div>
 			</div>
 			<div class="clear-filter-box">
@@ -60,39 +61,42 @@
 			<div class="job-container">
 				
 				<?php if(isset($_GET['vt']) && $_GET['vt'] == "jobs-by-location"):?>
-					<div class="box box-widget">
-						<div class="box-header py-2">
-							<h6 class="header mb-0">Featured jobs in <?=urldecode($_GET['location']);?></h6>
-						</div>
-						<div class="box-body py-1">
-							<div class="row">
+					<?php if(count($featuredJobsByLocation) != 0):?>
+				
+						<div class="box box-widget">
+							<div class="box-header py-2">
+								<h6 class="header mb-0">Featured jobs in <?=urldecode($_GET['location']);?></h6>
+							</div>
+							<div class="box-body py-1">
+								<div class="row">
 
-								<?php $counter=0;?>		
+									<?php $counter=0;?>		
 
-								<?php foreach($featuredJobsByLocation AS $job):?>
+									<?php foreach($featuredJobsByLocation AS $job):?>
 
-									<?php $counter++;?>
+										<?php $counter++;?>
 
-									<div class="col-md-3">
+										<div class="col-md-3">
 
-										<div class="py-2 acc-header">	
-											<a data-toggle="collapse" href="#collapseSidebar<?=$counter?>" aria-expanded="false" aria-controls="collapseSidebar" class="">
-												<i class="fa fa-plus pos-right fc-grey" style="top:25px;"></i>
-											</a>
-											<a class="fs-13 text-bold text-upper mb-0" href="<?=$job['url']?>" target="<?=$job['url']?>"><?=$job['position']?></a>
-											<p class="fs-12"><a href="<?=$job['company_url']?>" target="<?=$job['company_url']?>"><?=$job['company']?></a></p>
-											<div class="collapse" id="collapseSidebar<?=$counter?>">
-												<div class="card card-block fs-13">
-													<?=$job['description']?>
-													<a href="<?=$job['url']?>" class="text-center" target="<?=$job['url']?>">See more</a>
+											<div class="py-2 acc-header">	
+												<a data-toggle="collapse" href="#collapseSidebar<?=$counter?>" aria-expanded="false" aria-controls="collapseSidebar" class="">
+													<i class="fa fa-plus pos-right fc-grey" style="top:25px;"></i>
+												</a>
+												<a class="fs-13 text-bold text-upper mb-0" href="<?=$job['url']?>" target="<?=$job['url']?>"><?=$job['position']?></a>
+												<p class="fs-12"><a href="<?=$job['company_url']?>" target="<?=$job['company_url']?>"><?=$job['company']?></a></p>
+												<div class="collapse" id="collapseSidebar<?=$counter?>">
+													<div class="card card-block fs-13">
+														<?=$job['description']?>
+														<a href="<?=$job['url']?>" class="text-center" target="<?=$job['url']?>">See more</a>
+													</div>
 												</div>
-											</div>
-										</div>	
-									</div>
-								<?php endforeach;?>	
+											</div>	
+										</div>
+									<?php endforeach;?>	
+								</div>
 							</div>
 						</div>
-					</div>	
+					<?php endif;?>		
 				<?php else:?>
 					<div class="box box-widget">
 						<div class="box-header py-2">

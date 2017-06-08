@@ -12,6 +12,7 @@
 	<script type="text/javascript" src="<?php //echo base_url('assets/js/jquery-validate.bootstrap-tooltip.min.js');?>"></script>
 	<script type="text/javascript" src="<?php echo base_url('assets/js/plugins/localstoragedb.min.js');?>"></script>
 	<script type="text/javascript" src="<?php echo base_url('assets/js/plugins/bootstrap-notify.min.js');?>"></script>
+	<script type="text/javascript" src="<?php echo base_url('assets/js/plugins/easyNotify.js');?>"></script>
 	
 	<script type="text/javascript" src="<?php echo base_url('assets/bootstrap-filestyle/src/bootstrap-filestyle.min.js');?>"></script>
 	<script type="text/javascript" src="<?php echo base_url('assets/select2/select2.full.min.js');?>"></script>

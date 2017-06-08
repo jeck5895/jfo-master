@@ -18,6 +18,82 @@ $(function () {
         return $.parseJSON(response);
     }
 
+     function getData(url, callback)
+    {
+        $.ajax({
+            type: "GET",
+            url : url,
+            dataType: "JSON",
+            success: callback,
+            error:function(){
+               
+            }
+        });
+    }
+
+    function getCookie(cname) {
+        var name = cname + "=";
+        var decodedCookie = decodeURIComponent(document.cookie);
+        var ca = decodedCookie.split(';');
+        for(var i = 0; i <ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+    }
+
+    function loadNotification()
+    {
+        getData(App.apiUrl +"/companies/notifications",function(data){
+            var html = "";
+            var new_notif = 0;
+            $("#notif-list").html("");
+            console.log(data);
+            if(data.length != ""){
+                $.each(data, function (index, item){
+                    new_notif = (item.status == 1)? new_notif = new_notif + 1 : new_notif;
+                    notif_class = (item.status == 1)? "new-notif" : "";
+                    html += "<li class='"+notif_class+"'>";
+                        html += "<a href='"+item.link+"' target='"+item.link+"'>";
+                            html += "<div class='dropdown-item dropdown-notif-item'>";
+                                html += item.notification_html;
+                                html += "<p class='text-muted fs-11'>"+moment(item.date_created).format('MMMM D, YYYY')+' ('+moment(item.date_created).fromNow()+")</p>";
+                            html += "</div>";    
+                        html += "</a>";    
+                    html += "</li>";
+                });
+
+                if(new_notif != 0){
+                    $("#notif-badge").css("display","block");
+                    $("#notif-badge").css("right","24px");
+                    $("#notif-badge").html(new_notif);
+                }
+
+                $("#notif-list").append(html);
+                
+            }
+            else{
+                html += '<div class="dropdown-item">';
+                    html += '<p class="fs-13 text-muted-light text-center">No notifications right now</p>';
+                html += '</div>';
+
+                $("#notif-list").append(html);
+            }
+        });
+    }
+
+    /*
+    *FOR PUSHING NOTIFICATION
+
+    */
+    loadNotification();
+
+
     var table_approval = $('#approval_job_table').DataTable({ 
             "order": [[ 5, "desc" ]],
             "processing": true, //Feature control the processing indicator.
@@ -147,6 +223,62 @@ $(function () {
             ],
     });
 
+     var pusher = new Pusher('2a2530e2a6d4fc64f74f',{
+            authEndpoint: App.pathUrl + '/notification/auth',
+            auth: {
+              headers: {
+                'X-CSRF-Token': "123456",
+            },
+            authTransport: 'jsonp'
+        }
+    });
+
+    var notificationsChannel = pusher.subscribe("private-"+getCookie("_u"));
+
+    notificationsChannel.bind('private-'+getCookie("_u")+'-notification', function(notification){
+        
+        loadNotification();
+        table_approval.ajax.reload(null, false);
+        published_job_table.ajax.reload(null, false);
+        declined_job_table.ajax.reload(null, false);
+        expired_job_table.ajax.reload(null, false);
+
+        var message = notification.message;
+
+        var redirect = function(){
+            window.open(notification.link);
+        };
+        
+        var options = {
+            title: "jobfair-online.net",
+            options: {
+              body: message,
+              icon: App.pathUrl + "/assets/images/app/jfo_logo_mini.png",
+              lang: 'en-US',
+              onClick: redirect
+          }
+        };
+
+        $("#easyNotify").easyNotify(options);
+
+
+        // $.notify({
+        //     title: " ",//<strong>"+name+"</strong>
+        //     message: message
+        // },{
+        //     type: "default",
+        //     delay: 80000,
+        //     placement: {
+        //         from: "bottom",
+        //         align: "left"
+        //     },
+        //     animate: {
+        //         enter: 'animated fadeIn',
+        //         exit: 'animated fadeOut'
+        //     }
+        // });
+    });
+
     // $('#approval_job_table_filter input, #approval_job_table_length select').removeClass('form-control-sm');
     $('#approval_job_table tbody').on( 'mouseenter', 'td > a > img#edit, td > a > img#view, td > a > img#delete', function () {
         var id = $(this).attr('id');
@@ -272,10 +404,10 @@ $(function () {
         if(job_ids.length != 0)
         {
             $.confirm({
-                icon: 'fa fa-exclamation-circle',
+                icon: ' ',
                 alignMiddle: true,
                 columnClass: 'col-md-4',   
-                title: 'JobFair Online says:',
+                title: ' ',
                 content: 'Delete this/these job(s)?',
                 buttons: {
                     confirm: {
@@ -361,10 +493,10 @@ $(function () {
         job_ids.push(id);
 
         $.confirm({
-            icon: 'fa fa-exclamation-circle',
+            icon: ' ',
             alignMiddle: true,
             columnClass: 'col-md-4',   
-            title: 'JobFair Online says:',
+            title: ' ',
             content: 'Are you sure you want to delete this job?',
             buttons: {
                 confirm: {

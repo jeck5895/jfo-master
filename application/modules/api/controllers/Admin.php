@@ -1,6 +1,4 @@
-<?php
-
-defined('BASEPATH') OR exit('No direct script access allowed');
+<?php defined('BASEPATH') OR exit('No direct script access allowed');
 
 // This can be removed if you use __autoload() in config.php OR use Modular Extensions
 /** @noinspection PhpIncludeInspection */
@@ -651,6 +649,336 @@ class Admin extends REST_Controller {
         }
     }
 
+    public function advertisement_logo_post()
+    {
+        if(!isset($_COOKIE['_ut']))
+        {
+            $this->response([
+                'status' => FALSE,
+                'message' => 'REQUEST FORBIDDEN' 
+                ],REST_Controller::HTTP_FORBIDDEN);
+        }
+        else
+        {
+            $token = $_COOKIE['_ut'];
+            $user = $this->auth_model->getUserByToken($token);
+
+            if(!empty($user) && $user->account_type == 1)
+            {
+                $ads['title'] = $this->post('ads_title');
+                $ads['ads_url'] = $this->post('ads_link');
+                $ads['duration'] = $this->post('duration');
+                $ads['date_created'] = date('Y-m-d h:i:s');
+                $ads['is_active'] = 0;
+                $response = array(
+                                "status"=>TRUE,
+                                "message" => "Logo has been saved",
+                                "data" => $ads
+                                );
+                            $this->response($response, REST_Controller::HTTP_CREATED);
+                $log['user_id'] = $user->user_id;
+                $log['audit_action'] = 57;
+                $log['table_name'] = "tb_advertisement";
+                $log['record_id'] = $user->user_id;
+                $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                $log['date'] = date('Y-m-d H:i:s');
+                $log['is_active'] = 1;
+                $this->log_model->save($log);
+
+                if($adsId = $this->admin_model->saveAdvertisementLogo($ads))
+                {
+                    $rand_id = time();
+                    $filename = $rand_id.preg_replace('/\s+/', '_', $_FILES['userfile']['name']);
+                    $folder = md5($rand_id.$this->functions->guid());
+                    $upload_response = $this->functions->upload_advertisement_logo($folder, $filename);
+
+                    if($upload_response['status'] === TRUE)
+                     {
+                        $data['upload_path'] = $upload_response['path'];
+                        $data['filename'] = $filename;
+                        if($this->admin_model->updateAdvertisementLogo($adsId, $data))
+                        {
+                            $response = array(
+                                "status"=>TRUE,
+                                "message" => "Advertisement has been saved",
+                                );
+                            $this->response($response, REST_Controller::HTTP_CREATED);
+                        }
+                    }
+                    else{
+                        $this->admin_model->deleteErrorUploadLogo($adsId); //delete record of error upload file
+                        rmdir($upload_response['path']); //delete folder
+                        $response = array(
+                            "status"=>TRUE,
+                            "message" => $upload_response['error'],
+                            );
+                        $this->response($response, REST_Controller::HTTP_NO_CONTENT);
+                    }
+                }
+            }
+            else{
+                $this->response(['status' => FALSE, 'message' => 'REQUEST UNAUTHORIZED' ],REST_Controller::HTTP_UNAUTHORIZED);
+            }
+        }   
+    }
+
+    public function advertisement_logo_activate_post()
+    {
+        if(!isset($_COOKIE['_ut']))
+        {
+            $this->response([
+                'status' => FALSE,
+                'message' => 'REQUEST FORBIDDEN' 
+                ],REST_Controller::HTTP_FORBIDDEN);
+        }
+        else
+        {
+            $token = $_COOKIE['_ut'];
+            $user = $this->auth_model->getUserByToken($token);
+
+            if(!empty($user) && $user->account_type == 1)
+            {
+                $id = $this->my_encrypt->decode($this->post('id'));
+                $query = $this->admin_model->getAdvertisementLogo($id);
+                $ads['start_date'] = date('Y-m-d H:i:s');
+                $ads['end_date'] = date("Y-m-d H:i:s", strtotime('+'.$query->duration." day"));
+                $ads['is_active'] = 1;
+
+                $log['user_id'] = $user->user_id;
+                $log['audit_action'] = 60;
+                $log['table_name'] = "tb_advertisement";
+                $log['record_id'] = $user->user_id;
+                $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                $log['date'] = date('Y-m-d H:i:s');
+                $log['is_active'] = 1;
+                $this->log_model->save($log);
+                
+                
+                if($fID = $this->admin_model->updateAdvertisementLogo($id, $ads))
+                {
+
+                    $response = array(    
+                        "status"=>TRUE,
+                        "message" => "Logo has been activated",        
+                        "data" => $ads                 
+                    );
+                    $this->response($response, REST_Controller::HTTP_CREATED);
+
+                }
+            }
+            else{
+                $this->response(['status' => FALSE, 'message' => 'REQUEST UNAUTHORIZED' ],REST_Controller::HTTP_UNAUTHORIZED);
+            }
+        }
+    }
+
+    public function advertisement_logo_deactivate_post()
+    {
+        if(!isset($_COOKIE['_ut']))
+        {
+            $this->response([
+                'status' => FALSE,
+                'message' => 'REQUEST FORBIDDEN' 
+                ],REST_Controller::HTTP_FORBIDDEN);
+        }
+        else
+        {
+            $token = $_COOKIE['_ut'];
+            $user = $this->auth_model->getUserByToken($token);
+
+            if(!empty($user) && $user->account_type == 1)
+            {
+                $id = $this->my_encrypt->decode($this->post('id'));
+                $query = $this->admin_model->getAdvertisementLogo($id);
+                $ads['start_date'] = NULL;
+                $ads['end_date'] = NULL;
+                $ads['is_active'] = 0;
+
+                $log['user_id'] = $user->user_id;
+                $log['audit_action'] = 61;
+                $log['table_name'] = "tb_advertisement";
+                $log['record_id'] = $user->user_id;
+                $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                $log['date'] = date('Y-m-d H:i:s');
+                $log['is_active'] = 1;
+                $this->log_model->save($log);
+                
+                
+                if($fID = $this->admin_model->updateAdvertisementLogo($id, $ads))
+                {
+
+                    $response = array(    
+                        "status"=>TRUE,
+                        "message" => "Logo has been deactivated",                         
+                    );
+                    $this->response($response, REST_Controller::HTTP_CREATED);
+
+                }
+            }
+            else{
+                $this->response(['status' => FALSE, 'message' => 'REQUEST UNAUTHORIZED' ],REST_Controller::HTTP_UNAUTHORIZED);
+            }
+        }
+    }
+
+    public function advertisement_logo_patch()
+    {
+        if(!isset($_COOKIE['_ut']))
+        {
+            $this->response([
+                'status' => FALSE,
+                'message' => 'REQUEST FORBIDDEN' 
+                ],REST_Controller::HTTP_FORBIDDEN);
+        }
+        else
+        {
+            $token = $_COOKIE['_ut'];
+            $user = $this->auth_model->getUserByToken($token);
+
+            if(!empty($user) && $user->account_type == 1)
+            {
+                $ads_id = $this->my_encrypt->decode($this->patch('ads_id'));
+                $ads['title'] = $this->patch('title');
+                $ads['ads_url'] = $this->patch('ads_link');
+                $ads['duration'] = $this->patch('duration');
+        
+                if($this->admin_model->updateAdvertisementLogo($ads_id, $ads))
+                {
+                    $log['user_id'] = $user->user_id;
+                    $log['audit_action'] = 58;
+                    $log['table_name'] = "tb_advertisement";
+                    $log['record_id'] = $user->user_id;
+                    $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                    $log['date'] = date('Y-m-d H:i:s');
+                    $log['is_active'] = 1;
+                    $this->log_model->save($log);
+
+                    $response = array(
+                        "status"=>TRUE,
+                        "message" => "Logo information changes saved",
+                        );
+                    $this->response($response, REST_Controller::HTTP_CREATED);
+                }
+            }
+            else{
+                $this->response(['status' => FALSE, 'message' => 'REQUEST UNAUTHORIZED' ],REST_Controller::HTTP_UNAUTHORIZED);
+            }
+        }
+
+    }
+
+    public function advertisement_logo_get()
+    {
+        if(!isset($_COOKIE['_ut']))
+        {
+            $this->response([
+                'status' => FALSE,
+                'message' => 'REQUEST FORBIDDEN' 
+                ],REST_Controller::HTTP_FORBIDDEN);
+        }
+        else
+        {
+            $token = $_COOKIE['_ut'];
+            $user = $this->auth_model->getUserByToken($token);
+
+            if(!empty($user) && $user->account_type == 1)
+            {
+                $id = $this->my_encrypt->decode($this->get('id'));
+
+                if($id == NULL)
+                {
+                    $sliderImages = array();
+                    $query = $this->admin_model->getAdvertisementLogo();
+
+                    if(!empty($query))
+                    {
+                        foreach($query as $image)
+                        {
+                            $sliderImages[] = array(
+                                "path" => base_url().str_replace("./", "", $image->upload_path)."/".$image->filename,
+                                "ads_url" => $image->ads_url,
+                                "ads_title" => $image->title,
+                                "start_date" => $image->start_date,
+                                "end_date" => $image->end_date,
+                                "duration" => $query->duration,
+                                );
+                        }
+
+                        $this->response($sliderImages, REST_Controller::HTTP_OK);
+                    }else{
+                        $this->response(['status'=>FALSE,'message'=>'Logo not found'], REST_Controller::HTTP_NOT_FOUND);
+                    }
+                }
+                else{
+                    $query = $this->admin_model->getAdvertisementLogo($id);
+                    
+                    if(!empty($query))
+                    {
+                        $sliderImage = array(
+                            "path" => base_url().str_replace("./", "", $query->upload_path)."/".$query->filename,
+                            "ads_url" => $query->ads_url,
+                            "ads_title" => $query->title,
+                            "duration" => $query->duration,
+                            );
+                        $this->response($sliderImage, REST_Controller::HTTP_OK);
+                    }
+                    else{
+                        $this->response(['status'=>FALSE,'message'=>'Logo not found',"data"=> $query], REST_Controller::HTTP_NOT_FOUND);
+                    }
+                }
+            }
+            else{
+                $this->response(['status' => FALSE, 'message' => 'REQUEST UNAUTHORIZED' ],REST_Controller::HTTP_UNAUTHORIZED);
+            }
+        }
+    }
+
+    public function advertisement_logo_delete()
+    {
+        if(!isset($_COOKIE['_ut']))
+        {
+            $this->response([
+                'status' => FALSE,
+                'message' => 'REQUEST FORBIDDEN' 
+                ],REST_Controller::HTTP_FORBIDDEN);
+        }
+        else
+        {
+            $token = $_COOKIE['_ut'];
+            $user = $this->auth_model->getUserByToken($token);
+
+            if(!empty($user) && $user->account_type == 1)
+            {
+                $ads_id = $this->my_encrypt->decode($this->delete('id'));
+
+                $query = $this->admin_model->getAdvertisementLogo($ads_id);
+            
+                unlink($query->upload_path."/".$query->filename);
+                rmdir($query->upload_path);
+                $this->admin_model->deleteErrorUploadLogo($ads_id);
+
+                $log['user_id'] = $user->user_id;
+                $log['audit_action'] = 59;
+                $log['table_name'] = "tb_advertisement";
+                $log['record_id'] = $user->user_id;
+                $log['ip_address'] = $_SERVER['REMOTE_ADDR'];
+                $log['date'] = date('Y-m-d H:i:s');
+                $log['is_active'] = 1;
+                $this->log_model->save($log);
+                
+                $response = array(
+                    "status"=>TRUE,
+                    "message" => "Advertisement deleted",
+                    );
+                $this->response($response, REST_Controller::HTTP_OK);
+            }
+            else{
+                $this->response(['status' => FALSE, 'message' => 'REQUEST UNAUTHORIZED' ],REST_Controller::HTTP_UNAUTHORIZED);
+            }
+        }
+    }
+
+
     public function featured_jobs_get()
     {
         if(!isset($_COOKIE['_ut']))
@@ -799,7 +1127,7 @@ class Admin extends REST_Controller {
                 $ads['job_position'] = $this->my_encrypt->decode($this->patch('job_position'));
                 $ads['duration'] = $this->patch('duration');
                 $ads['job_description'] = $this->patch('job_content');
-                $ads['date_modified'] = date('Y-m-d h:i:s');
+                $ads['date_modified'] = date('Y-m-d H:i:s');
                 $ads['use_alternative']  = $this->patch('alt_status');
                 $ads['alternative_title'] = ($this->patch('alt_status') == 1)? $this->patch('alt_position') :"";
 

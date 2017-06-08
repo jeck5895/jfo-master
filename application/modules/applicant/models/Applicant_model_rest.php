@@ -361,21 +361,4 @@ class Applicant_model_rest extends CI_Model{
 		$this->db->delete('tb_verification', array('user_id' => $id));
 		return TRUE;
 	}
-
-	public function getNotification($user_id, $status = FALSE)
-	{
-		$this->db->select("*");
-		$this->db->from("tb_notification");
-		
-		if($status != FALSE){
-		
-			$this->db->where("status",1);
-		
-		}
-		$this->db->where("receiver_id" ,$user_id);
-		$this->db->order_by("date_created", "DESC");
-		$query = $this->db->get();
-
-		return $query->result();
-	}
 }	

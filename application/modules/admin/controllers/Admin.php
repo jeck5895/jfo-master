@@ -1,5 +1,4 @@
-<?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+<?php defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Admin extends MY_Controller {
 
@@ -280,6 +279,29 @@ class Admin extends MY_Controller {
         }     
     }
 
+    public function maintenance_advertisements_logo()
+    {
+        if(isset($_COOKIE['_ut']) && $_COOKIE['_typ'])
+        {
+            $user = $this->auth_model->getUserByToken($_COOKIE['_ut']);
+            if(!empty($user) && $user->account_type == 1){
+                
+                $page_title['title'] = 'Advertisements | Logo';
+                $page = 'v_admin_ads_logo';
+                $data['admin'] = $admindata['user'] = $this->auth_model->getUserDetails($user->user_id, $user->account_type);
+                $admindata['admin_logo'] = base_url().str_replace("./", "", $data['admin']->profile_pic);
+
+                $this->loadMainPage($page_title, $admindata, $page ,$data);
+            }
+            else{
+                redirect('');    
+            }
+        }
+        else{
+            redirect('');
+        }     
+    }
+
     public function maintenance_featured_jobs()
     {
         if(isset($_COOKIE['_ut']) && $_COOKIE['_typ'])
@@ -349,19 +371,28 @@ class Admin extends MY_Controller {
         }
     }
 
-    //not used. Alternative is maintenance() with dynamic contents using templating(mustache)
-    public function job_fair()
+    public function activity_logs()
     {
+        if(isset($_COOKIE['_ut']) && $_COOKIE['_typ'])
+        {
+            $user = $this->auth_model->getUserByToken($_COOKIE['_ut']);
+            if(!empty($user) && $user->account_type == 1){
+                
+                $page_title['title'] = 'Activity Logs';
+                $page = 'v_admin_log';
+                $data['admin'] = $admindata['user'] = $this->auth_model->getUserDetails($user->user_id, $user->account_type);
+                $admindata['admin_logo'] = base_url().str_replace("./", "", $data['admin']->profile_pic);
 
-        $page_title['title'] = 'Admin | Job Fair';
-        $page = 'v_admin_job_fair';
-        $data['regions'] =  $this->reg_model->getLocation();
-        $data['admin'] = $admindata['user'] = $this->admin_model->getActiveAdmin($this->session->userdata('active_admin')->user_id);
-        $admindata['admin_logo'] = base_url().str_replace("./", "", $data['admin']->profile_pic);
-        
-        $this->loadMainPage($page_title, $admindata, $page ,$data);   
+                $this->loadMainPage($page_title, $admindata, $page ,$data);
+            }
+            else{
+                redirect('');    
+            }
+        }
+        else{
+            redirect('');
+        }
     }
-   
 
 
     public function get_job_post($status)
@@ -402,7 +433,7 @@ class Admin extends MY_Controller {
                     $no++;
                     $row = array();
                         $input_html = "<label class='custom-control custom-checkbox'>";
-                        $input_html .= "<input type='checkbox' class='custom-control-input' name='".$name."' data-id='".$job_id ."'>";
+                        $input_html .= "<input type='checkbox' class='custom-control-input' name='".$name."' data-id='".$job_id ."' data-cuid='".$job->user_id."'>";
                         $input_html .= "<span class='custom-control-indicator'></span>";
                         $input_html .= "<span class='custom-control-description'></span>";
                         $input_html .= "</label>";
@@ -689,6 +720,68 @@ class Admin extends MY_Controller {
         }    
     }
 
+    public function get_advertisements_logo()
+    {
+        $this->load->model('advertisement_logo_model');
+        if(isset($_COOKIE['_ut']) && $_COOKIE['_typ'])
+        {
+            $user = $this->auth_model->getUserByToken($_COOKIE['_ut']);
+            if(!empty($user) && $user->account_type == 1)
+            {    
+                $list = $this->advertisement_logo_model->get_datatables();
+
+                $data = array();
+
+                $no = $_POST['start'];
+                foreach ($list as $advertisement) {
+                    $date_now = new DateTime(date('Y-m-d H:i:s'));
+                    $end_date = new DateTime($advertisement->end_date);
+                    $interval = $date_now->diff($end_date)->format('%R%a days');
+                    $advertisement_id = $this->my_encrypt->encode($advertisement->id);
+                    $no++;
+                    $row = array();
+                    
+                    $row[] = $advertisement->id;
+                    $row[] = $advertisement->title;
+                    $row[] = ($advertisement->start_date != NULL)? date('F j, Y', strtotime($advertisement->start_date)) :"TBD";
+                    $row[] = ($advertisement->end_date != NULL)? date('F j, Y', strtotime($advertisement->end_date)): "TBD" ;
+                    $row[] = $advertisement->duration;
+                    $row[] = ($advertisement->is_active == 1)? "Active":"Inactive";
+
+                    if($advertisement->is_active == 1){
+                         $html = '<a href="" onclick="return false;" id="btn-deactivate" data-id="'.$advertisement_id.'" data-title="'.$advertisement->title.'" class="ml-2"><i class="fa fa-power-off fc-grey fa-1x"></i></a>';
+                    }
+                    else{
+                        $html = '<a href="" onclick="return false;" id="btn-activate" data-id="'.$advertisement_id.'" data-title="'.$advertisement->title.'" class="ml-2"><i class="fa fa-check fc-grey fa-1x"></i></a>';
+                    }
+
+                    $html .= '<a href="" onclick="return false;" id="btn-view" data-toggle="modal" data-target="#dynamicModal" data-id="'.$advertisement_id.'" data-title="'.$advertisement->title.'" class="ml-2"><img id="view" src="'.base_url('assets/images/app/PreviewDataTableIcon.png').'" ></a> ';
+                    
+                    $html .= '<a href="" onclick="return false;" id="btn-edit" data-toggle="modal" data-target="#dynamicModal" data-id="'.$advertisement_id.'" data-title="'.$advertisement->title.'" class="" style="margin-right:0.25rem;"><img id="edit" src="'.base_url('assets/images/app/EditDataTableIcon.png').'"></a> ';
+
+                    $html .= '<a href="" onclick="return false;" id="btn-delete" data-id="'.$advertisement_id.'" data-title="'.$advertisement->title.'"><img id="delete" src="'.base_url('assets/images/app/DeleteDataTableIcon.png').'"></a>';
+                            
+                    $row[] = $html;
+                    
+
+                    $data[] = $row;
+                }
+
+                $output = array(
+                                "draw" => $_POST['draw'],
+                                "recordsTotal" => $this->advertisement_logo_model->count_all(),
+                                "recordsFiltered" => $this->advertisement_logo_model->count_filtered(),
+                                "data" => $data,
+                        );
+                //output to json format
+                echo json_encode($output); 
+            }
+            else{
+                redirect("404");
+            }
+        }    
+    }
+
     public function get_featured_jobs()
     {
         $this->load->model('featured_job_model');
@@ -887,6 +980,58 @@ class Admin extends MY_Controller {
         }    
     }
 
+    public function get_activity_logs()
+    {
+        $this->load->model('datatable_logs_model');
+        if(isset($_COOKIE['_ut']) && $_COOKIE['_typ'])
+        {
+            $user = $this->auth_model->getUserByToken($_COOKIE['_ut']);
+            if(!empty($user) && $user->account_type == 1)
+            {    
+                $list = $this->datatable_logs_model->get_datatables();
+
+                $data = array();
+
+                $no = $_POST['start'];
+                foreach ($list as $log) {
+                    
+                    $no++;
+                    $row = array();
+                    
+                    $row[] = $log->id;
+
+                    if($log->account_type == 1){
+                        $row[] = $log->afname ." ".$log->alname;
+                    }
+                    if($log->account_type == 2){
+                        $row[] = $log->emfname ." ".$log->emlname;
+                    }
+                    if($log->account_type == 3){
+                        $row[] = $log->erfname ." ".$log->erlname;
+                    }
+                    
+                    $row[] = $log->table_name ;
+                    $row[] = $log->record_id;
+                    $row[] = $log->ip_address;
+                    $row[] =  date('F j, Y h:i A', strtotime($log->date));
+                
+                    $data[] = $row;
+                }
+
+                $output = array(
+                                "draw" => $_POST['draw'],
+                                "recordsTotal" => $this->datatable_logs_model->count_all(),
+                                "recordsFiltered" => $this->datatable_logs_model->count_filtered(),
+                                "data" => $data,
+                        );
+                echo json_encode($output); 
+            }
+            else{
+                redirect("404");
+            }
+        }
+    }
+
     public function createAdmin()
     {
         $uid = $this->functions->guid();
@@ -912,6 +1057,10 @@ class Admin extends MY_Controller {
         $user_info['date_create'] = date('Y-m-d h:i:s');
         $user_info['date_modified'] = date('Y-m-d h:i:s');
         $user_info['is_active'] = 1;
-        $this->admin_model->create($user, $user_info);
+        if($this->admin_model->create($user_info, $user))
+        {
+            $response = array("success" => true);
+            echo json_encode($response);
+        }
     }   
 }

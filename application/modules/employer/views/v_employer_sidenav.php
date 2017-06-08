@@ -67,5 +67,5 @@
 </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-<script type="text/javascript" src="<?php echo base_url('assets/js/company/employer.js');?>"></script>
+<script type="text/javascript" src="<?php echo base_url('assets/js/company/pjp.js');?>"></script>
 <script type="text/javascript" src="<?php echo base_url('assets/js/plugins/dropzone.js');?>"></script>

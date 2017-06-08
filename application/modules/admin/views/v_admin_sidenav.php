@@ -2,7 +2,7 @@
 <div class="sidebar-wide bg-semi-dark">
     <div class="info-container fs-12">
         <div class="user-image">
-            <img src="<?= ($admin->profile_pic != '')? $admin_logo : base_url('assets/images/avatar.jpg'); ?>" class="img-fluid" alt="User Image">
+            <img src="<?= ($admin->profile_pic != '')? $admin_logo : base_url('assets/images/Default_User2.png'); ?>" class="img-fluid" alt="User Image">
         </div>
         <div class="user-info sidenav hidden-md-down">
             <?php $fname = strtolower($admin->first_name); $mname = strtolower($admin->middle_name); $lname= strtolower($admin->last_name);?>
@@ -12,8 +12,8 @@
     </div>
     <ul class="sidebar-nav">
         <li>
-            <a href="<?=site_url('co/jobs/review')?>">
-                <i class="fa fa-tachometer"></i> <span class="hidden-md-down">DASHBOARD</span>
+            <a href="<?=site_url('admin/dashboard')?>">
+                <i class="fa fa-tachometer"></i> <span class="hidden-md-down">Dashboard</span>
             </a>
         </li>
         <li>
@@ -92,6 +92,12 @@
                             </a>
                         </li>
                         <li style="font-size: 12px; margin-bottom: 5px;">
+                            <a href="<?=site_url('admin/maintenance/advertisements/logo')?>" style="color: #909090;">
+                                Featured Logo
+                                
+                            </a>
+                        </li>
+                        <li style="font-size: 12px; margin-bottom: 5px;">
                             <a href="<?=site_url('admin/maintenance/advertisements/featured/companies')?>" style="color: #909090;">
                                 Featured Companies
                                 
@@ -112,7 +118,7 @@
             </div>
         </li>
         <li>
-            <a href="<?=site_url('co/profile/settings')?>">
+            <a href="<?=site_url('admin/activity-logs')?>">
                 <i class="fa fa-tasks"></i>  <span class="hidden-md-down">Activity Logs</span>
             </a>
         </li>
@@ -120,5 +126,4 @@
 </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-<script type="text/javascript" src="<?php echo base_url('assets/js/company/employer.js');?>"></script>
 <script type="text/javascript" src="<?php echo base_url('assets/js/plugins/dropzone.js');?>"></script>

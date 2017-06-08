@@ -1,4 +1,8 @@
 <?php $var = explode("/",$_SERVER['PATH_INFO']); $isMe = explode("-",$var[2]);?>
+
+<?php if(isset($_COOKIE['_ut']) && isset($_COOKIE['_u']) && isset($_COOKIE['_typ']) && $_COOKIE['_typ'] == "ap"):?>
+    <?=$this->load->view('template/v_home_sidebar');//$this->load->view('applicant/v_applicant_sidebar');?>
+<?php endif;?>
 <div class="container">
     <div class="col-md-10 offset-md-1">
         <div class="c-profile-box">

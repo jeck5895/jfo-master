@@ -382,10 +382,10 @@ $(function () {
                 };
 
             $.confirm({
-                icon: 'fa fa-exclamation-circle',
+                icon: ' ',
                 alignMiddle: true,
                 columnClass: 'col-md-4',   
-                title: 'JobFair Online says:',
+                title: ' ',
                 content: 'Are you sure to permanently remove this record?',
                 buttons: {
                     confirm: {
@@ -639,10 +639,10 @@ $(function () {
             data = {old_file: old_file_name, op:action};
 
             $.confirm({
-                icon: 'fa fa-exclamation-circle',
+                icon: ' ',
                 alignMiddle: true,
                 columnClass: 'col-md-4',   
-                title: 'JobFair Online says:',
+                title: ' ',
                 content: 'Remove your current resume?',
                 buttons: {
                     confirm: {

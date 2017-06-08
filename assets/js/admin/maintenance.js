@@ -237,7 +237,7 @@ $(document).ready(function(){
  					alignMiddle: true,
  					columnClass: 'col-md-4',   
  					title: ' ',
- 					content: 'Are you sure to delete '+slid_title+'?',
+ 					content: 'Are you sure you want to delete '+slid_title+'?',
  					buttons: {
  						confirm: {
  							btnClass: 'btn-success btn-materialize btn-materialize-sm',
@@ -289,7 +289,7 @@ $(document).ready(function(){
  					alignMiddle: true,
  					columnClass: 'col-md-4',   
  					title: ' ',
- 					content: 'Are you sure activate <strong>'+slid_title+'</strong>?',
+ 					content: 'Are you sure you want to activate <strong>'+slid_title+'</strong>?',
  					buttons: {
  						confirm: {
  							btnClass: 'btn-success btn-materialize btn-materialize-sm',
@@ -340,7 +340,7 @@ $(document).ready(function(){
  					alignMiddle: true,
  					columnClass: 'col-md-4',   
  					title: ' ',
- 					content: 'Are you sure deactivate <strong>'+slid_title+'</strong>?',
+ 					content: 'Are you sure you want to deactivate <strong>'+slid_title+'</strong>?',
  					buttons: {
  						confirm: {
  							btnClass: 'btn-success btn-materialize btn-materialize-sm',

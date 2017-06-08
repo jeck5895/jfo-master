@@ -1186,7 +1186,9 @@ class Applicants extends REST_Controller {
 
     public function notifications_get()
     {
-         if(!isset($_COOKIE['_ut']))
+        $this->load->model('notification/notification_model');
+         
+        if(!isset($_COOKIE['_ut']))
         {
             $this->response([
                 'status' => FALSE,
@@ -1200,7 +1202,7 @@ class Applicants extends REST_Controller {
 
             if(!empty($user) && $user->account_type == 2)
             { 
-                $query = $this->app_model->getNotification($user->user_id);
+                $query = $this->notification_model->getNotification($user->user_id);
                 $notifications = array();
 
                 foreach($query as $notif)
@@ -1208,6 +1210,8 @@ class Applicants extends REST_Controller {
                     $notifications[] = array(
                         "id" => $notif->id,
                         "notification" => $notif->notification,
+                        "notification_html" => $notif->notification_html,
+                        "link" => $notif->notif_url,
                         "date_created" => $notif->date_created,
                         "status" => $notif->status 
                         );

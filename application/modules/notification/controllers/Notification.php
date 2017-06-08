@@ -27,7 +27,6 @@ class Notification extends MY_Controller
 		
 		$pusher = $this->ci_pusher->get_pusher();
 
-		
 		$data['name'] = "JobFair-Online.net";
 		$data['message'] = 'Hello Jeck! This message was sent at ' . date('Y-m-d H:i:s');
 
@@ -86,6 +85,7 @@ class Notification extends MY_Controller
                 	$query = $this->company_model->getVerification($id);
 
                 	$message = "";
+                    $html_message = "";
                     $action = $this->input->post('method');
                     $temp = str_replace(array('\\', '/'), '', $query->job_position);
                     $position_uri =  str_replace(' ', '-', $temp);
@@ -94,10 +94,18 @@ class Notification extends MY_Controller
 
                     
                     if($action == "tag_as_reviewed"){
-                    	$message = '<a href="'.base_url().'jobs/details/'.$position_uri.'/'.$job_id.'" target="'.$job_id.'"><strong>'.$query->recruiter.'</strong> has viewed and is reviewing your application for the position <strong>'.$query->job_position.'</strong></a>';
+                    	
+                        $message = $query->recruiter.' is currently reviewing your applicantion for '.$query->job_position;
+                        $html_message = '<strong>'.$query->recruiter.'</strong> is currently reviewing your applicantion for <strong>'.$query->job_position.'</strong>';
                     }
                     elseif($action == "tag_for_interview"){
-                    	$message = '<a href="'.base_url().'jobs/details/'.$position_uri.'/'.$job_id.'" target="'.$job_id.'"><strong>'.$query->recruiter.'</strong> has been tag you as FOR INTERVIEW.</a>';
+                    	$message = 'Your application for '.$query->recruiter.' for the position of '.$query->job_position.' has been tag as Qualified. Please wait for the employer to contact you for further processing of your application';
+
+                        $html_message = 'Your application for <strong>'.$query->recruiter.'</strong> for the position of <strong>'.$query->job_position.'</strong> has been tag as Qualified. Please wait for the employer to contact you for further processing of your application';
+                    }
+                    elseif($action == "tag_as_reject"){
+                        $message = $query->recruiter.' has dismissed application for '.$query->job_position;
+                        $html_message = '<strong>'.$query->recruiter.'</strong> has dismissed application for <strong>'.$query->job_position.'</strong>';   
                     }
                     else{
 
@@ -106,32 +114,113 @@ class Notification extends MY_Controller
                     $data['sender_id'] = $user->user_id;
                     $data['receiver_id'] = $query->applicant_id;
                     $data['notification'] = $message;
+                    $data['notification_html'] = $html_message;
                     $data['channel_name'] = "private-".$query->applicant_id;
                     $data['notif_event'] = "private-".$query->applicant_id."-notification";
                     $data['date_created'] = date("Y-m-d H:i:s");
                     $data['status'] = 1;
 
-                    if($this->notification_model->create($data))
+                    if($notif_id = $this->notification_model->create($data))
                     {
-                    	$notif['name'] = 'Hello '.$query->apl_fname."!<br> ";
-						$notif['message'] = $data['notification'];
+                        $updateData['notif_url'] = site_url('jobs/details/'.$position_uri.'/'.$job_id.'/?notif_id='.$notif_id);
 
-						$event = $pusher->trigger($data['channel_name'], $data['notif_event'], $notif);
+                        if($this->notification_model->update($notif_id, $updateData) == TRUE)
+                        {
+                        	$notif['name'] = 'Hello '.$query->apl_fname."!<br> ";
+    						$notif['message'] = $data['notification'];
+                            $notif['link'] = site_url('jobs/details/'.$position_uri.'/'.$job_id.'/?notif_id='.$notif_id);
 
-						if ($event === TRUE)
-						{
-							$response = array("status"=>TRUE, "data"=>$query, "ids" => $ids);
-	                        
-	                        echo json_encode($response);
-						}
-						else
-						{
-							$response = array("status"=>TRUE);
-	                        
-	                        echo json_encode($response);
-						}	
+    						$event = $pusher->trigger($data['channel_name'], $data['notif_event'], $notif);	
+                        }
                     }
+                }
+
+                if ($event === TRUE)
+                {
+                    $response = array("status"=>TRUE, "data"=>$query, "ids" => $ids);
+
+                    echo json_encode($response);
+                }
+                else
+                {
+                    $response = array("status"=>FALSE);
+
+                    echo json_encode($response);
                 }  
+            }
+            if(!empty($user) && $user->account_type == 1)
+            {
+                $this->load->model('api/job_post_model');
+                
+                $ids = $this->input->post('id',true);
+                $action = $this->input->post('method');
+                
+                foreach($ids AS $id )
+                {
+                    $id = $this->my_encrypt->decode($id);
+                    
+                    $query = $this->job_post_model->get($id);
+     
+                    $message = "";
+                    $html_message = "";
+    
+                    if($action == "approve"){
+                        
+                        $temp = str_replace(array('\\', '/'), '', $query['job_position']);
+                        $position_uri =  str_replace(' ', '-', $temp);
+                        $job_id = $this->my_encrypt->encode($query['job_id']);
+
+                        $message = 'Greetings! '.$query['first_name'].' your job post '.$query['job_position'].' has been approved';
+                        $html_message = 'Greetings! '.$query['first_name'].' your job post <strong>'.$query['job_position'].'</strong> has been Approved';
+                        
+                    }
+                    if($action == "decline"){
+                        $message = 'Greetings! '.$query['first_name'].' your job post '.$query['job_position'].' has been declined.';
+                        $html_message = 'Greetings! '.$query['first_name'].' your job post <strong>'.$query['job_position'].'</strong> has been Declined';
+                        
+                    }
+
+                    $data['sender_id'] = $user->user_id;
+                    $data['receiver_id'] = $query['user_id'];
+                    $data['notification'] = $message;
+                    $data['notification_html'] = $html_message;
+                    $data['channel_name'] = "private-".$query['user_id'];
+                    $data['notif_event'] = "private-".$query['user_id']."-notification";
+                    $data['date_created'] = date("Y-m-d H:i:s");
+                    $data['status'] = 1;
+
+                    if($notif_id = $this->notification_model->create($data))
+                    {
+
+                        $updateData['notif_url'] = ($action == "approve")? $link =  site_url('jobs/details/'.$position_uri.'/'.$job_id.'/?notif_id='.$notif_id): site_url('co/jobs');
+
+
+
+                        if($this->notification_model->update($notif_id, $updateData) == TRUE)
+                        {
+                            
+                            $notif['message'] = $data['notification'];
+                            $notif['link'] = $updateData['notif_url'];
+
+                            $event = $pusher->trigger($data['channel_name'], $data['notif_event'], $notif); 
+                        }
+                    }
+                }
+
+
+                if ($event === TRUE)
+                {
+                    $response = array("status"=>TRUE, "data"=>$query, "ids" => $ids);
+                    
+                    echo json_encode($response);
+                }
+                else
+                {
+                    $response = array("status"=>FALSE);
+                    
+                    echo json_encode($response);
+                }
+              
             }
             else
             {

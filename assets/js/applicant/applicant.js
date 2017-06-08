@@ -170,11 +170,11 @@
     });
 
   
-    var pendingURL = App.apiUrl+'/applicants/application?status=1';
-    var withdrawnURL = App.apiUrl+'/applicants/application?status=2';
-    var reviewedURL = App.apiUrl+'/applicants/application?status=3';
-    var unsuccessfulURL = App.apiUrl+'/applicants/application?status=4';
-    var interviewURL = App.apiUrl+'/applicants/application?status=5';
+    var pendingURL = App.apiUrl+'/applicants/application?status=1&limit=10';
+    var withdrawnURL = App.apiUrl+'/applicants/application?status=2&limit=10';
+    var reviewedURL = App.apiUrl+'/applicants/application?status=3&limit=10';
+    var unsuccessfulURL = App.apiUrl+'/applicants/application?status=4&limit=10';
+    var interviewURL = App.apiUrl+'/applicants/application?status=5&limit=10';
 
     function loadBadges() {
         
@@ -405,16 +405,18 @@
             var html = "";
             var new_notif = 0;
             $("#notif-list").html("");
-
+            console.log(data);
             if(data.length != ""){
                 $.each(data, function (index, item){
                     new_notif = (item.status == 1)? new_notif = new_notif + 1 : new_notif;
                     notif_class = (item.status == 1)? "new-notif" : "";
                     html += "<li class='"+notif_class+"'>";
-                        html += "<div class='dropdown-item dropdown-notif-item'>";
-                            html += item.notification;
-                            html += "<p class='text-muted fs-11'>"+moment(item.date_created).format('MMMM D, YYYY')+' ('+moment(item.date_created).fromNow()+")</p>";
-                        html += "</div>";    
+                        html += "<a href='"+item.link+"' target='"+item.link+"'>";
+                            html += "<div class='dropdown-item dropdown-notif-item'>";
+                                html += item.notification_html;
+                                html += "<p class='text-muted fs-11'>"+moment(item.date_created).format('MMMM D, YYYY')+' ('+moment(item.date_created).fromNow()+")</p>";
+                            html += "</div>";    
+                        html += "</a>";    
                     html += "</li>";
                 });
 
@@ -425,7 +427,7 @@
                 }
 
                 $("#notif-list").append(html);
-                console.log(new_notif)
+                
             }
             else{
                 html += '<div class="dropdown-item">';
@@ -488,25 +490,43 @@
     var notificationsChannel = pusher.subscribe("private-"+getCookie("_u"));
 
     notificationsChannel.bind('private-'+getCookie("_u")+'-notification', function(notification){
+        
+        reloadJobs();
+
         var message = notification.message;
         var name = notification.name;
+        var redirect = function(){
+            window.open(notification.link);
+        };
+        
+        var options = {
+            title: "jobfair-online.net",
+            options: {
+              body: message,
+              icon: App.pathUrl + "/assets/images/app/jfo_logo_mini.png",
+              lang: 'en-US',
+              onClick: redirect
+          }
+      };
 
-        $.notify({
-            title: " ",//<strong>"+name+"</strong>
-            message: message
-        },{
-            type: "default",
-            delay: 80000,
-            placement: {
-                from: "bottom",
-                align: "left"
-            },
-            animate: {
-                enter: 'animated fadeIn',
-                exit: 'animated fadeOut'
-            }
-        });
-        reloadJobs();
+      $("#easyNotify").easyNotify(options);
+
+
+        // $.notify({
+        //     title: " ",//<strong>"+name+"</strong>
+        //     message: message
+        // },{
+        //     type: "default",
+        //     delay: 80000,
+        //     placement: {
+        //         from: "bottom",
+        //         align: "left"
+        //     },
+        //     animate: {
+        //         enter: 'animated fadeIn',
+        //         exit: 'animated fadeOut'
+        //     }
+        // });
     });
     
     

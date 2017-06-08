@@ -93,6 +93,38 @@
             }	
 		}
 
+		public function upload_advertisement_logo($folder, $file)
+		{
+			$config['file_name'] =  $file;
+			$config['upload_path']   = './assets/images/cover_logo/'.$folder; 
+			$config['allowed_types'] = 'jpeg|jpg|png|gif'; 
+			$config['remove_spaces'] = FALSE;
+			$config['max_size'] = 0;
+			$config['detect_mime']  = TRUE;
+
+			$this->load->library('upload', $config);
+
+			if (!file_exists($config['upload_path'])) 
+            {
+                mkdir('./assets/images/cover_logo/'.$folder, 0777);
+            }
+
+            if(!$this->upload->do_upload())
+            {
+              	$result['error'] = $this->upload->display_errors();
+              	$result['status'] = FALSE;
+              	$result['path'] = $config['upload_path'];
+             	return $result;
+            }
+            else
+            {
+            	$img_path['path'] = $config['upload_path'];
+            	$img_path['status'] = TRUE;
+				
+				return $img_path;
+            }	
+		}
+
 		public function upload_banner($id, $file)
 		{
 			$folder_name = $id;

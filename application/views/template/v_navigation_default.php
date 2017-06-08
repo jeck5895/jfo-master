@@ -25,9 +25,6 @@
                         </span> 
                     </a>
 
-                   <!--  <ul id="notif-list" class="dropdown-menu dropdown-notif top-navigation dropdown-default" aria-labelledby="responsiveNavbarDropdown">
-                        <li class="dropdown-item text-center"><label class="fs-11 text-bold">No notifications for now</label></li>
-                    </ul> -->
                     <div class="dropdown-menu dropdown-notif">
                         <div class="box-header with-border py-1">
                             <p class="text-bold">Notifications</p>
@@ -62,6 +59,21 @@
                 </li>
 
             <?php elseif(isset($_COOKIE['_typ']) && $_COOKIE['_typ'] == "ep"):?>
+                <li class="nav-item dropdown">
+                    <a href="" class="nav-link nav-link-purple" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">    <span class="nav-notification fa fa-flag-o"> 
+                            <span id="notif-badge" class="badge-sm badge badge-pill badge-danger badge-nav-notif" style="display: none;">0</span>    
+                        </span> 
+                    </a>
+
+                    <div class="dropdown-menu dropdown-notif">
+                        <div class="box-header with-border py-1">
+                            <p class="text-bold">Notifications</p>
+                        </div>
+                        <div class="box-body py-0 px-0" id="notif-list">
+                            
+                        </div>
+                    </div>
+                </li>
                 <li class="nav-item active dropdown">
 
                     <a class="nav-link nav-link-purple dropdown-toggle" href="" id="responsiveNavbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -94,7 +106,7 @@
                             <a class="dropdown-item" href="<?php echo base_url('admin/review/jobs')?>">Review Job Post</a>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="<?php echo base_url('admin/review/applicants')?>">Applicants</a>
+                            <a class="dropdown-item" href="<?php echo base_url('admin/applicants/for-review')?>">Applicants</a>
                         </li>
                         <li>
                             <a class="dropdown-item" href="<?php echo base_url('admin/review/applicants')?>">Reports</a>

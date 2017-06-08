@@ -233,7 +233,7 @@ class Companies extends REST_Controller {
                         $log['is_active'] = 1;
                         $this->log_model->save($log);
                         
-                        $comp_activation_code = $this->reg_model->newUserActivationCode($activationCode, $uid, $employer_acct['date_created']);
+                        $comp_activation_code = $this->auth_model->newUserActivationCode($activationCode, $uid, $employer_acct['date_created']);
                         $email_response = $this->functions->sendEmail($email, $subject, $content);
                         
                         if($email_response == TRUE)
@@ -1188,6 +1188,49 @@ class Companies extends REST_Controller {
             }
             else{
                 $this->response(['status' => FALSE, 'message' => 'REQUEST UNAUTHORIZED' ],REST_Controller::HTTP_UNAUTHORIZED);
+            }
+        }
+    }
+
+    public function notifications_get()
+    {
+        $this->load->model('notification/notification_model');
+         
+        if(!isset($_COOKIE['_ut']))
+        {
+            $this->response([
+                'status' => FALSE,
+                'message' => 'REQUEST FORBIDDEN' 
+                ],REST_Controller::HTTP_FORBIDDEN);
+        }
+        else
+        {
+            $token = $_COOKIE['_ut'];
+            $user = $this->auth_model->getUserByToken($token);
+
+            if(!empty($user) && $user->account_type == 3)
+            { 
+                $query = $this->notification_model->getNotification($user->user_id);
+                $notifications = array();
+
+                foreach($query as $notif)
+                {
+                    $notifications[] = array(
+                        "id" => $notif->id,
+                        "notification" => $notif->notification,
+                        "notification_html" => $notif->notification_html,
+                        "link" => $notif->notif_url,
+                        "date_created" => $notif->date_created,
+                        "status" => $notif->status 
+                        );
+                }
+
+                //$response = array("status" => true, "data"=> $notifications,"id"=> $user->user_id);
+
+                $this->response($notifications, REST_Controller::HTTP_OK);
+            }
+            else{
+                $this->response(['status'=>FALSE, "response"=> "REQUEST UNAUTHORIZED"], REST_Controller::HTTP_UNAUTHORIZED);
             }
         }
     }

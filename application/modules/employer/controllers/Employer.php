@@ -177,6 +177,7 @@ class Employer extends MY_Controller{
                 $user = $this->auth_model->getUserByToken($_COOKIE['_ut']);
                 $data['employer'] = $employerdata['user'] = $this->auth_model->getUserDetails($user->user_id, $user->account_type);
                 $data['company_logo'] = ($data['employer']->profile_pic != "")? base_url().str_replace("./", "", $data['employer']->profile_pic) : base_url('assets/images/Default_Company_Logo1.png');
+
                 $this->loadMainPage($page_title, $employerdata, $page ,$data);
                
             }
@@ -272,16 +273,23 @@ class Employer extends MY_Controller{
             $row[] = date('F j, Y', strtotime($job->date_create));
                 
             if($status == "pending"){
-                $html = '<a href="'.base_url().'employer/job/edit/id/'.$job_id.'" target="'.$job_id.'" class="ml-2"><img id="edit" src="'.base_url('assets/images/app/EditDataTableIcon.png').'"></a> ';
+                $html = '<a title="Edit" href="'.base_url().'employer/job/edit/id/'.$job_id.'" target="'.$job_id.'" class="ml-2"><img id="edit" src="'.base_url('assets/images/app/EditDataTableIcon.png').'"></a> ';
+                $html .= '<a title="Delete" href="" id="delete-job" data-id="'.$job_id.'" onclick="return false;" class="ml-2"><img id="delete" src="'.base_url('assets/images/app/DeleteDataTableIcon.png').'"></a>';
             }
                 
             $temp = str_replace(array('\\', '/'), '', $job->job_position);
             $position_uri =  str_replace(' ', '-', $temp);
             
             if($status == "published"){    
-                $html = '<a href="'.base_url().'jobs/details/'.$position_uri.'/'.$job_id.'"  target="'.$job_id.'" class="ml-2"><img id="view" src="'.base_url('assets/images/app/PreviewDataTableIcon.png').'" ></a> ';
+                $html = '<a title="View" href="'.base_url().'jobs/details/'.$position_uri.'/'.$job_id.'"  target="'.$job_id.'" class="ml-2"><img id="view" src="'.base_url('assets/images/app/PreviewDataTableIcon.png').'" ></a> ';
+                $html .= '<a title="Delete" href="" id="delete-job" data-id="'.$job_id.'" onclick="return false;" class="ml-2"><img id="delete" src="'.base_url('assets/images/app/DeleteDataTableIcon.png').'"></a>';
             }    
-                $html = '<a  href="" id="delete-job" data-id="'.$job_id.'" onclick="return false;" class="ml-2"><img id="delete" src="'.base_url('assets/images/app/DeleteDataTableIcon.png').'"></a>';
+            
+            if($status == "declined" || $status == "expired"){
+                
+                $html = '<a title="Delete"  href="" id="delete-job" data-id="'.$job_id.'" onclick="return false;" class="ml-2"><img id="delete" src="'.base_url('assets/images/app/DeleteDataTableIcon.png').'"></a>';
+          
+            }
                  
             $row[] = $html;
 

@@ -32,9 +32,9 @@
 
 			$page_title['title'] = "Job-Fair Online";
 			$sliderImages = array();
-			$featuredCompanies = array();
+			$featuredLogo = array();
 			$query = $this->admin_model->getAdvertisementSlider();
-			$companies = $this->admin_model->getFeaturedCompanies();
+			$ads_logo = $this->admin_model->getAdvertisementLogo();
 				
 				foreach($query as $image)
 				{
@@ -46,21 +46,16 @@
 						);
 				}
 
-				foreach($companies as $company)
+				foreach($ads_logo as $logo)
 				{
-					$featuredCompanies[] = array(
-						"logo" => base_url().str_replace("./", "", $company->profile_pic),
-						"company" => $company->company_name,
-						"location" => $company->city_name.", ".$company->region_name,
-						"industry" => $company->industry_name,
-						"industry_id" => $company->industry,
-						"prov_id" => $company->province_1,
-						"city_id" => $company->city_1,
-						"cid" => $company->cid
+					$featuredLogo[] = array(
+						"logo" => base_url().str_replace("./", "", $logo->upload_path)."/".$logo->filename,
+						"ads_url" => $logo->ads_url,
+						"title" => $logo->title,
 						);
 				}
 			$data['sliderImages'] = $sliderImages;
-			$data['featuredCompanies'] = $featuredCompanies;
+			$data['featuredLogo'] = $featuredLogo;
 			$this->loadHomePage($page_title,$data);
 		}
 
@@ -123,7 +118,7 @@
 			{
 				$user = $this->auth_model->getUserByToken($_COOKIE['_ut']);
 				$userdata['user'] = $data['user'] =  $this->auth_model->getUserDetails($user->user_id, $user->account_type);
-				
+				$userdata['user_image'] = base_url().str_replace("./", "", $userdata['user']->profile_pic);
 			}
 			$this->loadMainPage($page_title,  $userdata, $page, $data);
 		}
@@ -139,13 +134,14 @@
 			{
 				$user = $this->auth_model->getUserByToken($_COOKIE['_ut']);
         		$userdata['user'] = $data['user'] =  $this->auth_model->getUserDetails($user->user_id, $user->account_type);
+        		$userdata['user_image'] = base_url().str_replace("./", "", $userdata['user']->profile_pic);
 			}
 			$this->loadMainPage($page_title, $userdata, $page ,$data);
 		}
 
 		public function applicant_profile($company_name)
 		{
-			$page_title['title'] = 'JFO | Company Profile';
+			$page_title['title'] = 'Applicant Profile';
 			$page = 'contents/v_applicant_profile';
 			$data = NULL;
 			$userdata['user'] = NULL; 

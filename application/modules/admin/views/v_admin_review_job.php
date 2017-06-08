@@ -10,17 +10,29 @@
                 <hr>
                 <ul class="nav nav-tabs applicant-edit-tab nav-fill" role="tablist">
                     <li class="nav-item">
-                        <a class="nav-link active" data-toggle="tab" href="#for-approval-tab" role="tab">For Review</a>
+                        <a class="nav-link active" data-toggle="tab" href="#for-approval-tab" role="tab">For Review
+                            <span id="review-badge" class="badge badge-pill badge-danger pos-right" style="top:5px">0</span>
+                        </a>
+                            
                     </li>
                 
                     <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#published-tab" role="tab">Published</a>
+                        <a class="nav-link" data-toggle="tab" href="#published-tab" role="tab">Published
+                            <span id="published-badge" class="badge badge-pill badge-danger pos-right" style="top:5px">0</span>
+                        </a>
+                        
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#declined-tab" role="tab">Declined</a>
+                        <a class="nav-link" data-toggle="tab" href="#declined-tab" role="tab">Declined
+                            <span id="declined-badge" class="badge badge-pill badge-danger pos-right" style="top:5px">0</span>
+                        </a>
+                       
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#trash-tab" role="tab">Trash</a>
+                        <a class="nav-link" data-toggle="tab" href="#trash-tab" role="tab">Trash
+                            <span id="trash-badge" class="badge badge-pill badge-danger pos-right" style="top:5px">0</span>
+                        </a>
+                        
                     </li>
                 </ul>
                 

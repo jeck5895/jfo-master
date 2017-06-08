@@ -394,7 +394,7 @@ $(function () {
                     alignMiddle: true,
                     columnClass: 'col-md-4',   
                     title: ' ',
-                    content: 'Are you sure to tag '+app_name.ucfirst()+' '+prompt_message+'?',
+                    content: 'Are you sure you want to tag '+app_name.ucfirst()+' '+prompt_message+'?',
                     buttons: {
                         confirm: {
                             btnClass: 'btn-success btn-materialize btn-materialize-sm',
@@ -469,7 +469,7 @@ $(function () {
                     alignMiddle: true,
                     columnClass: 'col-md-4',   
                     title: ' ',
-                    content: 'Are you sure to tag these applicants '+prompt_message+'?',
+                    content: 'Are you sure you want to tag these applicants '+prompt_message+'?',
                     buttons: {
                         confirm: {
                             btnClass: 'btn-success btn-materialize btn-materialize-sm',

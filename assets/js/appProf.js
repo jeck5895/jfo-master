@@ -36,10 +36,11 @@ $(function () {
     getData(App.apiUrl+'/applicants/profiles/id/'+id, function(data){
         var fname = data.first_name.toLowerCase();
         var mname = data.middle_name.toLowerCase();
+        var mInitial = (mname != "")? mname[0].ucfirst()+".": "";
         var lname = data.last_name.toLowerCase();
         var html = "";
 
-        $("#applicant-name").html(fname.ucfirst() +" "+ mname[0].ucfirst()+"."+" "+lname.ucfirst());
+        $("#applicant-name").html(fname.ucfirst() +" "+ mInitial+" "+lname.ucfirst());
         $("#profile-image").attr('src', data.profile_img);
         $("#degree").text(data.degree);
         $("#mobile").text(data.mobile);

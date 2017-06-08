@@ -1,6 +1,4 @@
-<?php
-
-defined('BASEPATH') OR exit('No direct script access allowed');
+<?php defined('BASEPATH') OR exit('No direct script access allowed');
 
 // This can be removed if you use __autoload() in config.php OR use Modular Extensions
 /** @noinspection PhpIncludeInspection */
@@ -171,7 +169,6 @@ class Jobs extends REST_Controller {
                         "totalJobs" => $this->job_post_model->getTotalRows($job_status), 
                         "offset" => 0,
                         "status" => (!empty($user))?$status:FALSE,
-                        "query" => $query['query_string']
                         );
                 }
 
@@ -203,28 +200,29 @@ class Jobs extends REST_Controller {
                     $job_application = $this->job_post_model->getJobVerification($job_id, $user->user_id);
                 }
 
-                $salary1 = floatval($job['0']['salary_range1']);
-                $salary2 = floatval($job['0']['salary_range2']);
-                $salary = ($job['0']['salary_status'] == 1)? number_format($salary1,2,'.',',').'-'.number_format($salary2,2,'.',','):0; 
+                $salary1 = floatval($job['salary_range1']);
+                $salary2 = floatval($job['salary_range2']);
+                $salary = ($job['salary_status'] == 1)? number_format($salary1,2,'.',',').'-'.number_format($salary2,2,'.',','):0; 
                 $jobs = array(
-                    "id" => $this->my_encrypt->encode($job['0']['job_id']),
-                    "position" => $job['0']['job_position'],
-                    "cid" => $job['0']['company_id'],
-                    "company" => $job['0']['company_name'],
-                    "location" => $job['0']['city_1'].','.$job['0']['province_1'],
+                    "id" => $this->my_encrypt->encode($job['job_id']),
+                    "position" => $job['job_position'],
+                    "cid" => $job['company_id'],
+                    "company" => $job['company_name'],
+                    "location" => $job['city_1'].','.$job['province_1'],
                     "salary" =>  $salary,
-                    "open_date" =>  $job['0']['job_opendate'],
-                    "due_date" => $job['0']['job_closedate'],
-                    "category" => $job['0']['category_name'],
-                    "cat_id" => $job['0']['category'],
-                    "job_description" => $job['0']['job_description'],
-                    "education_requirement" => $job['0']['educational_attainment'],
-                    "company_details" => $job['0']['company_description'],
-                    "company_logo" => base_url().str_replace("./", "",$job['0']['profile_pic']),
-                    "vacancies" => $job['0']['num_vacancies'],
-                    "course" => $job['0']['code'],
+                    "open_date" =>  $job['job_opendate'],
+                    "due_date" => $job['job_closedate'],
+                    "category" => $job['category_name'],
+                    "cat_id" => $job['category'],
+                    "job_description" => $job['job_description'],
+                    "education_requirement" => $job['educational_attainment'],
+                    "company_details" => $job['company_description'],
+                    "company_logo" => base_url().str_replace("./", "",$job['profile_pic']),
+                    "vacancies" => $job['num_vacancies'],
+                    "course" => $job['code'],
                     "vid" => (!empty($user) && $status != FALSE)? $this->my_encrypt->encode($job_application->id) :FALSE,
-                    "status" => (!empty($user))? $status :FALSE
+                    "status" => (!empty($user))? $status :FALSE,
+                    "cuid" => $job['user_id']
                     );
 
                 $this->response($jobs, REST_Controller::HTTP_OK);
@@ -251,31 +249,31 @@ class Jobs extends REST_Controller {
         {
 
             $jobs = array(
-                "id" => $this->my_encrypt->encode($job['0']['job_id']),
-                "position" => $job['0']['job_position'],
-                "cid" => $job['0']['company_id'],
-                "company" => $job['0']['company_name'],
-                "location" => $job['0']['city_name'].','.$job['0']['region_name'],
-                "city_id" => $job['0']['city_id'],
-                "region_id" => $job['0']['region_id'],
-                "salary_range1" => floatval($job['0']['salary_range1']),
-                "salary_range2" => floatval($job['0']['salary_range2']),
-                "open_date" =>  date('F d, Y',strtotime($job['0']['job_opendate'])),
-                "due_date" => date('F d, Y',strtotime($job['0']['job_closedate'])),
-                "category" => $job['0']['category_name'],
-                "job_description" => $job['0']['job_description'],
-                "education_requirement" => $job['0']['educational_attainment'],
-                "company_details" => $job['0']['company_description'],
-                "company_logo" => base_url().str_replace("./", "",$job['0']['profile_pic']),
-                "vacancies" => floatval($job['0']['num_vacancies']),
-                "course" => $job['0']['code'],
-                "date_posted" => $job['0']['job_opendate'],
-                "gender_requirement" => $job['0']['sex'],
-                "civil_status_requirement" => $job['0']['civil_status'],
-                "show_salary" => floatval($job['0']['salary_status']),
-                "duration" => $job['0']['expiration'],
-                "education_requirement" => $job['0']['educational_attainment'],
-                "preferred_course" => $job['0']['code'],
+                "id" => $this->my_encrypt->encode($job['job_id']),
+                "position" => $job['job_position'],
+                "cid" => $job['company_id'],
+                "company" => $job['company_name'],
+                "location" => $job['city_name'].','.$job['region_name'],
+                "city_id" => $job['city_id'],
+                "region_id" => $job['region_id'],
+                "salary_range1" => floatval($job['salary_range1']),
+                "salary_range2" => floatval($job['salary_range2']),
+                "open_date" =>  date('F d, Y',strtotime($job['job_opendate'])),
+                "due_date" => date('F d, Y',strtotime($job['job_closedate'])),
+                "category" => $job['category_name'],
+                "job_description" => $job['job_description'],
+                "education_requirement" => $job['educational_attainment'],
+                "company_details" => $job['company_description'],
+                "company_logo" => base_url().str_replace("./", "",$job['profile_pic']),
+                "vacancies" => floatval($job['num_vacancies']),
+                "course" => $job['code'],
+                "date_posted" => $job['job_opendate'],
+                "gender_requirement" => $job['sex'],
+                "civil_status_requirement" => $job['civil_status'],
+                "show_salary" => floatval($job['salary_status']),
+                "duration" => $job['expiration'],
+                "education_requirement" => $job['educational_attainment'],
+                "preferred_course" => $job['code'],
                 );
 
             $this->response($jobs, REST_Controller::HTTP_OK);

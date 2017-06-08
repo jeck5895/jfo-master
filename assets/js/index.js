@@ -147,43 +147,33 @@ $(function(){
                 //page_url = (parameters == null)? url+'?offset='+offset: url+'&offset='+offset;
                 if(keyword != '' && location == '' && category =='')
                 {   
-                    url = App.pathUrl + "/api/jobs?keyword="+keyword;
-
-                    // if(window.history.pushState)
-                    // {
-                    //     window.history.pushState({urlPath: App.pathUrl +'/jobs?keyword='+keyword},'',App.pathUrl +'/jobs?keyword='+keyword);
-                    // }
+                    url = App.pathUrl + "/api/jobs?keyword="+keyword+"&offset="+offset+"&limit=10";
                 }
                 else if((keyword && location) != '' && category =='')
                 {
-                    url = App.pathUrl + "/api/jobs?keyword="+keyword+"&reg="+location;
-
-                    // if(window.history.pushState)
-                    // {
-                    //     window.history.pushState({urlPath: App.pathUrl + "/api/jobs?keyword="+keyword+"&reg="+location},'',App.pathUrl + "/api/jobs?keyword="+keyword+"&reg="+location);
-                    // }
+                    url = App.pathUrl + "/api/jobs?keyword="+keyword+"&reg="+location+"&offset="+offset+"&limit=10";
                 }
                 else if((keyword && category) != '' && location =='')
                 {
-                    url = App.pathUrl + "/api/jobs?keyword="+keyword+"&category="+category;
+                    url = App.pathUrl + "/api/jobs?keyword="+keyword+"&category="+category+"&offset="+offset+"&limit=10";
                 }
                 else if((category && location) != '' && keyword =='')
                 {
-                    url = App.pathUrl + "/api/jobs?category="+category+"&reg="+location;
+                    url = App.pathUrl + "/api/jobs?category="+category+"&reg="+location+"&offset="+offset+"&limit=10";
                 }
                 else if(location != '' && keyword == '' && category == '')
                 {
-                    url = App.pathUrl + "/api/jobs?reg="+location;
+                    url = App.pathUrl + "/api/jobs?reg="+location+"&offset="+offset+"&limit=10";
                 }
                 else if(category != '' && location == '' && keyword == '')
                 {
-                    url = App.pathUrl + "/api/jobs?category="+category;
+                    url = App.pathUrl + "/api/jobs?category="+category+"&offset="+offset+"&limit=10";
                 }
                 else if((keyword && location && category) != ''){
-                    url = App.pathUrl + "/api/jobs?keyword="+keyword+"&reg="+location+"&category="+category;
+                    url = App.pathUrl + "/api/jobs?keyword="+keyword+"&reg="+location+"&category="+category+"&offset="+offset+"&limit=10";
                 }
                 else{
-                    url = App.pathUrl + "/api/jobs";   
+                    url = App.pathUrl + "/api/jobs?limit=10"+"&offset="+offset;   
                 }
                 paginatedJobs = getJSONDoc(url);
 

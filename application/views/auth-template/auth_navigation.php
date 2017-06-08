@@ -22,8 +22,8 @@
 							REGISTER
 						</a>
 						<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-							<a class="dropdown-item" href="<?php echo base_url('registration/applicant')?>">
-								Applicant
+							<a class="dropdown-item" href="<?php echo base_url('registration/job-seeker')?>">
+								Job Sekeer
 							</a>
 							<a class="dropdown-item" href="<?php echo base_url('registration/employer')?>">
 								Employer
