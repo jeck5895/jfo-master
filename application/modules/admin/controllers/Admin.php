@@ -999,6 +999,7 @@ class Admin extends MY_Controller {
                     $row = array();
                     
                     $row[] = $log->id;
+                    $row[] = $log->action_name;
 
                     if($log->account_type == 1){
                         $row[] = $log->afname ." ".$log->alname;

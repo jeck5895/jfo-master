@@ -38,6 +38,7 @@
                             <div class="row">
                                 <div class="col-sm-4">
                                     <select class="form-control" name="birth_month" required tabindex="4">
+                                        <option></option>
                                         <option value="01">January</option>
                                         <option value="02">February</option>
                                         <option value="03">March</option>
@@ -54,17 +55,18 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <select class="form-control" name="birth_date" required tabindex="5">
+                                        <option></option>
                                         <?php for($i = 1; $i <= 31; $i++):?>
                                             <option value="<?=$i?>"> <?=$i?> </option>
                                         <?php endfor;?>
                                     </select>
                                 </div>
                                 <div class="col-sm-4">
-                                   <select class="form-control" name="birth_year" required tabindex="6">
+                                    <select class="form-control" name="birth_year" required tabindex="6">
+                                        <option></option>
                                     <?php for($now = date("Y"),$counter = 0; $now >= 1940; $now--):?>
-                                        <?php $counter++;?>
-                                        <?php $selected = ($counter == 1)? "selected" :"";?>
-                                        <option value="<?=$now?>" <?=$selected?>> <?=$now?> </option>
+                                        
+                                        <option value="<?=$now?>"> <?=$now?> </option>
                                     <?php endfor;?>
                                     </select>
                                 </div>
@@ -153,16 +155,38 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="email"><small>Job Category</small></label>
-                    <select class="form-control" tabindex="15" name="jobCategory">
-                        <option>  </option>
-                        
-                    </select>
+                    <label for="email"><small>Institution / University</small></label>
+                    <input type="text" name="school" class="form-control" tabindex="15">
                 </div>
                 <div class="form-group">
-                    <label for="email"><small>Job Role</small></label>
-                    <select class="form-control select2 jobrole" id="job-role" multiple="multiple" tabindex="16" name="jobRole[]">
+                    <div class="row"> 
+                        <div class="col-sm-6">
+                            <label for="email"><small>Year Started</small></label>
+                            <select class="form-control" name="year_started" required tabindex="16">
+                                <option> </option>
+                                <?php for($now = date("Y"),$counter = 0; $now >= 1940; $now--):?>
+                                    <option value="<?=$now?>" > <?=$now?> </option>
+                                <?php endfor;?>
+                            </select>    
+                        </div>
+                        <div class="col-sm-6">
+                            <label for="email"><small>Year Graduated</small></label>
+                            <select class="form-control" name="year_graduated" required tabindex="17">
+                                <option> </option>
+                                <?php for($now = date("Y"),$counter = 0; $now >= 1940; $now--):?>
+                                    
+                                    <option value="<?=$now?>" > <?=$now?> </option>
+                                <?php endfor;?>
+                            </select>    
+                        </div>
+
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="email"><small>Job Category</small></label>
+                    <select class="form-control" tabindex="18" name="jobCategory">
                         <option>  </option>
+                        
                     </select>
                 </div>
                 <div class="form-group">
@@ -173,21 +197,21 @@
                             <ul class="list-inline">
                                 <li>
                                     <label class="custom-control custom-radio">
-                                    <input id="radio3" name="hearAboutUs" value="facebook" type="radio" class="custom-control-input" tabindex="17">
+                                    <input id="radio3" name="hearAboutUs" value="facebook" type="radio" class="custom-control-input" tabindex="19">
                                     <span class="custom-control-indicator"></span>
                                     <span class="custom-control-description"><i class="fa fa-facebook-official"></i> Facebook</span>
                                     </label>
                                 </li>
                                 <li>
                                     <label class="custom-control custom-radio">
-                                    <input id="radio3" name="hearAboutUs" value="twitter" type="radio" class="custom-control-input" tabindex="18">
+                                    <input id="radio3" name="hearAboutUs" value="twitter" type="radio" class="custom-control-input" tabindex="20">
                                     <span class="custom-control-indicator"></span>
                                     <span class="custom-control-description"><i class="fa fa-twitter-square"></i> Twitter</span>
                                     </label>
                                 </li>
                                 <li>
                                     <label class="custom-control custom-radio">
-                                    <input id="radio3" name="hearAboutUs" value="linkedIn" type="radio" class="custom-control-input" tabindex="19">
+                                    <input id="radio3" name="hearAboutUs" value="linkedIn" type="radio" class="custom-control-input" tabindex="21">
                                     <span class="custom-control-indicator"></span>
                                     <span class="custom-control-description"><i class="fa fa-linkedin"></i> Link In</span>
                                     </label>
@@ -198,21 +222,21 @@
                             <ul class="list-inline">
                                 <li>
                                     <label class="custom-control custom-radio">
-                                    <input id="radio3" name="hearAboutUs" value="websearch" type="radio" class="custom-control-input" tabindex="20">
+                                    <input id="radio3" name="hearAboutUs" value="websearch" type="radio" class="custom-control-input" tabindex="22">
                                     <span class="custom-control-indicator"></span>
                                     <span class="custom-control-description"><i class="fa fa-search"></i> Web Search</span>
                                     </label>
                                 </li>
                                 <li>
                                     <label class="custom-control custom-radio">
-                                    <input id="radio3" name="hearAboutUs" value="magazine" type="radio" class="custom-control-input" tabindex="21">
+                                    <input id="radio3" name="hearAboutUs" value="magazine" type="radio" class="custom-control-input" tabindex="23">
                                     <span class="custom-control-indicator"></span>
                                     <span class="custom-control-description"><i class="fa fa-file-image-o"></i> Magazine Ads</span>
                                     </label>
                                 </li>
                                 <li>
                                     <label class="custom-control custom-radio">
-                                    <input id="radio3" name="hearAboutUs"  value="newspaper" type="radio" class="custom-control-input" tabindex="22">
+                                    <input id="radio3" name="hearAboutUs"  value="newspaper" type="radio" class="custom-control-input" tabindex="24">
                                     <span class="custom-control-indicator"></span>
                                     <span class="custom-control-description"><i class="fa fa-newspaper-o"></i> Newspaper</span>
                                     </label>
@@ -223,14 +247,14 @@
                             <ul class="list-inline">
                                 <li>
                                     <label class="custom-control custom-radio">
-                                    <input id="radio3" name="hearAboutUs"  value="friends" type="radio" class="custom-control-input" tabindex="23">
+                                    <input id="radio3" name="hearAboutUs"  value="friends" type="radio" class="custom-control-input" tabindex="25">
                                     <span class="custom-control-indicator"></span>
                                     <span class="custom-control-description"><i class="fa fa-users"></i> Friends</span>
                                     </label>
                                 </li>
                                 <li>
                                     <label class="custom-control custom-radio">
-                                    <input id="radio3" name="hearAboutUs" value="others" type="radio" class="custom-control-input" tabindex="24">
+                                    <input id="radio3" name="hearAboutUs" value="others" type="radio" class="custom-control-input" tabindex="26">
                                     <span class="custom-control-indicator"></span>
                                     <span class="custom-control-description"><i class="fa fa-external-link"></i> Others</span>
                                     </label>
@@ -244,7 +268,7 @@
                 <hr>
                 <div class="form-group">
                     <label class="custom-control custom-checkbox">
-                    <input type="checkbox" name="termsCondition" class="custom-control-input" checked tabindex="25" value="1">
+                    <input type="checkbox" name="termsCondition" class="custom-control-input" checked tabindex="27" value="1">
                     <span class="custom-control-indicator"></span>
                     <span class="terms-condition"></span>
                     <span class="custom-control-description">I agree to JobFair-Online.net Terms <?php echo form_error('termsCondition','<div style="color:red;"><i class="fa fa-exclamation-circle"> </i>','</div>');?></span>
@@ -253,20 +277,20 @@
                 <br>
                 <div class="form-group">
                     <label class="custom-control custom-radio">
-                    <input id="radio3" name="infoCondition" type="radio" class="custom-control-input" tabindex="26" value="1" checked>
+                    <input id="radio3" name="infoCondition" type="radio" class="custom-control-input" tabindex="28" value="1" checked>
                     <span class="custom-control-indicator"></span>
                     <span class="custom-control-description">Allow Jobfair-online.net to make my name, age, gender, civil status, educational attainment and contact number available to all registered Employers and make my profile available to employers I applied to.</span>
                     </label>
                 </div>
                 <div class="form-group">
                     <label class="custom-control custom-radio">
-                    <input id="radio3" name="infoCondition" type="radio" class="custom-control-input" tabindex="27" value="0">
+                    <input id="radio3" name="infoCondition" type="radio" class="custom-control-input" tabindex="29" value="0">
                     <span class="custom-control-indicator"></span>
                     <span class="custom-control-description">Allow Jobfair-online.net to hide my name, age, gender, civil status, educational attainment and contact number to all registered employers and make my full profile available only to employers I applied to.</span>
                     </label>
                 </div>
                 <div class="form-group col-md-6 offset-md-3">
-                    <input type="submit" id="register-applicant" name="register-applicant" value="REGISTER" class="form-control btn btn-info btn-materialize ripple" tabindex="28">
+                    <input type="submit" id="register-applicant" name="register-applicant" value="REGISTER" class="form-control btn btn-info btn-materialize ripple" tabindex="30">
                 </div>
             </div>      
         </div>

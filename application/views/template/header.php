@@ -30,10 +30,9 @@
 	<body>
 		<div class="wrapper">
 			<div id="load" class="loader-wrapper">
-				<h6>jobfair-online.net</h6>
 				<div class="loader"></div>
 
-				<div class="loader-section section-left"></div>
-				<div class="loader-section section-right"></div>				
+				<!-- <div class="loader-section section-left"></div>
+				<div class="loader-section section-right"></div> -->				
 			</div>
 			

@@ -30,7 +30,7 @@
                 </div>
                 <div class="box box-widget">
                     <div class="box-header with-border form-note">
-                        <small><p>Making your profile <strong class="text-success">PUBLIC</strong> will allow all recruiters to view your profile, making it <strong class="text-danger">PRIVATE</strong> will allow recruiters whom you applied to view your profile. </p></small>
+                        <small><p><strong class="text-success">PUBLIC</strong> profile is visible to ALL Recruiters, while <strong class="text-danger">PRIVATE</strong> profile is only visible to the recruiters whom you applied to.</p></small>
                     </div>
                 </div>  
                     

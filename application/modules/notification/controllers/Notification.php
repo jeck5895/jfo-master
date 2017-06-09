@@ -76,7 +76,6 @@ class Notification extends MY_Controller
 
             if(!empty($user) && $user->account_type == 3)
             {
-         
                 $ids = $this->input->post('vid');
                 foreach($ids as $id)
                 {
@@ -137,7 +136,7 @@ class Notification extends MY_Controller
 
                 if ($event === TRUE)
                 {
-                    $response = array("status"=>TRUE, "data"=>$query, "ids" => $ids);
+                    $response = array("status"=>TRUE);
 
                     echo json_encode($response);
                 }
@@ -210,7 +209,7 @@ class Notification extends MY_Controller
 
                 if ($event === TRUE)
                 {
-                    $response = array("status"=>TRUE, "data"=>$query, "ids" => $ids);
+                    $response = array("status"=>TRUE);
                     
                     echo json_encode($response);
                 }
@@ -221,17 +220,6 @@ class Notification extends MY_Controller
                     echo json_encode($response);
                 }
               
-            }
-            else
-            {
-            	header('HTTP/1.0 403 Forbidden');
-
-            	$response = array(
-            		"status" => FALSE,
-            		"message" => "REQUEST FORBIDDEN"
-            		);
-
-            	echo json_encode($response);
             }
         }
 	}

@@ -29,7 +29,6 @@
 			$this->db->from($this->table);
 			$this->db->join('tb_employer','tb_employer.id = tb_featured_jobpost_location.company_id');
 			$this->db->join('tb_jobpost', 'tb_jobpost.id = tb_featured_jobpost_location.job_position');
-			$this->db->where('tb_featured_jobpost_location.is_active',1);
 			$i = 0;
 
 			foreach ($this->column as $item) 

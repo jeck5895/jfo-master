@@ -18,13 +18,17 @@
                     </div>
                 </div>
                 <div class="profile-box-body">
+                    
                     <div class="btn-box">
-                        <a href="<?=site_url('applicant/resume')?>" class="btn btn-secondary btn-materialize">View Resume</a>
+                        <?php if($user->resume_path != "" && $user->resume_name != ""):?>
+                            <a href="<?=base_url().$user->resume_path.'/'.$user->resume_name?>" class="btn btn-secondary btn-materialize">View Resume</a>
+                        <?php endif;?>       
                     </div>
+                    
                     <div class="profile-name">
                         <h5>
-                            <?php $firstname = strtolower($user->first_name); $middlename = strtolower($user->middle_name); $lastname = strtolower($user->last_name);
-                                echo ucfirst($firstname)." ".ucfirst($middlename[0])."."." ".ucfirst($lastname);
+                            <?php $firstname = strtolower($user->first_name); $mInitial = ($user->middle_name != "")?strtolower($user->middle_name).".": ""; $lastname = strtolower($user->last_name);
+                                echo ucfirst($firstname)." ".$mInitial." ".ucfirst($lastname);
                             ?>
                         </h5>
                         <p><?=$user->degree?></p>

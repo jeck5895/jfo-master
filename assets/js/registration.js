@@ -146,6 +146,17 @@
          	workExp:{
          		required: true
          	},
+            school:{
+                required: true,
+            },
+            year_started:{
+                required: true,
+            },
+            year_graduated:{
+                required: true,
+                validDateRange:true
+
+            },
          	jobCategory:{
          		required: true
          	},
@@ -169,7 +180,7 @@
  			},
  			
  			"permanent-address":{
- 				required: " Region/City field is required"
+ 				required: " Location/City field is required"
  			},
  			email:{
  				required: " Email is required",
@@ -194,6 +205,15 @@
          	workExp:{
          		required: " Work Experience is required"
          	},
+            school:{
+                required: "Institution/Univeristy is required"
+            },
+            year_started:{
+                required: "What year have you started ?"
+            },
+            year_graduated:{
+                required: "What year have you graduated ? "
+            },
          	jobCategory:{
          		required: " Please specify your desired field"
          	},
@@ -284,7 +304,9 @@
         	var educAttainment = $("#applicant-registration-form select[name=educAttainment] option:selected" ).val();
         	var workExp = $( "#applicant-registration-form select[name=workExp] option:selected" ).val();
         	var jobCategory = $("#applicant-registration-form select[name=jobCategory] option:selected" ).val();
-        	var jobRole = $("#job-role").val();
+        	var school = $("#applicant-registration-form input[name=school]").val();
+            var year_started = $("select[name=year_started]").val();
+            var year_graduated = $("select[name=year_graduated]").val();
         	var infoCondition = $("input[name = infoCondition]:checked").val();
         	var hearAboutUs = $("input[name = hearAboutUs]:checked").val();
         	var form_token  = $("input[name = token]").val();
@@ -315,7 +337,9 @@
                     educAttainment:educAttainment,
                     workExp:workExp,
                     jobCategory:jobCategory,
-                    jobRole:jobRole,
+                    school : $.trim(school),
+                    year_started:year_started,
+                    year_graduated:year_graduated,
                     infoCondition:infoCondition,
                     hearAboutUs:hearAboutUs,
                 },
@@ -326,7 +350,7 @@
                     $("#applicant-registration-form")[0].reset();
 
                     window.location = data.redirect;
-                    
+
 
                 },
                 error:function(){
@@ -334,6 +358,7 @@
                     $("#register-applicant").html("Register");
                 }
             });
+            
         }
  	});
 
@@ -740,5 +765,12 @@
 	 	//console.log(counter);
 	 	return  (counter == 11)? true: false;
 	}, jQuery.validator.format("<p style='text-align:justify; text-justify: inter-word;'> Please complete the field</p>"));
+
+    jQuery.validator.addMethod("validDateRange", function(value, element){
+        var val2 = value;    
+        var val1 = $('select[name=year_started]').val();
+        console.log(val1 +"||"+ val2);
+        return  (val1 > val2)? true: false;
+    }, jQuery.validator.format("<i class='fa fa-exclamation-triangle'></i> Academic year value is incorrect"));
 
  });    

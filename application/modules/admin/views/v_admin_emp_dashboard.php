@@ -119,7 +119,7 @@
                                                 </select>
                                             </div>
                                             <div class="col-md-4 d-filter-group">
-                                                <input type="search" id="admin-search-employers-active" data-scope="active" class="form-control form-control-sm" name="search" placeholder="Search Applicants" style="height: 29px;">  
+                                                <input type="search" id="admin-search-employers-active" data-scope="active" class="form-control form-control-sm" name="search" placeholder="Search company name" style="height: 29px;">  
                                             </div>
                                             <div class="col d-filter-group">
                                                 <button type="button" data-scope="active" id="btn-admin-search-emp" class="btn btn-info btn-materialize btn-materialize-sm form-control form-control-sm">SEARCH</button>
@@ -193,7 +193,7 @@
                                                 </select>
                                             </div>
                                             <div class="col-md-4 d-filter-group">
-                                                <input type="search" id="admin-search-employers-inactive" data-scope="inactive" class="form-control form-control-sm" name="search" placeholder="Search Applicants" style="height: 29px;">  
+                                                <input type="search" id="admin-search-employers-inactive" data-scope="inactive" class="form-control form-control-sm" name="search" placeholder="Search company name" style="height: 29px;">  
                                             </div>
                                             <div class="col d-filter-group">
                                                 <button type="button" data-scope="inactive" id="btn-admin-search-emp" class="btn btn-info btn-materialize btn-materialize-sm form-control form-control-sm">SEARCH</button>

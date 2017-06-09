@@ -52,7 +52,7 @@ class Applicants extends REST_Controller {
         {   
             $temp_date = $this->post('birth_year')."/".$this->post('birth_month').'/'.$this->post('birth_date');
             $birthdate = date("Y-m-d", strtotime($temp_date));
-            $birth_year = date("Y", strtotime($this->post('birthdate')));  
+            $birth_year = $this->post("birth_year");  
             $age = date("Y") - $birth_year;
             $mobile_no = str_replace("-","",$this->post('phonenumber'));
 
@@ -67,7 +67,9 @@ class Applicants extends REST_Controller {
             $applicant_info['s_educ_attain'] = $this->post('educAttainment');
             $applicant_info['s_work_exp'] = $this->post('workExp');
             $applicant_info['job_category'] = $this->post('jobCategory');
-            $applicant_info['job_position'] = serialize($this->post('jobRole'));
+            $applicant_info['school_name'] = $this->post('school');
+            $applicant_info['s_year_entered'] = $this->post('year_started');
+            $applicant_info['s_year_graduated'] = $this->post('year_graduated');
             $applicant_info['about_us'] =($this->post('hearAboutUs') != NULL)? $this->post('hearAboutUs'):" ";
             $applicant_info['allow_info_status'] = $this->post('infoCondition');
             $applicant_info['date_created'] = date('Y-m-d H:i:s');
@@ -156,10 +158,13 @@ class Applicants extends REST_Controller {
                     if($operation == "general_update"){
 
                         $birthdate = date("Y-m-d", strtotime($this->patch('birthdate')));
+                        $birth_year = date("Y", strtotime($this->patch('birthdate')));
+                        $age = date("Y") - $birth_year;
                         $data['first_name'] = $this->patch('first_name');
                         $data['middle_name'] = $this->patch('middle_name');
                         $data['last_name'] = $this->patch('last_name');
                         $data['sex'] = $this->patch('gender');
+                        $data['age'] = $age;
                         $data['civil_status'] = $this->patch('civil_status');
                         $data['birth_date'] = $birthdate;
                         $data['religion'] = $this->patch('religion');
@@ -459,10 +464,13 @@ class Applicants extends REST_Controller {
                                 $job_positions = $this->job_model->get_positions($id = FALSE, $app["job_category"]);
                                 $temp = unserialize($app["job_position"]);
 
-                                foreach($job_positions as $job_position)
-                                {
-                                    $positions[] = (in_array($job_position->id, $temp))?$job_position->name:false;
+                                if($temp != ""){
+                                    foreach($job_positions as $job_position)
+                                    {
+                                        $positions[] = (in_array($job_position->id, $temp))?$job_position->name:false;
+                                    }
                                 }
+                               
                                 foreach($positions as $pos){
                                     if($pos != false)
                                     {
@@ -486,9 +494,9 @@ class Applicants extends REST_Controller {
 
                                 $applicants[] = array(
                                     "id" => $app['user_id'],
-                                    "first_name" => $app['first_name'],
-                                    "middle_name" => $app['middle_name'],
-                                    "last_name" => $app['last_name'],
+                                    "first_name" => ucfirst($app['first_name']),
+                                    "middle_name" => ucfirst($app['middle_name']),
+                                    "last_name" => ucfirst($app['last_name']),
                                     "profile_img" =>  ($app['profile_pic'] != "")?base_url().str_replace("./", "", $app['profile_pic']):base_url().'assets/images/Default_User1.png',
                                     "age" => $app['age'],
                                     "civil_status" => $app['civil_status'],

@@ -94,12 +94,12 @@
 	<div class="tab-content">
 		<div class="tab-pane active animated fadeInLeftBig" id="jobseekers-tab" role="tabpanel">
 			<div class="tab1-content">
-			<img src="<?=base_url('assets/images/forJobSeeker.png')?>" class="img-fluid">
+			<img src="<?=base_url('assets/images/Services_BannerJobseeker .png')?>" class="img-fluid">
 			</div>
 		</div>
 		<div class="tab-pane animated fadeInRightBig" id="employers-tab" role="tabpanel">
 			<div class="tab2-content">
-				<img src="<?=base_url('assets/images/forRecruiter.png')?>" class="img-fluid">
+				<img src="<?=base_url('assets/images/Services_BannerRecruiter.png')?>" class="img-fluid">
 			</div>
 		</div>
 	</div>

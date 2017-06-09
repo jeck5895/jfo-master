@@ -10,7 +10,6 @@
             <ul class="list-unstyled">
                 <li><?=$employer->city.", ".$employer->province?></li>
                 <li><?=$employer->email?></li>
-                <li><i class="fa fa-phone"></i> <?=$employer->company_website?></li>
             </ul>
         </div>
     </div>

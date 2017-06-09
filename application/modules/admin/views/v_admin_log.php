@@ -18,7 +18,8 @@
                         <table class="table table-responsive no-border-top dt-responsive" id="admin-logs-table" width="100%">
                             <thead class="thead-semi-dark">
                                 <tr>
-                                    <th class="" style="width: 10%;"><small>No.</small></th>
+                                    <th class="" style="width: 5%;"><small>No.</small></th>
+                                    <th class="" style="width: 10%;"><small>Activity</small></th>
                                     <th class="" style="width: 10%;"><small>User</small></th>
                                     <th class="" style="width: 10%;"><small>Table Affected</small></th>
                                     <th class="" style="width: 10%;"><small>Record Affected</small></th>

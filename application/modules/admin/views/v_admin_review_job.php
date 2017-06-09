@@ -90,9 +90,6 @@
                         <div class="tab3-content">
                             <div class="box box-widget">
                                 <div class="box-header with-border">
-                                    <button data-scope="published-tab" data-title="Add to Featured Job" data-action="add-to-featured" id="btn-admin-featured-job" class="btn  btn-success btn-sm btn-minimize">
-                                        Add to Featured Job
-                                    </button>
 
                                     <button data-scope="published-tab" data-title="Tag for Review" data-action="review" id="btn-admin-review-job" class="btn  btn-primary btn-sm btn-minimize">
                                         Tag for Review

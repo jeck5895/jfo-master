@@ -116,6 +116,10 @@ class Admin_model extends CI_Model{
 				$this->db->where('tb_jobpost.location_id', $reg);
 			}
 
+			if($status != FALSE){
+				$this->db->where('tb_featured_jobpost_location.is_active',$status);
+			}
+
 			$this->db->where('.tb_featured_jobpost_location.is_active',1);
 			$this->db->join('tb_employer','tb_employer.id = tb_featured_jobpost_location.company_id');
 			$this->db->join('tb_jobpost', 'tb_jobpost.id = tb_featured_jobpost_location.job_position');

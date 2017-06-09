@@ -78,9 +78,20 @@
                 <p id="jobs-pagination"></p>
             </div>      
         </div>
-        <div style="padding: 5px; margin-bottom: 1rem;">
-            <center><a href="<?=site_url('jobs/')?>">See All Jobs</a></center>
-        </div>
+
+        <?php 
+            $this->load->model('api/auth_model');
+            if(isset($_COOKIE['_ut'])):
+                $user = $this->auth_model->getUserByToken($_COOKIE['_ut']);
+            if(!empty($user) && $user->account_type == 2):
+        ?>
+            <div style="padding: 5px; margin-bottom: 1rem;">
+                <center><a href="<?=site_url('jobs/')?>">See All Jobs</a></center>
+            </div>
+        <?php 
+                endif;
+            endif;
+        ?>
         
     </div>    
 </div>  
@@ -110,3 +121,14 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url('assets/js/plugins/dropzone.js');?>"></script>
 <script type="text/javascript" src="<?=base_url('assets/js/cop.js')?>"></script>
+<?php 
+    $this->load->model('api/auth_model');
+    if(isset($_COOKIE['_ut'])):
+        $user = $this->auth_model->getUserByToken($_COOKIE['_ut']);
+        if(!empty($user) && $user->account_type == 3):
+?>
+    <script type="text/javascript" src="<?php echo base_url('assets/js/company/pjp.js');?>"></script>
+<?php 
+        endif;
+    endif;
+?>

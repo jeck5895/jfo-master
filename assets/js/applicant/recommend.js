@@ -56,11 +56,12 @@ $(function(){
         {
             containerSelector.html("");
         	$("#total-jobs").html(jobs.length);
+            
             $.each(jobs, function(index, item){
                 var html = '';
                 var salary = (item.salary != 0)? '₱'+item.salary :'Not available';
                 var uri = encodeURIComponent(item.company);
-                var temp = item.position.replace(/\//g, '');
+                var temp = (item.position != "")? item.position.replace(/\//g, ''): "";
                 var job_title_uri = temp.replace(/\s+/g, '-').toLowerCase();
 
                 html += '<div class="box box-widget">';
