@@ -1,3 +1,15 @@
+<?php
+    $this->load->model('notification/notification_model'); 
+    if(isset($_GET['notif_id']))
+    {
+
+        $notif_id = $_GET['notif_id'];
+        $data['status'] = 0;
+        $data['date_modified'] = date("Y-m-d H:i:s");
+
+        $this->notification_model->update($notif_id, $data);
+    }
+?>
 <?php $this->load->view('employer/v_employer_sidenav')?>
 <div class="content-wrapper">
     <section class="content-header" style="">

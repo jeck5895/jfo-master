@@ -191,7 +191,7 @@ class Notification extends MY_Controller
                     if($notif_id = $this->notification_model->create($data))
                     {
 
-                        $updateData['notif_url'] = ($action == "approve")? $link =  site_url('jobs/details/'.$position_uri.'/'.$job_id.'/?notif_id='.$notif_id): site_url('co/jobs');
+                        $updateData['notif_url'] = ($action == "approve")? $link =  site_url('jobs/details/'.$position_uri.'/'.$job_id.'/?notif_id='.$notif_id): site_url('co/jobs/?notif_id='.$notif_id);
 
 
 

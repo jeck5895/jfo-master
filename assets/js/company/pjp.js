@@ -59,7 +59,7 @@ $(function () {
                     new_notif = (item.status == 1)? new_notif = new_notif + 1 : new_notif;
                     notif_class = (item.status == 1)? "new-notif" : "";
                     html += "<li class='"+notif_class+"'>";
-                        html += "<a href='"+item.link+"' target='"+item.link+"'>";
+                        html += "<a href='"+item.link+"'>";
                             html += "<div class='dropdown-item dropdown-notif-item'>";
                                 html += item.notification_html;
                                 html += "<p class='text-muted fs-11'>"+moment(item.date_created).format('MMMM D, YYYY')+' ('+moment(item.date_created).fromNow()+")</p>";
